@@ -17,7 +17,6 @@ currentRelease/libisimpa/
 *.pdb
 *.suo
 *.depend
-*.exe
 *.pyc
 *.pyd
 *.obj

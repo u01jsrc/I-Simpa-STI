@@ -117,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;&quot;$(PYTHON)\include&quot;;../"
+				AdditionalIncludeDirectories="&quot;$(BOOST)&quot;;c:\Python26\include;../"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -137,7 +137,7 @@
 				Name="VCLinkerTool"
 				OutputFile="..\..\..\..\..\..\currentRelease\libsimpa\_libsimpa.pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(PYTHON)\libs&quot;;&quot;$(BOOST)\lib&quot;"
+				AdditionalLibraryDirectories="c:\Python26\libs;&quot;$(BOOST)\lib&quot;"
 				GenerateManifest="true"
 				ManifestFile="..\..\..\vc_mswd\UserScript\libsimpa\$(TargetFileName).intermediate.manifest"
 				AddModuleNamesToAssembly=""

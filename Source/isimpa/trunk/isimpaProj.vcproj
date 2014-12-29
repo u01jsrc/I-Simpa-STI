@@ -5,6 +5,7 @@
 	Name="I-SIMPA"
 	ProjectGUID="{AF6CF5F7-AEF4-4304-B3B8-1FA6891836A0}"
 	RootNamespace="I-SIMPA"
+	AssemblyReferenceSearchPaths="&quot;c:\Python26\include&quot;"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -545,7 +546,7 @@
 				AdditionalOptions="/EHsc "
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="coreSrc\lib_interface;&quot;$(WXWIN)\lib\vc_lib\mswu&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\contrib\include&quot;;.;&quot;$(BOOST)&quot;;&quot;$(PYTHON)\include&quot;"
+				AdditionalIncludeDirectories="coreSrc\lib_interface;&quot;$(WXWIN)\lib\vc_lib\mswu&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\contrib\include&quot;;.;&quot;$(BOOST)&quot;;c:\Python26\include"
 				PreprocessorDefinitions="WIN32;__WXMSW__;_WINDOWS;NOPCH;USE_PYTHON;_UNICODE;UNICODE"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -577,7 +578,7 @@
 				OutputFile="..\..\..\currentRelease\I-SIMPA.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_lib&quot;;$(PYTHON)\libs;&quot;$(BOOST)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_lib&quot;;c:\python26\libs;&quot;$(BOOST)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="MSVCRT.lib"
 				GenerateDebugInformation="false"
