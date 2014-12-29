@@ -43,7 +43,8 @@ if __name__ == '__main__':
                                                      os.path.abspath('../dummy.hpp')
                                                  ]
                                           , gccxml_path=os.environ["GCCXML"]
-                                          , encoding='iso-8859-1')
+                                          , encoding='iso-8859-1'
+                                          , define_symbols=['_HAS_TR1=0'])
 
     #mb.namespace("core_mathlib").exclude()
     mb.calldefs( access_type_matcher_t( 'protected' ) ).exclude()
