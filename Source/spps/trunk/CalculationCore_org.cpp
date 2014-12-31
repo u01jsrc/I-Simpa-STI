@@ -313,75 +313,23 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 				{
 					TraverserTetra(configurationP,collisionResolution);
 				}else{
+					// Choix de la méthode de reflexion en fonction de la valeur de diffusion
 					vec3 nouvDirection;
-					if(configurationP.diffOrd < *configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DIFFUSION_ORDER) && configurationP.energie>10*configurationP.energie_epsilon)
+					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
 					{
-						if(materialInfo->diffusion>0)
-						{
-							vec3 faceDirection;
-							if(!doInvertNormal)
-								faceDirection=-faceInfo->normal;
-							else
-								faceDirection=faceInfo->normal;
-
-							nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
-																					
-						    CONF_PARTICULE configurationPTransmise=configurationP;
-							configurationPTransmise.energie*=materialInfo->diffusion;
-							configurationPTransmise.direction=nouvDirection*distanceSurLePas;
-							configurationPTransmise.diffOrd=configurationP.diffOrd;
-
-							if(materialInfo->diffusion>0.5)
-							{
-								configurationP.diffOrd++;
-							}
-							else //if(materialInfo->diffusion<0.3){
-							{
-								configurationPTransmise.diffOrd++;
-							}
-
-							//bool localcolres;
-							//TraverserTetra(configurationPTransmise,localcolres);
-
-							if(configurationPTransmise.energie>configurationPTransmise.energie_epsilon)
-							{
-								confEnv.duplicatedParticles.push_back(configurationPTransmise);
-								/*
-								reportTool->SaveParticule();
-								reportTool->NewParticule(configurationPTransmise);
-								 Run(configurationPTransmise);
-								reportTool->SaveParticule();
-								reportTool->NewParticule(configurationP);
-								*/
-							}
-						}
+						vec3 faceDirection;
+						if(!doInvertNormal)
+							faceDirection=-faceInfo->normal;
+						else
+							faceDirection=faceInfo->normal;
+						nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
+					}else{
 						nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
-						configurationP.direction=nouvDirection*distanceSurLePas;
-						configurationP.energie*=(1-materialInfo->diffusion);
-
-						collisionResolution=true;
-						SetNextParticleCollision(configurationP);
-						
-					}else
-					{
-						// Choix de la méthode de reflexion en fonction de la valeur de diffusion
-						vec3 nouvDirection;
-						if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
-						{
-							vec3 faceDirection;
-							if(!doInvertNormal)
-								faceDirection=-faceInfo->normal;
-							else
-								faceDirection=faceInfo->normal;
-							nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
-						}else{
-							nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
-						}
-						//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
-						configurationP.direction=nouvDirection*distanceSurLePas;
-						collisionResolution=true;
-						SetNextParticleCollision(configurationP);
 					}
+					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
+					configurationP.direction=nouvDirection*distanceSurLePas;
+					collisionResolution=true;
+					SetNextParticleCollision(configurationP);
 				}
 			}
 		}

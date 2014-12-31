@@ -94,6 +94,10 @@ protected:
 			_("Random number generator initialization");
 		#endif
 	}
+	void InitDiffusion_order(Element* confCore) {
+		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",2,true,false,true,0,0);
+	}
+
 public:
 
 	E_Core_Spps( Element* parent, wxXmlNode* noeudCourant)
@@ -119,6 +123,9 @@ public:
 			if(!confCore->IsPropertyExist("random_seed")) {
 				InitRandomSeed(confCore);
 			}
+			if(!confCore->IsPropertyExist("diffusion_order")) {
+				InitDiffusion_order(confCore);
+			}
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
@@ -143,8 +150,8 @@ public:
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
 		std::vector<int> computationMethodsIndex;
-		computationMethods.push_back("Aléatoire");
-		computationMethods.push_back("Énergétique");
+		computationMethods.push_back(_("Random"));
+		computationMethods.push_back(_("Energetic"));
 
 		confCore->AppendPropertyEntier("nbparticules","Particules par source",150000,true,false,true,0,1);
 		confCore->AppendPropertyEntier("nbparticules_rendu","Particules par source (rendu)",0,true,false,true,0,0);

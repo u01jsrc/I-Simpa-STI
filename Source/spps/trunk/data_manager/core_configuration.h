@@ -40,6 +40,7 @@ public:
 	 */
 	enum IPROP
 	{
+		IPROP_DIFFUSION_ORDER,						/*!< Number of allowed splittings*/
 		IPROP_QUANT_PARTICLE_CALCULATION,			/*!< Nombre total de particule dans la simulation par source*/
 		IPROP_QUANT_PARTICLE_OUTPUT,				/*!< Nombre total de particule à enregistrer par source */
 		IPROP_DO_CALC_ABS_ATMO,						/*!< Calcul de l'absorption atmosphérique */

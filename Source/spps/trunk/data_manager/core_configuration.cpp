@@ -43,6 +43,13 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			if(simuNode->IsPropertyExist("output_recp_bysource")) {
 				outputBySource = simuNode->GetProperty("output_recp_bysource").ToInt();
 			}
+
+			//if(simuNode->IsPropertyExist("diffusion_order")) {
+			int diffusion_order = simuNode->GetProperty("diffusion_order").ToInt();
+			//}else{
+			//	int diffusion_order = 2;
+			//}
+
 			SetConfigInformation(I_PROP_OUTPUT_RECEIVER_BY_SOURCE, outputBySource);
 			uentier_long seed = 0;
 			if(simuNode->IsPropertyExist("random_seed")) {
@@ -62,6 +69,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(IPROP_DO_CALC_TRANSMISSION,simuNode->GetProperty("trans_calc").ToInt());
 			SetConfigInformation(IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ,simuNode->GetProperty("output_recs_byfreq").ToInt());
 			SetConfigInformation(I_PROP_SURFACE_RECEIVER_MODE,simuNode->GetProperty("surf_receiv_method").ToInt());
+			SetConfigInformation(IPROP_DIFFUSION_ORDER,diffusion_order);
 		}
 	}
 }
