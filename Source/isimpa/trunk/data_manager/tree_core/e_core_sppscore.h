@@ -95,9 +95,11 @@ protected:
 		#endif
 	}
 	void InitDiffusion_order(Element* confCore) {
-		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",2,true,false,true,0,0);
+		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",2,true,false,true,0,0);		
 	}
-
+	void InitDiffusion_when_reached(Element* confCore) {
+		confCore->AppendPropertyBool("specular_when_order_reached","Specular when order reached",false,true);
+	}
 public:
 
 	E_Core_Spps( Element* parent, wxXmlNode* noeudCourant)
@@ -126,6 +128,9 @@ public:
 			if(!confCore->IsPropertyExist("diffusion_order")) {
 				InitDiffusion_order(confCore);
 			}
+			if(!confCore->IsPropertyExist("specular_when_order_reached")) {
+				InitDiffusion_when_reached(confCore);
+			}
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
@@ -147,6 +152,8 @@ public:
 		InitSurfaceReceiverMethod(confCore);
 		InitOutputRecpBySource(confCore);
 		InitRandomSeed(confCore);
+		InitDiffusion_order(confCore);
+		InitDiffusion_when_reached(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
 		std::vector<int> computationMethodsIndex;
@@ -220,6 +227,8 @@ public:
 			}else if(filsInfo.libelleElement=="computation_method")
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
+				elConf->SetReadOnlyConfig("diffusion_order",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
+				elConf->SetReadOnlyConfig("specular_when_order_reached",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
 			}
 		}
 		Element::Modified(eModif);

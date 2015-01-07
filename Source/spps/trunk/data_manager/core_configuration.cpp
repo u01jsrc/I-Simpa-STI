@@ -70,6 +70,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ,simuNode->GetProperty("output_recs_byfreq").ToInt());
 			SetConfigInformation(I_PROP_SURFACE_RECEIVER_MODE,simuNode->GetProperty("surf_receiv_method").ToInt());
 			SetConfigInformation(IPROP_DIFFUSION_ORDER,diffusion_order);
+			SetConfigInformation(IPROP_SPECULAR_WHEN_REACHED,simuNode->GetProperty("specular_when_order_reached").ToInt());
 		}
 	}
 }

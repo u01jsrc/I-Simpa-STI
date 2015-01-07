@@ -362,6 +362,13 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 						collisionResolution=true;
 						SetNextParticleCollision(configurationP);
 						
+					}else if(configurationP.diffOrd == *configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DIFFUSION_ORDER) && *configurationTool->FastGetConfigValue(Core_Configuration::IPROP_SPECULAR_WHEN_REACHED)==1){
+						vec3 faceDirection;
+						nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
+
+						configurationP.direction=nouvDirection*distanceSurLePas;
+						collisionResolution=true;
+						SetNextParticleCollision(configurationP);
 					}else
 					{
 						// Choix de la méthode de reflexion en fonction de la valeur de diffusion
@@ -373,7 +380,7 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 								faceDirection=-faceInfo->normal;
 							else
 								faceDirection=faceInfo->normal;
-							nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
+								nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
 						}else{
 							nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
 						}
