@@ -148,7 +148,6 @@ public:
 	 * @param particleInfos Informations de la particule au moment du nouveau pas de temps
 	 */
 	void RecordTimeStep(CONF_PARTICULE& particleInfos);
-
 	/**
 	 * Une nouvelle particule va être sauvegardé dans le fichier de particules
 	 */
@@ -194,6 +193,8 @@ public:
 		uentier_long partLoop;
 		uentier_long partAlive;
 		uentier_long partTotal;
+		double sumaric_time;
+		double sumaric_reflections;
 		t_Stats() { memset(this,0,sizeof(t_Stats)); }
 	} statReport;
 

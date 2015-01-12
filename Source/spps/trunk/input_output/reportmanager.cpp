@@ -228,9 +228,11 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 	vec3& normal=face->face_scene->normal;
 	if(particleInfos.outputToParticleFile && face->face_scene!=NULL)
 	{
-		particleInfos.reflectionOrder++;
+		//particleInfos.reflectionOrder++;
 		//Add intersection to history
 		this->collisionHistory.push_back(t_collision_history(face->face_scene->normal,particleInfos.reflectionOrder,particleInfos.nextModelIntersection.collisionPosition,particleInfos.direction, particleInfos.energie));
+	}else if(face->face_scene!=NULL){
+		particleInfos.reflectionOrder++;
 	}
 	#else
 	t_cFace* face=&paramReport.sceneModel->pfaces[particleInfos.nextModelIntersection.idface];
@@ -295,7 +297,8 @@ void ReportManager::CloseLastParticleFileHeader()
 formatGABE::GABE_Object* ReportManager::GetColStats()
 {
 	using namespace formatGABE;
-	GABE_Data_Integer* statValues=new GABE_Data_Integer(7);
+	GABE_Data_Float* statValues=new GABE_Data_Float(8);
+	statValues->headerData.numOfDigits=2;
 	statValues->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz").c_str());
 	statValues->Set(0,statReport.partAbsAtmo);
 	statValues->Set(1,statReport.partAbsSurf);
@@ -304,6 +307,7 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 	statValues->Set(4,statReport.partLost);
 	statValues->Set(5,statReport.partAlive);
 	statValues->Set(6,statReport.partTotal);
+	statValues->Set(7,statReport.sumaric_time*paramReport.timeStep*343/(statReport.sumaric_reflections));
 
 	return statValues;
 }
@@ -429,7 +433,7 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 
 	using namespace formatGABE;
 
-	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(7);
+	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(8);
 	statLbl->SetString(0,"Particules absorbées par l'atmosphère");
 	statLbl->SetString(1,"Particules absorbées par les matériaux");
 	statLbl->SetString(2,"Particules absorbées par les encombrements");
@@ -437,6 +441,7 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 	statLbl->SetString(4,"Particules perdues dû au maillage incorrect");
 	statLbl->SetString(5,"Particules restantes");
 	statLbl->SetString(6,"Total");
+	statLbl->SetString(7,"Mean free path");
 	uentier nbfreqUsed=0;
 	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
 	{

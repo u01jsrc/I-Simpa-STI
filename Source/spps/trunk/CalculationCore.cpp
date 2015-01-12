@@ -92,12 +92,18 @@ bool CalculationCore::Run(CONF_PARTICULE configurationP)
 			break;
 		case PARTICULE_STATE_ABS_SURF:
 			reportTool->statReport.partAbsSurf++;
+			reportTool->statReport.sumaric_reflections += configurationP.reflectionOrder;
+			reportTool->statReport.sumaric_time += configurationP.pasCourant;
 			break;
 		case PARTICULE_STATE_ABS_ATMO:
 			reportTool->statReport.partAbsAtmo++;
+			reportTool->statReport.sumaric_reflections += configurationP.reflectionOrder;
+			reportTool->statReport.sumaric_time += configurationP.pasCourant;
 			break;
 		case PARTICULE_STATE_ABS_ENCOMBREMENT:
 			reportTool->statReport.partAbsEncombrement++;
+			reportTool->statReport.sumaric_reflections += configurationP.reflectionOrder;
+			reportTool->statReport.sumaric_time += configurationP.pasCourant;
 			break;
 		case PARTICULE_STATE_LOOP:
 			reportTool->statReport.partLoop++;
