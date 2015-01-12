@@ -228,6 +228,7 @@ public:
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
 				elConf->SetReadOnlyConfig("diffusion_order",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
+				elConf->UpdateEntierConfig("diffusion_order",0);
 				elConf->SetReadOnlyConfig("specular_when_order_reached",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
 			}
 		}
