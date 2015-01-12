@@ -33,7 +33,10 @@ def GetMixedLevel(folderwxid,param):
             if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
                 cols.append(list(zip(*gridparam)[0])) #libellé Freq et Global
             idcol=gridparam[0].index(param) #Changer le paramètre par celui pour lequel on veut la fusion
-            cols.append([nomrecp]+list(zip(*gridparam)[idcol][1:])) #1ere colonne, (0 etant le libellé des lignes) et [1:] pour sauter la premiere ligne 
+            cols.append([nomrecp]+list(zip(*gridparam)[idcol][1:])) #1ere colonne, (0 etant le libellé des lignes) et [1:] pour sauter la premiere ligne
+	
+    cols2=zip(*cols[1:])
+    cols.append(['average']+[float(sum(l))/len(l) for l in cols2[1:]])
     return cols
 
 def SaveLevel(tab,path):

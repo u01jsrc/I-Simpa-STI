@@ -47,7 +47,7 @@ def GetMixedLevel(folderwxid,param,enable):
             #cols.append([nomrecp]+list(zip(*gridparam)[idcol1][1:])) #1ere colonne, (0 etant le libellé des lignes) et [1:] pour sauter la premiere ligne						
 			
             if len(avr)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-				avr=(['global']+list(zip(*gridparam)[idcol1][1:])) #libellé Freq et Global
+				avr=(['average']+list(zip(*gridparam)[idcol1][1:])) #libellé Freq et Global
             else:
 				avr[1:]=[x + y for x, y in zip(avr[1:], list(zip(*gridparam)[idcol1][1:]))]
 			
@@ -71,24 +71,39 @@ def GetMixedLevel(folderwxid,param,enable):
 				licznik.append(1)
 
 		
-	
+    suma=sum(licznik)						#number of calculations for receiver	
     avr_std=(['average']+[0 for x in avr[1:]])
 	
-    for wek1, wek2 in zip(cols2[1:], cols3[1:]):
+    for wek1, wek2 in zip(cols2[1:], cols3[1:]):	#calculate average std for eache frequency range
         wek1[1:] = [x / y  for x,y in zip(wek1[1:],licznik)]
         wek2[1:] = [math.sqrt(math.fabs(x1/n-x2*x2)) for n,x1,x2 in zip(licznik,wek2[1:],wek1[1:])]
-        avr_std[1:]= [x+y for x,y in zip(wek2[1:],avr_std[1:])]
+        avr_std[1:]= [x+y for x,y in zip(wek2[1:],avr_std[1:])]		
+
+    avr[1:]=[x / suma for x in avr[1:]]		#calculate average parameter for each frequency range		
+    avr_std[1:]= [x/len(licznik) for x in avr_std[1:]]		
+    global_Std[1:]=[math.sqrt(math.fabs(x/suma - x2*x2)) for x,x2 in zip(global_Std[1:],avr[1:])] #calculate global std for eache frequency range
 	
-    suma=sum(licznik)
-    avr[1:]=[x / suma for x in avr[1:]]
+    average=(['mean']+[sum(avr[1:])/len(avr[1:])])				#average calculated from all values
+    maks=(['max']+ [max(max(l) for l in zip(*cols2[1:])[1:])])	#maximum calculated from all values
 	
-    avr_std[1:]= [x/len(licznik) for x in avr_std[1:]]
-    cols2.append(avr)
+    average2=(['mean']+[sum(avr_std[1:])/len(avr_std[1:])])		#average calculated from all std's
+    maks2=(['max']+ [max(max(l) for l in zip(*cols3[1:])[1:])])	#maximum calculated from all std's
 	
-    global_Std[1:]=[math.sqrt(math.fabs(x/suma - x2*x2)) for x,x2 in zip(global_Std[1:],avr[1:])]
-    cols3.append(global_Std)
-    cols3.append(avr_std)
-	
+    for x in range(1, len(zip(*cols2))-1): #add zeros so that all rows are the same length
+		average.append(0)
+		maks.append(0)
+		average2.append(0)
+		maks2.append(0)	
+
+    cols2.append(avr)		#average in each frequency range
+    cols2.append(average)	#average calculated from all values
+    cols2.append(maks)		#maximum calculated from all values
+		
+
+    cols3.append(global_Std) #std calculated from every each value in frequency range (each receiver and each calculation)
+    cols3.append(avr_std)	#average calculated from std's in frequency range
+    cols3.append(average2)	#average calculated from all std's
+    cols3.append(maks2)		#maximum calculated from all std's
 	
     return [cols2,cols3]
 
