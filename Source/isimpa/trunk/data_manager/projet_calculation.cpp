@@ -81,19 +81,36 @@ enum SUM_OPERATION
 
 wxFloat32 GetSumLimit(wxInt32 idBandeFreq,wxFloat32 fromTime,wxFloat32 toTime,const std::vector<wxFloat32>& timeTable,const std::vector<std::vector<wxFloat32> >& tab_wj, SUM_OPERATION operation=SUM_OPERATION_Y,wxInt32* counter=NULL)
 {
+	int index=0;
+	std::vector<wxFloat32> timeTable2;
+
+	for(int i=0;i<tab_wj[idBandeFreq].size();i++){
+		if(tab_wj[idBandeFreq][i]>0){
+			index=i;
+			break;
+		}
+	}
+
+	//tmp=tab_wj[idBandeFreq]
+	std::vector<wxFloat32> tab_wj2(tab_wj[idBandeFreq].begin()+index,tab_wj[idBandeFreq].end());
+
+	for(int i=index;i<timeTable.size();i++){
+		timeTable2.push_back(timeTable[i]-timeTable[index]);
+	}
+
 	wxFloat32 sumJ=0;
 	wxFloat32 currentTime;
-	for(int idStep=0;idStep<timeTable.size();idStep++)
+	for(int idStep=0;idStep<timeTable2.size();idStep++)
 	{
-		currentTime=timeTable[idStep];
+		currentTime=timeTable2[idStep];
 		if(currentTime>=fromTime && (currentTime<=toTime || toTime==-1.f))
 		{
 			if(counter)
 				(*counter)++;
 			if(operation==SUM_OPERATION_Y)
-				sumJ+=tab_wj[idBandeFreq][idStep];
+				sumJ+=tab_wj2[idStep];
 			else if(operation==SUM_OPERATION_XY)
-				sumJ+=(tab_wj[idBandeFreq][idStep]*currentTime);
+				sumJ+=(tab_wj2[idStep]*currentTime);
 			else if(operation==SUM_OPERATION_X)
 				sumJ+=currentTime;
 			else if(operation==SUM_OPERATION_X2)
