@@ -20,7 +20,7 @@ def GetMixedLevel(folderwxid,param):
         recp=ui.element(idrecp)
         if recp.getinfos()["name"]=="soundpressure":
             #on demande le calcul des paramètres sonores
-            ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"20;30", "EDT":"", "D":""})
+            ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"20;30", "EDT":"", "D":"50"})
             #on recupere l'element parent (le dossier de récepteur ponctuel)
             pere=ui.element(recp.getinfos()["parentid"])
             #application.sendevent(pere,idevent.IDEVENT_RELOAD_FOLDER)

@@ -100,20 +100,68 @@ def GetMixedLevel(folderwxid,param,enable):
     cols2.append(maks)		#maximum calculated from all values
 		
 
-    cols3.append(global_Std) #std calculated from every each value in frequency range (each receiver and each calculation)
-    cols3.append(avr_std)	#average calculated from std's in frequency range
+    cols3.append(avr_std) 	#average calculated from std's in frequency range
+    cols3.append(global_Std)	#std calculated from every each value in frequency range (each receiver and each calculation)
     cols3.append(average2)	#average calculated from all std's
     cols3.append(maks2)		#maximum calculated from all std's
 	
     return [cols2,cols3]
 
-def SaveLevel(tab,path):
+def CalcJND(tab1,tab2,param):
+    JND=[]   
+    JND.append(tab1[0])
+    if(param=="RT-20 (s)" or param=="RT-30 (s)" or param=="EDT (s)"):
+		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+			tmp=[]
+			tmp.append(wek2[0])
+			for x,y in zip(wek1[1:],wek2[1:]):
+				if x==0:
+					tmp.append(0)
+				else:
+					tmp.append((y / x)/0.05)
+			JND.append(tmp)
+	
+	
+    elif(param=="C-50 (dB)" or param=="C-80 (dB)"):
+		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+			tmp=[]
+			tmp.append(wek2[0])
+			for x,y in zip(wek1[1:],wek2[1:]):
+				if x==0:
+					tmp.append(0)
+				else:
+					tmp.append(y)
+			JND.append(tmp)		
+	
+    elif(param=="D-50 (%)"):
+		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+			tmp=[]
+			tmp.append(wek2[0])
+			for x,y in zip(wek1[1:],wek2[1:]):
+				if x==0:
+					tmp.append(0)
+				else:
+					tmp.append(y /5)
+			JND.append(tmp)
+	
+    average=(['mean']+[sum(JND[-1][1:])/len(JND[-1][1:])])				#average calculated from all values
+    maks=(['max']+ [max(max(l) for l in zip(*JND[1:])[1:])])	#maximum calculated from all values
+	
+    for x in range(1, len(zip(*JND))-1): #add zeros so that all rows are the same length
+		average.append(0)
+		maks.append(0)
+		
+    JND.append(average)	#average calculated from all values
+    JND.append(maks)		#maximum calculated from all values
+    return JND
+	
+def SaveLevel(tab,path,param):
     #Creation de l'objet qui lit et ecrit les fichiers gabe
     gabewriter=Gabe_rw(len(tab))
     labelcol=stringarray()
     for cell in tab[0][1:]:
         labelcol.append(cell.encode('cp1252'))
-    gabewriter.AppendStrCol(labelcol,"RT-20")
+    gabewriter.AppendStrCol(labelcol,param)
     for col in tab[1:]:
         datacol=floatarray()
         for cell in col[1:]:
@@ -123,8 +171,10 @@ def SaveLevel(tab,path):
     
 def dofusion(folderwxid, path,param,enable):
     arraydata=GetMixedLevel(folderwxid,param,enable)
-    SaveLevel(zip(*arraydata[0]),path+param+".gabe")
-    SaveLevel(zip(*arraydata[1]),path+param+"_std.gabe")
+    JND=CalcJND(arraydata[0],arraydata[1],param)
+    SaveLevel(zip(*arraydata[0]),path+param+".gabe",param)
+    SaveLevel(zip(*arraydata[1]),path+param+"_std.gabe",param)
+    SaveLevel(zip(*JND),path+param+"_JND.gabe",param)
     #raffraichie l'arbre complet
     ui.application.sendevent(ui.element(ui.element(ui.application.getrootreport()).childs()[0][0]),ui.idevent.IDEVENT_RELOAD_FOLDER)
 
