@@ -653,8 +653,7 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 				tabWriter.SetCol(idparameter+1,tabParameters[idparameter]);
 
 
-			tabWriter.Save(fileFolder+"acoustic_param.gabe");
-			_("Acoustic parameters");
+			tabWriter.Save(fileFolder+wxString(_("Acoustic parameters"))+wxString(".gabe"));
 
 			//////////////////////////////////////////
 			// Enregistrement des données des courbes de shroeder
@@ -675,9 +674,7 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 				}
 				tabSchroederWriter.SetCol(idstep+1,colTimeStep);
 			}
-			tabSchroederWriter.Save(fileFolder+"schroedercurves.gabe");
-			_("Schroeder's curve");
-
+			tabSchroederWriter.Save(fileFolder+wxString(_("Schroeder curves"))+wxString(".gabe"));			
 
 
 			reportFolder->RefreshFolderContents();
@@ -994,9 +991,8 @@ void ProjectManager::OnMenuDoAdvancedAcousticParametersComputation(Element* sele
 		tabWriter.LockData(); //lecture seule pour l'utilisateur
 		for(int idparameter=0;idparameter<tabToExport.size();idparameter++)
 			tabWriter.SetCol(idparameter,tabToExport[idparameter]);
-		tabWriter.Save(fileFolder+"acoustic_param_advance.gabe");
+		tabWriter.Save(fileFolder+wxString(_("Advanced acoustic parameters"))+wxString(".gabe"));
 		gabeFolder->RefreshFolderContents();
 		gabeFolder->FillWxTree(treeResult);
-		_("Advanced acoustic parameters");
-	}
+		}
 }
