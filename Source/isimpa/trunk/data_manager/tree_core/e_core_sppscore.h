@@ -95,7 +95,7 @@ protected:
 		#endif
 	}
 	void InitDiffusion_order(Element* confCore) {
-		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",2,true,false,true,0,0);		
+		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",0,true,false,true,0,0);	
 	}
 	void InitDiffusion_when_reached(Element* confCore) {
 		confCore->AppendPropertyBool("specular_when_order_reached","Specular when order reached",false,true);
