@@ -70,6 +70,7 @@ protected:
 	{
 		/* this->AppendPropertyText("stats_filename",wxString(_("SPPS calculation statistics"))+wxString(".gabe"),true,true)->Hide(); */ 
 		this->AppendPropertyText("stats_filename","stats",wxTRANSLATE("statsSPPS")+wxString(".gabe"),true,true)->Hide();
+		this->AppendPropertyText("angle_filename","angle_stats",wxTRANSLATE("angle_stats")+wxString(".gabe"),true,true)->Hide();
 		this->AppendPropertyText("intensity_folder","intensity_folder",wxTRANSLATE("IntensityAnimation"),true,true)->Hide();
 		this->AppendPropertyText("intensity_filename","intensity_filename",wxTRANSLATE("Intensity vector")+wxString(".rpi"),true,true)->Hide();
 		this->AppendPropertyText("intensity_rp_filename","intensity_rp_filename","ponct_intensity.gabe",true,true)->Hide();
@@ -96,10 +97,10 @@ protected:
 		confCore->AppendPropertyEntier("random_seed",wxTRANSLATE("Random seed"), 0,true, false, true);
 	}
 	void InitDiffusion_order(Element* confCore) {
-		confCore->AppendPropertyEntier("diffusion_order","Diffusion order",0,true,false,true,0,0);	
+		confCore->AppendPropertyEntier("diffusion_order",wxTRANSLATE("Diffusion order"),0,true,false,true,0,0);	
 	}
 	void InitDiffusion_when_reached(Element* confCore) {
-		confCore->AppendPropertyBool("specular_when_order_reached","Specular when order reached",false,true);
+		confCore->AppendPropertyBool("specular_when_order_reached",wxTRANSLATE("Specular when order reached"),false,true);
 	}
 public:
 
