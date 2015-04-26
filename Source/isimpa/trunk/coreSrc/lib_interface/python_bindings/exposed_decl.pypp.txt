@@ -3101,6 +3101,7 @@
 ~@variable_t@st_atime@::_stat32i64::st_atime
 ~@variable_t@st_atime@::stat::st_atime
 ~@variable_t@st_atime@::_stat32::st_atime
++@variable_t@Rec_angle@::formatCoreBIN::ioFace::Rec_angle
 ~@variable_t@_Type@::std::_DebugHeapTag_t::_Type
 ~@variable_t@_Gnext@::std::basic_streambuf< wchar_t, std::char_traits< wchar_t > >::_Gnext
 ~@variable_t@_Gnext@::std::basic_streambuf< char, std::char_traits< char > >::_Gnext

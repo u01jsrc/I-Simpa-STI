@@ -951,7 +951,7 @@
 				PreprocessorDefinitions="USE_PYTHON;WIN32;_DEBUG;__WXMSW__;__WXDEBUG__;_UNICODE;UNICODE;_WINDOWS;NOPCH"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\vc_mswd\isimpa/isimpa.pch"
 				AssemblerListingLocation=".\vc_mswd\isimpa/"
