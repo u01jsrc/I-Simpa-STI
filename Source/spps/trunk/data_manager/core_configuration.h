@@ -24,7 +24,8 @@ public:
 	{
 		SPROP_PARTICULE_FILE_PATH,					/*!< Nom du fichier de sortiedes particules (par bande) */
 		SPROP_PARTICULE_FOLDER_PATH,					/*!< Nom de dossier de sortie des particules (toute bande) */
-		SPROP_STATS_FILE_PATH						/*!< Nom du fichier de statistiques des particules */
+		SPROP_STATS_FILE_PATH,						/*!< Nom du fichier de statistiques des particules */
+		SPROP_ANGLE_FILE_PATH						/*!< Name of file with energy in funcion of angle file */
 	};
 	/**
 	 * Enumeration des propriétés de type float

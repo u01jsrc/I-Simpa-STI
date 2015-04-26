@@ -208,6 +208,7 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 			ReportManager::SauveRecepteursSurfaciquesCoupe(reportParameter._recepteur_surf_cut_Path,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP),true,false,threadData->freqInfos->freqIndex);
 		outputTool.SaveAndCloseParticleFile();				//Finalisation du fichier de particule
 		threadData->GabeColData=outputTool.GetColStats();	//Recupere les données des etats de particules
+		threadData->GabeAngleData=outputTool.GetAngleStats();
 		threadData->GabeSumEnergyFreq=outputTool.GetSumEnergy();//Recupere les données du niveau sonore global
 		outputTool.FillWithLefData(*threadData); //Recupere les données du lef (utilisé pour le calcul du LF et LFC)
 		cout<<"End of calculation at "<<threadData->freqInfos->freqValue<<" Hz."<<endl;
@@ -352,6 +353,7 @@ int MainProcess(int argc, char* argv[])
 	reportCompilation(configManager,workingDir);
 
 	ReportManager::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
+	ReportManager::SaveAngleStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_ANGLE_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
 
 	cout<<"Saving Ponctual Receiver Advanced Parameters..."<<endl;
 	ReportManager::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_Configuration::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH),threadsData,reportParameter);

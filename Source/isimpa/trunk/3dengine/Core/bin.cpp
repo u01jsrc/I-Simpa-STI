@@ -38,7 +38,7 @@ extern CTexture *textures;
 namespace formatBIN
 {
  const int majorVersionFormat=1;
- const int minorVersionFormat=2;
+ const int minorVersionFormat=3;
 CformatBIN::CformatBIN()
 {
 
@@ -145,6 +145,36 @@ bool CformatBIN::ProcessNodeGroup(std::fstream &binFile,t3DModel *pModel)
 		nvObjet.pFaces[f].materialID=faceElement.idMaterial;
 		nvObjet.pFaces[f].vertexTex=faceElement.coordtex;
 		nvObjet.pFaces[f].internalFace=faceElement.internalFace;
+		nvObjet.pFaces[f].internalFace=faceElement.Rec_angle;
+	}
+	pModel->pObject.push_back(nvObjet);
+	return true;
+}
+
+bool CformatBIN::ProcessNodeGroupV120(std::fstream &binFile,t3DModel *pModel)
+{
+	binaryGroup elementNode;
+	binaryFace120 faceElement;
+	if(!binFile.is_open() || binFile.eof())
+		return false;
+	binFile.read((char*)&elementNode, sizeof (binaryGroup));
+	t3DObject nvObjet={0};
+	strcpy(nvObjet.strName,elementNode.groupName);
+	nvObjet.numOfFaces=elementNode.nbFace;
+	nvObjet.pFaces=new tFace[elementNode.nbFace];
+
+	for(unsigned long f=0;f<elementNode.nbFace;f++)
+	{
+		binFile.read((char*)&faceElement, sizeof (binaryFace120));
+		nvObjet.pFaces[f].vertIndex[0]=faceElement.a;
+		nvObjet.pFaces[f].vertIndex[1]=faceElement.b;
+		nvObjet.pFaces[f].vertIndex[2]=faceElement.c;
+		nvObjet.pFaces[f].diff[0] =faceElement.ab;
+		nvObjet.pFaces[f].diff[1] =faceElement.bc;
+		nvObjet.pFaces[f].diff[2] =faceElement.ca;
+		nvObjet.pFaces[f].materialID=faceElement.idMaterial;
+		nvObjet.pFaces[f].vertexTex=faceElement.coordtex;
+		nvObjet.pFaces[f].internalFace=faceElement.internalFace;
 	}
 	pModel->pObject.push_back(nvObjet);
 	return true;
@@ -153,7 +183,7 @@ bool CformatBIN::ProcessNodeGroup(std::fstream &binFile,t3DModel *pModel)
 bool CformatBIN::ProcessNodeGroupV110(std::fstream &binFile,t3DModel *pModel)
 {
 	binaryGroup elementNode;
-	binaryFace faceElement;
+	binaryFace110 faceElement;
 	if(!binFile.is_open() || binFile.eof())
 		return false;
 	binFile.read((char*)&elementNode, sizeof (binaryGroup));
@@ -221,11 +251,14 @@ bool CformatBIN::ProcessNode(std::fstream &binFile,t3DModel *pModel,const binary
 			case NODE_TYPE_MATERIAL:
 				if(fileHeader.majorVersion==1 && fileHeader.minorVersion==0)
 					this->ProcessNodeMaterialv100(binFile,pModel);
-				else
+				else{
 					this->ProcessNodeMaterial(binFile,pModel);
+				}
 				break;
 			case NODE_TYPE_GROUP:
-				if(fileHeader.majorVersion==1 && fileHeader.minorVersion==1)
+				if(fileHeader.majorVersion==1 && fileHeader.minorVersion==2)
+					this->ProcessNodeGroupV120(binFile,pModel);
+				else if(fileHeader.majorVersion==1 && fileHeader.minorVersion==1)
 					this->ProcessNodeGroupV110(binFile,pModel);
 				else if(fileHeader.majorVersion==1 && fileHeader.minorVersion==0)
 					this->ProcessNodeGroupv100(binFile,pModel);
@@ -374,7 +407,8 @@ bool CformatBIN::ExportBIN(const char *strFileName,vec4 UnitizeVar,std::vector<v
 				{(*itface).TexCoords.a,
 				(*itface).TexCoords.b,
 				(*itface).TexCoords.c
-				}
+				},
+				(*itface).Rec_angle,
 			};
 			binFile.write((char*)&faceElement,sizeof(binaryFace));
 		}

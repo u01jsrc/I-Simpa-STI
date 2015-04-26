@@ -36,6 +36,7 @@
 #include "data_manager/appconfig.h"
 #include "data_manager/grpInfo/data_group_info.h"
 #include "data_manager/e_data_tree.h"
+#include "data_manager/e_data_bool.h"
 #include <wx/progdlg.h>
 #include "last_cpp_include.hpp"
 
@@ -115,6 +116,7 @@ void E_Scene_Groupesurfaces_Groupe::InitGroupProp()
 	}else{
 		this->UpdateDecimalConfig("aire",0);
 	}
+
 }
 
 void E_Scene_Groupesurfaces_Groupe::BeginDrag(wxTreeEvent& treeEvent,wxTreeCtrl* tree)
@@ -224,6 +226,13 @@ void E_Scene_Groupesurfaces_Groupe::InitProp()
 				this->AppendFils(new E_Data_Tree(this,"typesurface","Material",rootMateriaux,filterTree,defaultEle,false,1));
 				this->SetDrawable();
 			}
+
+			if(!this->IsPropertyExist("Rec_angle"))
+			{
+				this->AppendPropertyBool("Rec_angle","Record angle",false,true);
+				_("Record angle");
+			}
+
 			ignoreModification=false;
 		}
 	}
@@ -242,7 +251,10 @@ void E_Scene_Groupesurfaces_Groupe::PushFace(std::vector<std::vector<Application
 	}
 	//Il faut renseigner l'element de la face en fonction du type de groupe
 	if(!isPointerGroup)
+	{
 		vectorToFeed[faceIndex.group][faceIndex.face].idMaterial=this->GetEntierConfig("idmat");
+		vectorToFeed[faceIndex.group][faceIndex.face].Rec_angle=this->GetBoolConfig("Rec_angle");
+	}
 	else
 	{
 		if(this->pere)
@@ -682,6 +694,14 @@ void E_Scene_Groupesurfaces_Groupe::Modified(Element* eModif)
 		if(!(elInfo.typeElement==ELEMENT_TYPE_FLOAT && elInfo.libelleElement=="aire")) //On ignore l'ajout ou la mise à jour de la propriété d'aire
 			Element::Modified(eModif);
 
+		if(elInfo.typeElement==ELEMENT_TYPE_BOOL && elInfo.libelleElement=="Rec_angle")
+		{	
+			E_Data_Bool* ElementBool=dynamic_cast<E_Data_Bool*>(eModif);
+			if(ElementBool)
+			{
+				this->UpdateBoolConfig("Rec_angle",ElementBool->GetValue());
+			}
+		}
 	}
 }
 

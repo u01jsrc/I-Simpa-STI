@@ -1,5 +1,6 @@
 #include "reportmanager.h"
 #include "tools/collision.h"
+#include <iostream>
 
 const l_decimal p_0=1/pow((float)(20*pow(10.f,(int)-6)),(int)2);
 
@@ -72,6 +73,7 @@ ReportManager::ReportManager(t_ParamReport& _paramReport)
 	{
 		lst_rp_lef[idrp].Init(_paramReport.nbTimeStep,nbSource, timeStepInSourceOutput);
 	}
+	angle_energy.fill_empty_data();
 
 	particleFile=NULL;
 	particleCSVFile=NULL;
@@ -234,10 +236,17 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 	}else if(face->face_scene!=NULL){
 		particleInfos.reflectionOrder++;
 	}
+
 	#else
 	t_cFace* face=&paramReport.sceneModel->pfaces[particleInfos.nextModelIntersection.idface];
 	vec3& normal=face->normal;
 	#endif
+
+	if(face->face_scene!=NULL && face->face_scene->Rec_angle==true)
+	{	
+		this->angle_energy.calc_angle(particleInfos,*face->face_scene);
+		this->angle_energy.add_eng(particleInfos);
+	}
 
 	if(face->recepteurS)
 	{
@@ -288,7 +297,6 @@ void ReportManager::CloseLastParticleHeader()
 
 void ReportManager::CloseLastParticleFileHeader()
 {
-
     particleFile->seekp(lastParticuleFileHeaderInfo);
     enteteSortie.nbParticles=realNbParticle;
     particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
@@ -311,6 +319,20 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 
 	return statValues;
 }
+
+formatGABE::GABE_Object* ReportManager::GetAngleStats()
+{
+	using namespace formatGABE;
+	GABE_Data_Float* statValues=new GABE_Data_Float(90);
+	statValues->headerData.numOfDigits=22;
+	statValues->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz").c_str());
+	for(int i=0;i<90;i++){
+		statValues->Set(i,angle_energy.energy[i]);
+	}
+	return statValues;
+}
+
+	
 void ReportManager::FillWithLefData(t_sppsThreadParam& data)
 {
 	using namespace formatGABE;
@@ -425,22 +447,53 @@ void ReportManager::NewParticule(CONF_PARTICULE& particleInfos)
 	}
 }
 
+void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
+{
+	/////////////////////////////////////
+	// 1: Sauvegarde des statistiques des états finaux des particules
+	using namespace formatGABE;
+
+	GABE_Data_Integer* statLbl=new GABE_Data_Integer(90);
+	statLbl->SetLabel("Angle");
+	for(int i=0; i<90; i++)
+	{
+		statLbl->Set(i,i+1);
+	}
+
+	uentier nbfreqUsed=0;
+	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
+	{
+		if(cols[idfreq].GabeAngleData)
+			nbfreqUsed++;
+	}
+
+	GABE exportTab(nbfreqUsed+1);
+	exportTab.LockData();
+	exportTab.SetCol(0,statLbl);
+
+	uentier currentIndex=1;
+
+	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
+	{
+		if(cols[idfreq].GabeAngleData)
+		{
+			exportTab.SetCol(currentIndex,cols[idfreq].GabeAngleData);
+			currentIndex++;
+		}
+	}
+
+	exportTab.Save(filename.c_str());
+
+}
+
 
 void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
 {
 	/////////////////////////////////////
 	// 1: Sauvegarde des statistiques des états finaux des particules
-
 	using namespace formatGABE;
 
 	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(8);
-	/* statLbl->SetString(0,"Particules absorbées par l'atmosphère");
-	statLbl->SetString(1,"Particules absorbées par les matériaux");
-	statLbl->SetString(2,"Particules absorbées par les encombrements");
-	statLbl->SetString(3,"Particules perdues dû aux boucles infinies");
-	statLbl->SetString(4,"Particules perdues dû au maillage incorrect");
-	statLbl->SetString(5,"Particules restantes");
-	statLbl->SetString(6,"Total"); */
 	statLbl->SetString(0,"Particles absorbed by the atmosphere");
 	statLbl->SetString(1,"Particles absorbed by the materials");
 	statLbl->SetString(2,"Particles absorbed by the fittings");
@@ -470,8 +523,7 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 	}
 
 	exportTab.Save(filename.c_str());
-
-
+	
 	/////////////////////////////////////
 	// 2: Sauvegarde des statistiques du niveau sonore en fonction du temps (même forme que pour un récepteur ponctuel)
 	GABE exportdBLevelTab(nbfreqUsed+1); //+1 pour la colonne des libellés
@@ -531,6 +583,8 @@ void ReportManager::SetPostProcessCutSurfaceReceiver(Core_Configuration& coreCon
 		}
 	}
 }
+
+
 void ReportManager::SaveSoundLevelBySource(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
 {
 	using namespace formatGABE;

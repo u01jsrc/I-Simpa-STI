@@ -19,9 +19,10 @@
 
 struct t_sppsThreadParam
 {
-	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;}
+	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;GabeAngleData=NULL;}
 	t_FreqUsage* freqInfos;
 	formatGABE::GABE_Object* GabeColData;
+	formatGABE::GABE_Object* GabeAngleData;
 	formatGABE::GABE_Data_Float* GabeSumEnergyFreq;
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosPhi;		/*!< Tableau de récepteur ponctuel */
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosSqrtPhi;	/*!< Tableau de récepteur ponctuel */
@@ -70,6 +71,35 @@ public:
 	l_decimal* SrcContrib;
 	veci_t* intensity;
 };
+
+class t_angle_energy
+{
+public:
+	int angle;
+	std::vector<double> energy;
+	t_angle_energy(){}
+	void fill_empty_data()
+	{	
+		for(int j = 0; j < 90; j++)
+		{					
+			energy.push_back(0);
+		}		
+	}
+	void calc_angle(CONF_PARTICULE& particleInfos, t_cFace face)
+	{
+		vec3 normal=face.normal;
+		vec3 dir=particleInfos.direction;
+		normal.normalize();
+		dir.normalize();
+		angle=(int)(acos(normal.dot(dir))*180.0/3.14);
+	}
+	void add_eng(CONF_PARTICULE& particleInfos)
+	{
+		energy[angle]+=particleInfos.energie;
+	}
+};
+
+
 /**
  * @brief Gestionnaire de fichier de sortie à déstination de l'interface PSPS
  *
@@ -98,6 +128,7 @@ public:
 		t_Mesh* sceneModel;
 		Core_Configuration* configManager;
 	};
+	t_angle_energy angle_energy;	//zmiana!!!
 private:
 	struct t_collision_history
 	{
@@ -116,6 +147,7 @@ private:
 
 		}
 	};
+
 	t_ParamReport paramReport;
 	std::fstream* particleFile;
 	std::fstream* particleCSVFile;
@@ -177,6 +209,8 @@ public:
 
 	formatGABE::GABE_Object* GetColStats();
 
+	formatGABE::GABE_Object* GetAngleStats();
+
 
 	void FillWithLefData(t_sppsThreadParam& data);
 
@@ -202,6 +236,12 @@ public:
 	 * Sauvegarde le tableau de statistique des états de particules et les données de niveaux sonores globaux
 	 */
 	static void SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+	
+	/**
+	 * Save information about angle energy relation
+	 */
+	static void SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+	
 	/**
 	 * Sauvegarde le tableau contenants les données servant aux calcul des paramètres acoustiques avancées tels que la tenue acoustique G ou la fraction d'énergie latérale précoce LF et LFC
 	 */

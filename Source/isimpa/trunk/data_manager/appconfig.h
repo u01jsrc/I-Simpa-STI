@@ -118,10 +118,11 @@ public:
 	 */
 	struct t_PropFace
 	{
+		bool Rec_angle;				/*!< Sets if energy in funciton of angle is recorded for this face */
 		int idMaterial;				/*!< Indice du materiau */
 		int idRecepteurSurfacique;	/*!< Indice du récepteur surfacique */
 		int idEncombrement;			/*!< Indice de l'encombrement */
-		t_PropFace(){idMaterial=0;idRecepteurSurfacique=-1;idEncombrement=-1;};
+		t_PropFace(){idMaterial=0;idRecepteurSurfacique=-1;idEncombrement=-1;Rec_angle=false;};
 	};
 private:
 	struct tab_HashElement

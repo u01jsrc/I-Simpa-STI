@@ -25,6 +25,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(SPROP_PARTICULE_FILE_PATH,simuNode->GetProperty("particules_filename"));
 			SetConfigInformation(SPROP_PARTICULE_FOLDER_PATH,simuNode->GetProperty("particules_directory"));
 			SetConfigInformation(SPROP_STATS_FILE_PATH,simuNode->GetProperty("stats_filename"));
+			SetConfigInformation(SPROP_ANGLE_FILE_PATH,simuNode->GetProperty("angle_filename"));
 			int nbpart=simuNode->GetProperty("nbparticules").ToInt();
 			if(nbpart<1)
 				nbpart=1;

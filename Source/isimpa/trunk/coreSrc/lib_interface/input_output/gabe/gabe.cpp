@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+﻿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -424,6 +424,7 @@ namespace formatGABE
 		fileheader.t_ColHeader_Length=sizeof(t_ColHeader);
 		fileheader.readOnly=readOnly;
 		fileheader.formatVersion=GABE_VERSION;
+
 
 		binFile.write((char*)&fileheader ,sizeof(t_FileHeader));
 		//Pour chaque colonne

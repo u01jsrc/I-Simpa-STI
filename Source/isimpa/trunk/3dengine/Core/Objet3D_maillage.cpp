@@ -641,6 +641,7 @@ void CObjet3D::ToCBINFormat(formatCoreBIN::ioModel& modelExport)
 			(*nvFace).a=this->_pGroups[g].pFaces[f].Vertices.a;
 			(*nvFace).b=this->_pGroups[g].pFaces[f].Vertices.b;
 			(*nvFace).c=this->_pGroups[g].pFaces[f].Vertices.c;
+			(*nvFace).Rec_angle=linkFacesAssociations[g][f].Rec_angle;
 			(*nvFace).idMat=linkFacesAssociations[g][f].idMaterial;
 			(*nvFace).idRs=linkFacesAssociations[g][f].idRecepteurSurfacique;
 			(*nvFace).idEn=linkFacesAssociations[g][f].idEncombrement;
@@ -988,7 +989,7 @@ bool CObjet3D::_LoadFaceFile(const char *filename)
 			{
 				this->_pGroups[g].pFaces.push_back(nvface);
 				this->_pGroups[g].pFaces[f].Vertices=faces[f];
-
+				this->_pGroups[g].pFaces[f].Rec_angle=false;
 				this->_pGroups[g].pFaces[f].Diff[0]=true;
 				this->_pGroups[g].pFaces[f].Diff[1]=true;
 				this->_pGroups[g].pFaces[f].Diff[2]=true;

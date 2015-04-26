@@ -345,6 +345,7 @@ struct t_Encombrement
  */
 struct t_cFace
 {
+	bool Rec_angle;							/*!< Sets if energy in funciton of angle is recorded for this face */
 	ivec3 sommets;							/*!< Indice des sommets */
 	vec3 normal;							/*!< Vecteur de normal */
 	t_Material* faceMaterial;				/*!< Pointeur vers le matériau associé (NULL si aucun) */
@@ -354,7 +355,6 @@ struct t_cFace
 	r_Surf_Face* recepteurS;				/*!<  Pointeur vers la face du récepteur surfacique correspondant */
 	t_cFace(){ faceMaterial=NULL;
 	recepteurS=NULL;
-
 	}
 };
 
