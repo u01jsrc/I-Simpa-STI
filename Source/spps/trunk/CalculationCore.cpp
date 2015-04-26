@@ -194,7 +194,6 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 			//Enregistrement de l'énergie passé à la paroi
 			reportTool->ParticuleCollideWithSceneMesh(configurationP);
 
-
 			vec3 vecTranslation=configurationP.nextModelIntersection.collisionPosition-configurationP.position;
 			//On incrémente le temps de parcourt entre la position avant et aprés collision
 			configurationP.tempsEcoule+=(vecTranslation/configurationP.direction.length()).length()*deltaT;
@@ -232,6 +231,7 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 			if(!faceInfo->faceEncombrement)
 			{
 			#endif
+
 
 				//On stocke le materiau dans la variable materialInfo
 				t_Material_BFreq* materialInfo=&(*faceInfo).faceMaterial->matSpectrumProperty[configurationP.frequenceIndex];
@@ -320,7 +320,7 @@ void CalculationCore::Mouvement(CONF_PARTICULE &configurationP)
 					TraverserTetra(configurationP,collisionResolution);
 				}else{
 					vec3 nouvDirection;
-					if(configurationP.diffOrd < *configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DIFFUSION_ORDER) && configurationP.energie>10*configurationP.energie_epsilon)
+					if(configurationP.diffOrd < *configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DIFFUSION_ORDER) && configurationP.energie>100*configurationP.energie_epsilon)
 					{
 						if(materialInfo->diffusion>0)
 						{
