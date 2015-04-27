@@ -4,6 +4,7 @@
 #include <input_output/particles/part_binary.h>
 #include <data_manager/core_configuration.h>
 #include <list>
+
 /**
  * @file reportmanager.h
  * @brief Implémentation du gestionnaire de fichiers de rapports
@@ -81,7 +82,7 @@ public:
 	void fill_empty_data()
 	{	
 		for(int j = 0; j < 90; j++)
-		{					
+		{
 			energy.push_back(0);
 		}		
 	}
@@ -91,11 +92,15 @@ public:
 		vec3 dir=particleInfos.direction;
 		normal.normalize();
 		dir.normalize();
-		angle=(int)(acos(normal.dot(dir))*180.0/3.14);
+
+		angle=(int)(acos(normal.dot(dir))*180.0/3.14159265358979323846264338328);
+
+		if(angle>89){angle=89;}	//probably not needed
 	}
 	void add_eng(CONF_PARTICULE& particleInfos)
 	{
 		energy[angle]+=particleInfos.energie;
+
 	}
 };
 
