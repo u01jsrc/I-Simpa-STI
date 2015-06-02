@@ -322,6 +322,8 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 
 formatGABE::GABE_Object* ReportManager::GetAngleStats()
 {
+	angle_energy.calc_energy_density();
+	angle_energy.normalize_energy_density();
 	using namespace formatGABE;
 	GABE_Data_Float* statValues=new GABE_Data_Float(90);
 	statValues->headerData.numOfDigits=22;
