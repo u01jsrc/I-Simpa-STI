@@ -100,6 +100,7 @@ public:
 		angle=(int)(acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/M_PI);
 		
 		if(angle>89){angle=89;}	//probably not needed
+		else if(angle<0){angle=0;}	//probably not needed
 	}
 	void add_eng(CONF_PARTICULE& particleInfos)
 	{
