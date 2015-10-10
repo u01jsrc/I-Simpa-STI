@@ -38,7 +38,6 @@
 t_Recepteur_P::t_Recepteur_P(uentier _nbfreq,	uentier _nbtimestep)
 	:nbfreq(_nbfreq),nbtimestep(_nbtimestep)
 {
-
 	bruit_spectre=new t_Bruit_Freq[nbfreq];
 	energy_sum=new l_decimal*[nbfreq];
 	memset(energy_sum,0,sizeof(l_decimal*)*nbfreq);

@@ -4,6 +4,7 @@
 #include <input_output/particles/part_binary.h>
 #include <data_manager/core_configuration.h>
 #include <list>
+#include <iostream>
 
 /**
  * @file reportmanager.h
@@ -29,6 +30,7 @@ struct t_sppsThreadParam
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosSqrtPhi;	/*!< Tableau de récepteur ponctuel */
 	std::vector<formatGABE::GABE_Data_Float*> GabeIntensity[3];			/*!< Vecteur d'intensité en X,Y,Z \f$frac{W_{n}.Isec.\frac{\overrightarrow{Dir}}{\Vert\overrightarrow{Dir}\Vert}}{V}\f$ */
 	std::vector<formatGABE::GABE_Data_Float*> GabeSlPerSrc;				/*!< Niveau sonore par source */
+	std::vector<formatGABE::GABE_Data_Float*> GabeAngleInc[2];
 	std::vector<l_decimal*> SrcContrib;									/*!< For each receiver, If timeStepInSourceOutput is true, contains the source contrib by time step */
 	void clearMem()
 	{
@@ -41,6 +43,9 @@ struct t_sppsThreadParam
 		for(short dim=0;dim<3;dim++)
 			for(uentier idrecp=0;idrecp<GabeSumEnergyCosSqrtPhi.size();idrecp++)
 				delete GabeIntensity[dim][idrecp];
+		for(short dim=0;dim<2;dim++)
+			for(uentier idrecp=0;idrecp<GabeSumEnergyCosSqrtPhi.size();idrecp++)
+				delete GabeAngleInc[dim][idrecp];
 		for(uentier idrecp=0;idrecp<SrcContrib.size();idrecp++) 
 			delete[] SrcContrib[idrecp];
 	}
@@ -49,8 +54,8 @@ typedef dvec3 veci_t;
 class t_rp_lef
 {
 public:
-	t_rp_lef(){Lf=NULL;Lfc=NULL;intensity=NULL;SrcContrib=NULL;}
-	~t_rp_lef(){delete[] Lf;delete[] Lfc;delete[] intensity;delete[] SrcContrib;}
+	t_rp_lef(){Lf=NULL;Lfc=NULL;intensity=NULL;SrcContrib=NULL;theta=NULL;phi=NULL;en=NULL;}
+	~t_rp_lef(){delete[] Lf;delete[] Lfc;delete[] intensity;delete[] SrcContrib;delete[] phi;delete[] theta;delete[] en;}
 	void Init(const uentier& nbTimeStep,const uentier& nbsources, const bool& sourceLvlByTimeStep)
 	{
 		int sourceContribCols;
@@ -61,16 +66,25 @@ public:
 		}
 		Lf=new l_decimal[nbTimeStep];
 		Lfc=new l_decimal[nbTimeStep];
+		phi=new l_decimal[nbTimeStep];
+		theta=new l_decimal[nbTimeStep];
+		en=new l_decimal[nbTimeStep];
 		intensity=new veci_t[nbTimeStep];
 		SrcContrib=new l_decimal[sourceContribCols];
 		memset(Lf,0,nbTimeStep*sizeof(l_decimal));
 		memset(Lfc,0,nbTimeStep*sizeof(l_decimal));
 		memset(SrcContrib,0,sourceContribCols*sizeof(l_decimal));
+		memset(theta,0,nbTimeStep*sizeof(l_decimal));
+		memset(phi,0,nbTimeStep*sizeof(l_decimal));
+		memset(en,0,nbTimeStep*sizeof(l_decimal));
 	}
 	l_decimal* Lf;
 	l_decimal* Lfc;
 	l_decimal* SrcContrib;
 	veci_t* intensity;
+	l_decimal* theta;
+	l_decimal* phi;
+	l_decimal* en;
 };
 
 class t_angle_energy
@@ -90,10 +104,13 @@ public:
 	{
 		vec3 normal=face.normal;
 		vec3 dir=particleInfos.direction;
-		normal.normalize();
-		dir.normalize();
 
-		angle=(int)(acos(normal.dot(dir))*180.0/3.14159265358979323846264338328);
+		//std::cout<<"nx"<<normal.x<<" ny"<<normal.y<<" nz"<<normal.z<<std::endl;
+		//std::cout<<"dx"<<dir.x<<" dy"<<dir.y<<" dz"<<dir.z<<std::endl;
+		//std::cout<<"dl "<<dir.length()<<" nl "<<normal.length()<<std::endl;
+		//std::cout<<acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/3.14159265358979323846264338328<<std::endl;
+
+		angle=(int)(acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/M_PI);
 
 		if(angle>89){angle=89;}	//probably not needed
 	}
@@ -251,6 +268,11 @@ public:
 	 * Sauvegarde le tableau contenants les données servant aux calcul des paramètres acoustiques avancées tels que la tenue acoustique G ou la fraction d'énergie latérale précoce LF et LFC
 	 */
 	static void SaveRecpAcousticParamsAdvance(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+	/**
+	 * Save of angle of incidence for receiver
+	 */
+	static void SaveIncidenceAngle(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+
 	/**
 	 * Sauvegarde le tableau contenants les données de vecteurs d'intensité
 	 */

@@ -197,6 +197,24 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 
 						lst_rp_lef[currentRecp->idrp].Lf[particleInfos.pasCourant]+=energy*pow(cosphi,2);
 						lst_rp_lef[currentRecp->idrp].Lfc[particleInfos.pasCourant]+=energy*fabs(cosphi);
+						
+						double phi=(atan2(-particleInfos.direction.y,-particleInfos.direction.x)-currentRecp->orientation_sph.z)*180/M_PI;
+						double theta=(asin(particleInfos.direction.z/particleInfos.direction.length())-currentRecp->orientation_sph.y)*180/M_PI;
+
+						if(phi>180){
+							phi=-(360-phi);
+						}else if(phi<-180){
+							phi=360+phi;
+						}
+
+						if(theta>90){
+							phi=(180-phi);
+						}else if(theta<-90){
+							phi=-180-phi;
+						}
+						lst_rp_lef[currentRecp->idrp].theta[particleInfos.pasCourant]+=theta*energy;
+						lst_rp_lef[currentRecp->idrp].phi[particleInfos.pasCourant]+=phi*energy;
+						lst_rp_lef[currentRecp->idrp].en[particleInfos.pasCourant]+=energy;
 
 						vec3 particleIntensity((particleInfos.direction/particleInfos.direction.length())*energy);
 						lst_rp_lef[currentRecp->idrp].intensity[particleInfos.pasCourant]+=veci_t(particleIntensity.x,particleIntensity.y,particleIntensity.z);
@@ -339,6 +357,7 @@ void ReportManager::FillWithLefData(t_sppsThreadParam& data)
 	//Pour chaque récepteur ponctuel rempli les données récoltés au cours de la propagation
 	data.GabeSumEnergyCosPhi.reserve(lst_rp_lef.size());
 	data.GabeSumEnergyCosSqrtPhi.reserve(lst_rp_lef.size());
+
 	for(uentier idrecp=0;idrecp<lst_rp_lef.size();idrecp++)
 	{
 		float volRp=(pow(*this->paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP),3)*M_PI*4.)/3.;
@@ -346,16 +365,27 @@ void ReportManager::FillWithLefData(t_sppsThreadParam& data)
 		t_Recepteur_P* currentConfigRp=paramReport.configManager->recepteur_p_List[idrecp];
 		GABE_Data_Float* energyCosSqrtPhi=new GABE_Data_Float(paramReport.nbTimeStep);
 		GABE_Data_Float* energyCosPhi=new GABE_Data_Float(paramReport.nbTimeStep);
+		GABE_Data_Float* GabeIncidence[2];
 		GABE_Data_Float* GabeIntensity[3];
 		GABE_Data_Float* energyBySrc=new GABE_Data_Float(paramReport.configManager->srcList.size());
+		for(short dim=0;dim<2;dim++)
+		{
+			GabeIncidence[dim]=new GABE_Data_Float(paramReport.nbTimeStep);
+		}
+
 		for(short dim=0;dim<3;dim++)
 		{
 			GabeIntensity[dim]=new GABE_Data_Float(paramReport.nbTimeStep+1); //+1 pour le cumul
 		}
+
 		CoreString lblcol=(CoreString::FromInt(paramReport.freqValue));
 		GabeIntensity[0]->SetLabel((lblcol+" Hz\nx").c_str());
 		GabeIntensity[1]->SetLabel((lblcol+" Hz\ny").c_str());
 		GabeIntensity[2]->SetLabel((lblcol+" Hz\nz").c_str());
+
+		GabeIncidence[0]->SetLabel((lblcol+" theta").c_str());
+		GabeIncidence[1]->SetLabel((lblcol+" phi").c_str());
+
 		energyBySrc->SetLabel((lblcol+" Hz").c_str());
 
 		dvec3 cumulIntensity;
@@ -363,6 +393,10 @@ void ReportManager::FillWithLefData(t_sppsThreadParam& data)
 		{
 			energyCosSqrtPhi->Set(idstep,currentRp->Lfc[idstep]*currentConfigRp->cdt_vol);
 			energyCosPhi->Set(idstep,currentRp->Lf[idstep]*currentConfigRp->cdt_vol);
+
+			GabeIncidence[0]->Set(idstep,currentRp->theta[idstep]/currentRp->en[idstep]);
+			GabeIncidence[1]->Set(idstep,currentRp->phi[idstep]/currentRp->en[idstep]);
+
 			GabeIntensity[0]->Set(idstep,currentRp->intensity[idstep].x/volRp);
 			GabeIntensity[1]->Set(idstep,currentRp->intensity[idstep].y/volRp);
 			GabeIntensity[2]->Set(idstep,currentRp->intensity[idstep].z/volRp);
@@ -387,10 +421,15 @@ void ReportManager::FillWithLefData(t_sppsThreadParam& data)
 		}
 		data.GabeSumEnergyCosPhi.push_back(energyCosPhi);
 		data.GabeSumEnergyCosSqrtPhi.push_back(energyCosSqrtPhi);
+
+		data.GabeAngleInc[0].push_back(GabeIncidence[0]);
+		data.GabeAngleInc[1].push_back(GabeIncidence[1]);		
+
 		data.GabeIntensity[0].push_back(GabeIntensity[0]);
 		data.GabeIntensity[1].push_back(GabeIntensity[1]);
 		data.GabeIntensity[2].push_back(GabeIntensity[2]);
 		data.GabeSlPerSrc.push_back(energyBySrc);
+
 		if(this->timeStepInSourceOutput) {
 			l_decimal* srcContribCopy = new l_decimal[nbSource*paramReport.nbTimeStep];
 			memcpy(srcContribCopy, currentRp->SrcContrib, sizeof(l_decimal) * nbSource * paramReport.nbTimeStep); 
@@ -664,6 +703,8 @@ void ReportManager::SaveSoundLevelBySource(const CoreString& filename,std::vecto
 		}
 	}
 }
+
+
 void ReportManager::SaveRecpIntensity(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
 {
 	using namespace formatGABE;
@@ -878,6 +919,64 @@ void ReportManager::SaveRecpAcousticParamsAdvance(const CoreString& filename,std
 				idfreqcol++;
 			}
 		}
+		recepteurPonctData.Save((currentRP->pathRp+filename).c_str());
+	}
+}
+
+
+void ReportManager::SaveIncidenceAngle(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
+{
+	using namespace formatGABE;
+
+	// Dans le format GABE on doit préciser le nombre de colonnes à la construction
+	// et le nombre de colonne correspond au nombre de bande de fréquence*3+1
+	//
+	uentier nbfreqUsed=0;
+	uentier nbfreqMax=params.configManager->freqList.size();
+	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
+	{
+		if(cols[idfreq].GabeColData)
+			nbfreqUsed++;
+	}
+
+	////////////////////////////////////////////
+	// Série Libellé des pas de temps
+	////////////////////////////////////////////
+	GABE_Data_ShortString collbl(params.nbTimeStep); //+1 pour le cumul
+	GABE_Data_ShortString* statdBLbl=&collbl;
+	for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+		statdBLbl->SetString(idstep,(CoreString::FromFloat((float)(params.timeStep*(idstep+1)*1000))+" ms").c_str());
+
+	statdBLbl->SetLabel("Intensity + Angle of Incidence");
+
+	for(uentier idrecp=0;idrecp<params.configManager->recepteur_p_List.size();idrecp++)
+	{
+		t_Recepteur_P* currentRP=params.configManager->recepteur_p_List[idrecp];
+		GABE recepteurPonctData(nbfreqUsed*3+1);
+
+		recepteurPonctData.SetCol(0,collbl);
+
+		int idcol=1;
+		for(std::size_t idfreq=0;idfreq<params.configManager->freqList.size();idfreq++)
+		{
+			if(params.configManager->freqList[idfreq]->doCalculation)
+			{
+				GABE_Data_Float* e_col=new GABE_Data_Float(params.nbTimeStep);
+				e_col->SetLabel("SPL");
+				for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+				{
+					e_col->Set(idstep,10*log10((currentRP->energy_sum[idfreq][idstep]*currentRP->cdt_vol)*p_0));
+				}
+
+				recepteurPonctData.SetCol(idcol,*(e_col));
+				idcol++;
+				recepteurPonctData.SetCol(idcol,*(cols[idfreq].GabeAngleInc[0][idrecp])); //theta
+				idcol++;
+				recepteurPonctData.SetCol(idcol,*(cols[idfreq].GabeAngleInc[1][idrecp])); //phi
+				idcol++;
+			}
+		}
+		recepteurPonctData.LockData();
 		recepteurPonctData.Save((currentRP->pathRp+filename).c_str());
 	}
 }

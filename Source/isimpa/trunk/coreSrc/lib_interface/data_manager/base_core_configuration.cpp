@@ -224,7 +224,9 @@ bool Base_Core_Configuration::LoadCfgFile( CXml& fichierXml  )
 				(*nvRecepteurp).lblRp=(*iterateurNoeuds)->GetProperty("lbl");
 				(*nvRecepteurp).idrp=recepteur_p_List.size();
 				vec3 uvwRecp((*iterateurNoeuds)->GetProperty("u").ToFloat(),(*iterateurNoeuds)->GetProperty("v").ToFloat(),(*iterateurNoeuds)->GetProperty("w").ToFloat());
+				vec3 rtpRecp(1,asin(uvwRecp.z/uvwRecp.length()),atan2(uvwRecp.y,uvwRecp.x));
 				(*nvRecepteurp).orientation=(uvwRecp/uvwRecp.length());
+				(*nvRecepteurp).orientation_sph=rtpRecp;
 				(*iterateurNoeuds)->OrderChildsByProperty("freq");
 				uentier idfrq=0;
 				for (std::vector<CXmlNode*>::iterator iterateurFreqNoeuds = (*iterateurNoeuds)->GetFirstChild(); iterateurFreqNoeuds != (*iterateurNoeuds)->GetLastChild(); iterateurFreqNoeuds++)

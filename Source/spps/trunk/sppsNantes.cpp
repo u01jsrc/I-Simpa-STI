@@ -363,6 +363,10 @@ int MainProcess(int argc, char* argv[])
 	ReportManager::SaveRecpIntensity("Punctual receiver intensity.gabe",threadsData,reportParameter);
 	cout<<"End of save of Ponctual Receiver intensity."<<endl;
 
+	cout<<"Saving Ponctual Incidence Angle..."<<endl;
+	ReportManager::SaveIncidenceAngle("Punctual receiver incidence.gabe",threadsData,reportParameter);
+	cout<<"End of save of Ponctual Incidence Angle."<<endl;
+
 	cout<<"Saving sound level for each Ponctual Receiver per source..."<<endl;
 	ReportManager::SaveSoundLevelBySource("Sound level per source.recp",threadsData,reportParameter);
 	cout<<"End of save sound level for each Ponctual Receiver per source."<<endl;

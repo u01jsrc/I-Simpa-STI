@@ -65,6 +65,7 @@ namespace uictrl
 		IDEVENT_CONVERT_VOL_TO_FITTING,/*!< \~english built-in event \~french Converti le volume en encombrement scène */
 		IDEVENT_NEW_RECEPTEUR_S_COUPE,/*!< \~english Add a cutting plan receiver event \~french Ajouter une récepteur en coupe */
 		IDEVENT_BFREQ_PRESELECTION_ALL,/*!< \~english built-in event \~french Séléction automatique des bandes de fréquences */
+		IDEVENT_RECEPTEURS_COMPUTE_STI,
 		IDEVENT_LAST_FIXED,
 
 	};

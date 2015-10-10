@@ -947,7 +947,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
 				Optimization="0"
-				AdditionalIncludeDirectories="coreSrc\lib_interface;&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\contrib\include&quot;;&quot;$(WXWIN)\lib\vc_lib\mswud&quot;;.;&quot;$(BOOST)&quot;;&quot;$(PYTHON)\include&quot;"
+				AdditionalIncludeDirectories="coreSrc\lib_interface;&quot;$(WXWIN)\include&quot;;&quot;$(WXWIN)\contrib\include&quot;;&quot;$(WXWIN)\lib\vc_lib\mswud&quot;;.;&quot;$(BOOST)&quot;;c:\Python26\include"
 				PreprocessorDefinitions="USE_PYTHON;WIN32;_DEBUG;__WXMSW__;__WXDEBUG__;_UNICODE;UNICODE;_WINDOWS;NOPCH"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -981,7 +981,7 @@
 				Version="0.1"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_lib&quot;;&quot;$(PYTHON)\libs&quot;;&quot;$(BOOST)\lib&quot;;&quot;$(PYTHON)&quot;"
+				AdditionalLibraryDirectories="c:\python26\libs;&quot;$(WXWIN)\lib\vc_lib&quot;;&quot;$(BOOST)\lib&quot;"
 				IgnoreDefaultLibraryNames="MSVCRT.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=""
@@ -3535,6 +3535,10 @@
 				</File>
 				<File
 					RelativePath=".\manager\modelRetriever.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\nc_curves.cpp"
 					>
 				</File>
 				<File

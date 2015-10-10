@@ -419,6 +419,7 @@ public:
 	vec3 orientation; /*!< Orientation du récepteur ponctuel,vecteur normalisé */
 	l_decimal** energy_sum; /*!< Tableau (par bande de fréquence) de pointeurs vers le 1er élément d'un tableau (par pas de temps) contenant la puissance recue */
 	t_Bruit_Freq* bruit_spectre; /*!< Spectre du bruit du récepteur ponctuel */
+	vec3 orientation_sph;
 	t_Recepteur_P( uentier _nbfreq,	uentier _nbtimestep);
 	~t_Recepteur_P();
 	void InitFreq(uentier idfreq);
