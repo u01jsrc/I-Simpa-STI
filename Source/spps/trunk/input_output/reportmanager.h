@@ -5,6 +5,7 @@
 #include <data_manager/core_configuration.h>
 #include <list>
 #include <iostream>
+#include <numeric>
 
 /**
  * @file reportmanager.h
@@ -89,15 +90,19 @@ public:
 
 class t_angle_energy
 {
+private:
+	double t,y;
 public:
 	int angle;
 	std::vector<double> energy;
+	std::vector<double> correction;
 	t_angle_energy(){}
 	void fill_empty_data()
 	{	
 		for(int j = 0; j < 90; j++)
 		{
 			energy.push_back(0);
+			correction.push_back(0);
 		}		
 	}
 	void calc_angle(CONF_PARTICULE& particleInfos, t_cFace face)
@@ -105,19 +110,29 @@ public:
 		vec3 normal=face.normal;
 		vec3 dir=particleInfos.direction;
 
-		//std::cout<<"nx"<<normal.x<<" ny"<<normal.y<<" nz"<<normal.z<<std::endl;
-		//std::cout<<"dx"<<dir.x<<" dy"<<dir.y<<" dz"<<dir.z<<std::endl;
-		//std::cout<<"dl "<<dir.length()<<" nl "<<normal.length()<<std::endl;
-		//std::cout<<acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/3.14159265358979323846264338328<<std::endl;
-
 		angle=(int)(acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/M_PI);
-
+		
 		if(angle>89){angle=89;}	//probably not needed
+		else if(angle<0){angle=0;}	//probably not needed
 	}
 	void add_eng(CONF_PARTICULE& particleInfos)
 	{
-		energy[angle]+=particleInfos.energie;
-
+		y=particleInfos.energie-correction[angle];
+		t=energy[angle]+y;
+		correction[angle]=(t-energy[angle])-y;
+		energy[angle]=t;
+		//energy[angle]+=particleInfos.energie;
+	}
+	void calc_energy_density(){
+		for(int i=0;i<90;i++){
+			energy[i]=energy[i]/(-2*M_PI*(cos((i+1)*M_PI/180)-cos((i)*M_PI/180)));
+		}
+	}
+	void normalize_energy_density(){
+		double sum=accumulate(energy.begin(),energy.end(),0.0);
+		for(int i=0;i<90;i++){
+			energy[i]=energy[i]*90/sum;
+		}
 	}
 };
 
