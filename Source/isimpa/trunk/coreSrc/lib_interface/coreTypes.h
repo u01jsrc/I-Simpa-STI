@@ -345,6 +345,7 @@ struct t_Encombrement
  */
 struct t_cFace
 {
+	entier angle_group;
 	bool Rec_angle;							/*!< Sets if energy in funciton of angle is recorded for this face */
 	ivec3 sommets;							/*!< Indice des sommets */
 	vec3 normal;							/*!< Vecteur de normal */

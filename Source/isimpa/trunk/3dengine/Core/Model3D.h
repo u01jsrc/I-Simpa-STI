@@ -121,6 +121,7 @@ struct SFace3D
 	bool internalFace;
 	short idMaterial;		/*!< Identifiant du matériau d'origine du modèle */
 	bool Rec_angle;		/*!< Sets if energy in funciton of angle is recorded for this face */
+	int angle_group;		/*!< Sets number of angle results group */
 };
 
 /**

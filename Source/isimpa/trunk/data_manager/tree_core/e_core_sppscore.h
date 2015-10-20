@@ -102,6 +102,12 @@ protected:
 	void InitDiffusion_when_reached(Element* confCore) {
 		confCore->AppendPropertyBool("specular_when_order_reached",wxTRANSLATE("Specular when order reached"),false,true);
 	}
+	void InitNormalizeAngleStats(Element* confCore) {
+		confCore->AppendPropertyBool("normalize_angle_stats",wxTRANSLATE("Normalize angle stats"),true,true);
+	}
+	void InitExtendedAngleCalc(Element* confCore) {
+		confCore->AppendPropertyBool("extended_angle_stats",wxTRANSLATE("Calculate extended angle stats"),false,true);
+	}
 public:
 
 	E_Core_Spps( Element* parent, wxXmlNode* noeudCourant)
@@ -133,6 +139,12 @@ public:
 			if(!confCore->IsPropertyExist("specular_when_order_reached")) {
 				InitDiffusion_when_reached(confCore);
 			}
+			if(!confCore->IsPropertyExist("normalize_angle_stats")) {
+				InitNormalizeAngleStats(confCore);
+			}
+			if(!confCore->IsPropertyExist("extended_angle_stats")) {
+				InitExtendedAngleCalc(confCore);
+			}
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
@@ -156,6 +168,7 @@ public:
 		InitRandomSeed(confCore);
 		InitDiffusion_order(confCore);
 		InitDiffusion_when_reached(confCore);
+		InitExtendedAngleCalc(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
 		std::vector<int> computationMethodsIndex;

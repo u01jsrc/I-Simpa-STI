@@ -122,7 +122,8 @@ public:
 		int idMaterial;				/*!< Indice du materiau */
 		int idRecepteurSurfacique;	/*!< Indice du récepteur surfacique */
 		int idEncombrement;			/*!< Indice de l'encombrement */
-		t_PropFace(){idMaterial=0;idRecepteurSurfacique=-1;idEncombrement=-1;Rec_angle=false;};
+		int angle_group;			/*!< Sets group of results for angle calculation */
+		t_PropFace(){idMaterial=0;idRecepteurSurfacique=-1;idEncombrement=-1;Rec_angle=false;angle_group=0;};
 	};
 private:
 	struct tab_HashElement

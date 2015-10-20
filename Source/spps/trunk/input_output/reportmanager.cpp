@@ -73,7 +73,6 @@ ReportManager::ReportManager(t_ParamReport& _paramReport)
 	{
 		lst_rp_lef[idrp].Init(_paramReport.nbTimeStep,nbSource, timeStepInSourceOutput);
 	}
-	angle_energy.fill_empty_data();
 
 	particleFile=NULL;
 	particleCSVFile=NULL;
@@ -198,6 +197,7 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 						lst_rp_lef[currentRecp->idrp].Lf[particleInfos.pasCourant]+=energy*pow(cosphi,2);
 						lst_rp_lef[currentRecp->idrp].Lfc[particleInfos.pasCourant]+=energy*fabs(cosphi);
 						
+						//Calc incidence angle for auralization data
 						double phi=(atan2(-particleInfos.direction.y,-particleInfos.direction.x)-currentRecp->orientation_sph.z)*180/M_PI;
 						double theta=(asin(particleInfos.direction.z/particleInfos.direction.length())-currentRecp->orientation_sph.y)*180/M_PI;
 
@@ -262,8 +262,14 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 
 	if(face->face_scene!=NULL && face->face_scene->Rec_angle==true)
 	{	
-		this->angle_energy.calc_angle(particleInfos,*face->face_scene);
-		this->angle_energy.add_eng(particleInfos);
+		if(this->angle_energy.size() < face->face_scene->angle_group){
+			int tmp=angle_energy.size();
+			this->angle_energy.resize(face->face_scene->angle_group);
+			for(int i=tmp;i<face->face_scene->angle_group;i++)
+				this->angle_energy[i].fill_empty_data(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::IPROP_EXTENDED_ANGLE_STATS)));
+		}	
+		this->angle_energy[face->face_scene->angle_group-1].calc_angle(particleInfos,*face->face_scene);
+		this->angle_energy[face->face_scene->angle_group-1].add_eng(particleInfos);
 	}
 
 	if(face->recepteurS)
@@ -338,18 +344,35 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 	return statValues;
 }
 
-formatGABE::GABE_Object* ReportManager::GetAngleStats()
+bool ReportManager::GetAngleStats(t_sppsThreadParam& data, bool NormalizeAngleStats)
 {
-	angle_energy.calc_energy_density();
-	angle_energy.normalize_energy_density();
-	using namespace formatGABE;
-	GABE_Data_Float* statValues=new GABE_Data_Float(90);
-	statValues->headerData.numOfDigits=22;
-	statValues->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz").c_str());
-	for(int i=0;i<90;i++){
-		statValues->Set(i,angle_energy.energy[i]);
+	if(angle_energy.size()==0){
+		data.AngleGroupNum=0;
+		return 1;
 	}
-	return statValues;
+
+	else{
+		using namespace formatGABE;
+		GABE_Data_Float** statValues=new GABE_Data_Float*[angle_energy.size()];
+
+		for(short i=0;i<angle_energy.size();i++){
+			angle_energy[i].calc_energy_density();
+			if(NormalizeAngleStats){
+				angle_energy[i].normalize_energy_density();
+			}
+
+			statValues[i]=new GABE_Data_Float(angle_energy[i].energy.size());
+			statValues[i]->headerData.numOfDigits=22;
+			statValues[i]->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz, group "+CoreString::FromInt(i+1)).c_str());
+
+			for(int j=0;j<angle_energy[i].energy.size();j++){
+				statValues[i]->Set(j,angle_energy[i].energy[j]);
+			}
+		}
+		data.GabeAngleData=statValues;
+		data.AngleGroupNum=angle_energy.size();
+	}
+	return 0;
 }
 
 	
@@ -488,27 +511,48 @@ void ReportManager::NewParticule(CONF_PARTICULE& particleInfos)
 	}
 }
 
-void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
+void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params, bool extended)
 {
 	/////////////////////////////////////
 	// 1: Sauvegarde des statistiques des états finaux des particules
 	using namespace formatGABE;
+	int size;
+	if(!extended){
+		size=90;
+	}else{
+		size=90*360;
+	}
 
-	GABE_Data_Integer* statLbl=new GABE_Data_Integer(90);
+	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(size);
 	statLbl->SetLabel("Angle");
-	for(int i=0; i<90; i++)
-	{
-		statLbl->Set(i,i+1);
+
+	if(!extended){
+		for(int i=0; i<90; i++)
+		{
+			statLbl->SetString(i,(CoreString::FromInt(i+1)).c_str());
+		}
+	}else{
+		int licz=0;
+		for(int phi=-180; phi<180; phi++){
+			for(int theta=0; theta<90; theta++){
+				statLbl->SetString(licz,("phi="+CoreString::FromInt(phi+1)+", theta="+CoreString::FromInt(theta+1)).c_str());
+				licz++;
+			}
+		}
 	}
 
 	uentier nbfreqUsed=0;
+	uentier nbgroupsUsed=0;
 	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
 	{
-		if(cols[idfreq].GabeAngleData)
+		if(cols[idfreq].GabeAngleData){
 			nbfreqUsed++;
+			nbgroupsUsed=cols[idfreq].AngleGroupNum;
+		}
 	}
 
-	GABE exportTab(nbfreqUsed+1);
+
+	GABE exportTab(nbfreqUsed*nbgroupsUsed+1);
 	exportTab.LockData();
 	exportTab.SetCol(0,statLbl);
 
@@ -516,15 +560,19 @@ void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& 
 
 	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
 	{
-		if(cols[idfreq].GabeAngleData)
+		for(int id_gr=0;id_gr<nbgroupsUsed;id_gr++)
 		{
-			exportTab.SetCol(currentIndex,cols[idfreq].GabeAngleData);
-			currentIndex++;
+			if(cols[idfreq].GabeAngleData)
+			{
+				exportTab.SetCol(currentIndex,cols[idfreq].GabeAngleData[id_gr]);
+				currentIndex++;
+			}
 		}
 	}
 
-	exportTab.Save(filename.c_str());
-
+	if(nbgroupsUsed!=0){
+		exportTab.Save(filename.c_str());
+	}
 }
 
 

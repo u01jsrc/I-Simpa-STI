@@ -208,7 +208,7 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 			ReportManager::SauveRecepteursSurfaciquesCoupe(reportParameter._recepteur_surf_cut_Path,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP),true,false,threadData->freqInfos->freqIndex);
 		outputTool.SaveAndCloseParticleFile();				//Finalisation du fichier de particule
 		threadData->GabeColData=outputTool.GetColStats();	//Recupere les données des etats de particules
-		threadData->GabeAngleData=outputTool.GetAngleStats();
+		outputTool.GetAngleStats(*threadData,reportParameter.NormalizeAngleStats);
 		threadData->GabeSumEnergyFreq=outputTool.GetSumEnergy();//Recupere les données du niveau sonore global
 		outputTool.FillWithLefData(*threadData); //Recupere les données du lef (utilisé pour le calcul du LF et LFC)
 		cout<<"End of calculation at "<<threadData->freqInfos->freqValue<<" Hz."<<endl;
@@ -296,6 +296,7 @@ int MainProcess(int argc, char* argv[])
 	reportParameter.configManager=&configManager;
 	reportParameter.sceneModel=&sceneMesh;
 	reportParameter.working_Path=workingDir;
+	reportParameter.NormalizeAngleStats=*configManager.FastGetConfigValue(Core_Configuration::IPROP_NORMALIZE_ANGLE_STATS);
 
 	//Création du dossier contenant les recepteurs surfaciques
 	if(configManager.recepteur_s_List.size()>0 || configManager.recepteur_scut_List.size()>0 )
@@ -353,7 +354,10 @@ int MainProcess(int argc, char* argv[])
 	reportCompilation(configManager,workingDir);
 
 	ReportManager::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
-	ReportManager::SaveAngleStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_ANGLE_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
+	
+	cout<<"Saving Angle of incidence statistics..."<<endl;
+	ReportManager::SaveAngleStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_ANGLE_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter,*configManager.FastGetConfigValue(Core_Configuration::IPROP_EXTENDED_ANGLE_STATS));
+	cout<<"End of save of Angle of incidence statistics."<<endl;
 
 	cout<<"Saving Ponctual Receiver Advanced Parameters..."<<endl;
 	ReportManager::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_Configuration::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH),threadsData,reportParameter);

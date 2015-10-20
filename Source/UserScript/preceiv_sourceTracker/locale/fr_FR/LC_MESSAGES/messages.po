@@ -1,36 +1,32 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: module_sppsreport\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-22 15:58+0100\n"
+"Report-Msgid-Bugs-To: 2014-07-24 14:15\n"
+"POT-Creation-Date: 2014-07-30 12:32+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Picaut <i-simpa.ifsttar.fr>\n"
-"Language-Team: \n"
+"Language-Team: Nicolas Fortin, Judicaël Picaut <i-simpa@ifsttar.fr>\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-Basepath: .\n"
-"Language: fr_FR\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
-#: ../../../__ui_startup__.py:97
+#: ../../../__init__.py:139
 msgid "Source name"
 msgstr "Nom de la source"
 
-#: ../../../__ui_startup__.py:98
+#: ../../../__init__.py:140
 msgid "Source selection"
 msgstr "Sélection d'une source"
 
-#: ../../../__ui_startup__.py:98
+#: ../../../__init__.py:140 ../../../__init__.py:166 ../../../__init__.py:172
 msgid "Please choose the source:"
-msgstr "Veuillez choisir la source :"
+msgstr "Veuillez choisir la source:"
 
-#: ../../../__ui_startup__.py:110
-msgid "Link to the source position"
-msgstr "Lier à la position d'une source"
-
-#: ../../../__ui_startup__.py:113
+#: ../../../__init__.py:169
 msgid "Delete the link with the source"
 msgstr "Supprimer le lien à la position d'une source"

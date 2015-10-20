@@ -423,6 +423,7 @@ bool initMesh(t_Mesh &sceneMesh,CoreString workingDir,CoreString sceneMeshPath,B
 		sceneMesh.pfaces[idface].idRecepteurS=modelEntree.faces[idface].idRs;
 		sceneMesh.pfaces[idface].idencombrement=modelEntree.faces[idface].idEn;
 		sceneMesh.pfaces[idface].Rec_angle=modelEntree.faces[idface].Rec_angle;
+		sceneMesh.pfaces[idface].angle_group=modelEntree.faces[idface].angle_group;
 		sceneMesh.pfaces[idface].normal=FaceNormal(sceneMesh.pvertices[sceneMesh.pfaces[idface].sommets.a],sceneMesh.pvertices[sceneMesh.pfaces[idface].sommets.b],sceneMesh.pvertices[sceneMesh.pfaces[idface].sommets.c]);
 		///////////////////////////////////////////////
 		// Association matériau, face

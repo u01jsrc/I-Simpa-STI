@@ -22,10 +22,11 @@
 
 struct t_sppsThreadParam
 {
-	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;GabeAngleData=NULL;}
+	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;GabeAngleData=NULL;AngleGroupNum=0;}
 	t_FreqUsage* freqInfos;
+	int AngleGroupNum;
 	formatGABE::GABE_Object* GabeColData;
-	formatGABE::GABE_Object* GabeAngleData;
+	formatGABE::GABE_Data_Float** GabeAngleData;
 	formatGABE::GABE_Data_Float* GabeSumEnergyFreq;
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosPhi;		/*!< Tableau de récepteur ponctuel */
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosSqrtPhi;	/*!< Tableau de récepteur ponctuel */
@@ -94,26 +95,63 @@ private:
 	double t,y;
 public:
 	int angle;
+	bool extended;
 	std::vector<double> energy;
 	std::vector<double> correction;
 	t_angle_energy(){}
-	void fill_empty_data()
+	void fill_empty_data(bool mode)
 	{	
-		for(int j = 0; j < 90; j++)
-		{
-			energy.push_back(0);
-			correction.push_back(0);
-		}		
-	}
+		extended=mode;
+		if(!extended){
+			for(int j = 0; j < 90; j++)
+			{
+				energy.push_back(0);
+				correction.push_back(0);
+			}
+		}else{
+			for(int j = 0; j < 90*360; j++)
+			{
+				energy.push_back(0);
+				correction.push_back(0);
+			}
+		}
+	}	
 	void calc_angle(CONF_PARTICULE& particleInfos, t_cFace face)
 	{
-		vec3 normal=face.normal;
-		vec3 dir=particleInfos.direction;
+		if(!extended){
+			vec3 normal=face.normal;
+			vec3 dir=particleInfos.direction;
 
-		angle=(int)(acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/M_PI);
+			angle=(int)(acos(normal.dot(dir)/(dir.length()*normal.length()))*180.0/M_PI);
 		
-		if(angle>89){angle=89;}	//probably not needed
-		else if(angle<0){angle=0;}	//probably not needed
+			if(angle>89){angle=89;}	//probably not needed
+			else if(angle<0){angle=0;}	//probably not needed
+		}else{
+			vec3 normal=face.normal;
+			vec3 dir=particleInfos.direction;
+			
+			int phi=(atan2(dir.y,dir.x)-atan2(normal.y,normal.x))*180/M_PI;
+			int theta=(asin(dir.z/dir.length())-asin(normal.z/normal.length()))*180/M_PI;
+
+			//std::cout<<phi<<std::endl;
+			//std::cout<<theta<<std::endl;
+
+			if(phi>180){
+				phi=-(360-phi);
+			}else if(phi<-180){
+				phi=360+phi;
+			}
+
+			if(theta>90){
+				theta=(180-theta);
+			}else if(theta<0){
+				theta=0;
+			}
+
+			if(phi>179){theta=179;}	//probably not needed
+			if(theta>89){theta=89;}	//probably not needed
+			angle=90*(phi+180)+theta;
+		}
 	}
 	void add_eng(CONF_PARTICULE& particleInfos)
 	{
@@ -124,14 +162,22 @@ public:
 		//energy[angle]+=particleInfos.energie;
 	}
 	void calc_energy_density(){
-		for(int i=0;i<90;i++){
-			energy[i]=energy[i]/(-2*M_PI*(cos((i+1)*M_PI/180)-cos((i)*M_PI/180)));
+		if(!extended){
+			for(int i=0;i<90;i++){
+				energy[i]=energy[i]/(-2*M_PI*(cos((i+1)*M_PI/180)-cos((i)*M_PI/180)));
+			}
+		}else{
+			//....
 		}
 	}
 	void normalize_energy_density(){
 		double sum=accumulate(energy.begin(),energy.end(),0.0);
-		for(int i=0;i<90;i++){
-			energy[i]=energy[i]*90/sum;
+		if(!extended){
+			for(int i=0;i<90;i++){
+				energy[i]=energy[i]*90/sum;
+			}
+		}else{
+			//....
 		}
 	}
 };
@@ -164,8 +210,9 @@ public:
 		t_TetraMesh* tetraModel;
 		t_Mesh* sceneModel;
 		Core_Configuration* configManager;
+		bool NormalizeAngleStats;
 	};
-	t_angle_energy angle_energy;	//zmiana!!!
+	std::vector <t_angle_energy> angle_energy;	//zmiana!!!
 private:
 	struct t_collision_history
 	{
@@ -246,7 +293,7 @@ public:
 
 	formatGABE::GABE_Object* GetColStats();
 
-	formatGABE::GABE_Object* GetAngleStats();
+	bool GetAngleStats(t_sppsThreadParam& data, bool NormalizeAngleStats);
 
 
 	void FillWithLefData(t_sppsThreadParam& data);
@@ -277,7 +324,7 @@ public:
 	/**
 	 * Save information about angle energy relation
 	 */
-	static void SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+	static void SaveAngleStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params, bool extended);
 	
 	/**
 	 * Sauvegarde le tableau contenants les données servant aux calcul des paramètres acoustiques avancées tels que la tenue acoustique G ou la fraction d'énergie latérale précoce LF et LFC

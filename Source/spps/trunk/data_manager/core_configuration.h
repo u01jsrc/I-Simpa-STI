@@ -54,7 +54,9 @@ public:
 		IPROP_DO_CALC_TRANSMISSION,
 		I_PROP_SURFACE_RECEIVER_MODE,				/*!< 0: Mode intensité avec pondération selon l'angle 2: Mode SPL */
 		I_PROP_OUTPUT_RECEIVER_BY_SOURCE,			/*! 0 Output soundprec.recp, 1 output soudprec.recp by source */
-		I_PROP_RANDOM_SEED							/*! Random SEED */
+		I_PROP_RANDOM_SEED,						/*! Random SEED */
+		IPROP_NORMALIZE_ANGLE_STATS,
+		IPROP_EXTENDED_ANGLE_STATS
 	};
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML

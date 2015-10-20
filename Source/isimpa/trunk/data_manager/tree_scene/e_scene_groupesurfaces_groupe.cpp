@@ -37,6 +37,7 @@
 #include "data_manager/grpInfo/data_group_info.h"
 #include "data_manager/e_data_tree.h"
 #include "data_manager/e_data_bool.h"
+#include "data_manager/e_data_entier.h"
 #include <wx/progdlg.h>
 #include "last_cpp_include.hpp"
 
@@ -233,6 +234,13 @@ void E_Scene_Groupesurfaces_Groupe::InitProp()
 				_("Record angle");
 			}
 
+			if(!this->IsPropertyExist("angle_group"))
+			{
+				this->AppendPropertyEntier("angle_group","Angle group",1,true,false,true,0,1);
+				_("Angle group");
+				this->SetReadOnlyConfig("angle_group");
+			}
+
 			ignoreModification=false;
 		}
 	}
@@ -254,6 +262,7 @@ void E_Scene_Groupesurfaces_Groupe::PushFace(std::vector<std::vector<Application
 	{
 		vectorToFeed[faceIndex.group][faceIndex.face].idMaterial=this->GetEntierConfig("idmat");
 		vectorToFeed[faceIndex.group][faceIndex.face].Rec_angle=this->GetBoolConfig("Rec_angle");
+		vectorToFeed[faceIndex.group][faceIndex.face].angle_group=this->GetEntierConfig("angle_group");
 	}
 	else
 	{
@@ -700,6 +709,16 @@ void E_Scene_Groupesurfaces_Groupe::Modified(Element* eModif)
 			if(ElementBool)
 			{
 				this->UpdateBoolConfig("Rec_angle",ElementBool->GetValue());
+				this->SetReadOnlyConfig("angle_group",!ElementBool->GetValue());
+			}
+		}
+
+		if(elInfo.typeElement==ELEMENT_TYPE_INTEGER && elInfo.libelleElement=="angle_group")
+		{	
+			E_Data_Entier* ElementEntier=dynamic_cast<E_Data_Entier*>(eModif);
+			if(ElementEntier)
+			{
+				this->UpdateEntierConfig("angle_group",ElementEntier->GetValue());
 			}
 		}
 	}

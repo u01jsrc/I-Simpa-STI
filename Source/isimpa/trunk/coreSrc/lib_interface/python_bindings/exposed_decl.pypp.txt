@@ -3217,6 +3217,7 @@
 ~@variable_t@_Fpz@::std::_Fpz
 ~@variable_t@_Lo@::std::ios_base::_Iosarray::_Lo
 ~@variable_t@lc_time_curr@::threadlocaleinfostruct::lc_time_curr
++@variable_t@angle_group@::formatCoreBIN::ioFace::angle_group
 ~@variable_t@_ZTISt14overflow_error@::_ZTISt14overflow_error
 ~@variable_t@wCodePage@::tagLC_ID::wCodePage
 ~@variable_t@_environ@::_environ

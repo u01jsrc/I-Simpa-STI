@@ -387,6 +387,7 @@ void CObjet3D::LoadPolyWithoutLostCurrentModelGroupAndMaterials(const char *file
 			nouvFace.FaceNormals=FaceNormal(this->_pVertices[sommetsTri.a],this->_pVertices[sommetsTri.b],this->_pVertices[sommetsTri.c]);
 			nouvFace.idMaterial=this->_pGroups[corrFace.g].pFaces[corrFace.f].idMaterial;
 			nouvFace.Rec_angle=this->_pGroups[corrFace.g].pFaces[corrFace.f].Rec_angle;
+			nouvFace.angle_group=this->_pGroups[corrFace.g].pFaces[corrFace.f].angle_group;
 			//Todo, corriger les coordonnées de textures
 			nouvFace.TexCoords=this->_pGroups[corrFace.g].pFaces[corrFace.f].TexCoords;
 

@@ -79,9 +79,10 @@ public:
  */
 struct ioFace {
 	int operator==(const ioFace &_f) {
-		return a==_f.a && b==_f.b && c==_f.c && idMat==_f.idMat && idRs==_f.idRs && idEn==_f.idEn && Rec_angle==_f.Rec_angle;
+		return a==_f.a && b==_f.b && c==_f.c && idMat==_f.idMat && idRs==_f.idRs && idEn==_f.idEn && Rec_angle==_f.Rec_angle && angle_group==_f.angle_group;
 	}
 	bool Rec_angle; /*!< Sets if energy in funciton of angle is recorded for this face */
+	int angle_group; /*!< Sets if energy in funciton of angle is recorded for this face */
 	indiceV a;/*!<  Indice du sommet */
 	indiceV b;/*!<  Indice du sommet */
 	indiceV c; /*!<  Indice du sommet */
