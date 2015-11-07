@@ -6,7 +6,10 @@
 #include <list>
 #include <iostream>
 #include <numeric>
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
 
+using namespace Eigen;
 /**
  * @file reportmanager.h
  * @brief Implémentation du gestionnaire de fichiers de rapports
@@ -127,29 +130,47 @@ public:
 			if(angle>89){angle=89;}	//probably not needed
 			else if(angle<0){angle=0;}	//probably not needed
 		}else{
-			vec3 normal=face.normal;
-			vec3 dir=particleInfos.direction;
+			Vector3f normal(face.normal.x,face.normal.y,face.normal.z);
+			Vector3f dir(particleInfos.direction.x,particleInfos.direction.y,particleInfos.direction.z);
+			Vector3f target(0,0,1);
+			Vector3f cross,res;
+			Matrix3f I,R,v;
+			I.setIdentity(3,3);
+
+			dir=dir/dir.norm();
+			normal=normal/normal.norm();
+			cross=normal.cross(target);
 			
-			int phi=(atan2(dir.y,dir.x)-atan2(normal.y,normal.x))*180/M_PI;
-			int theta=(asin(dir.z/dir.length())-asin(normal.z/normal.length()))*180/M_PI;
+			if(cross.norm()>0.00000001){
+				v<<0,-cross(2), cross(1),
+					cross(2), 0 ,-cross(0),
+					-cross(1), cross(0),0;
 
-			//std::cout<<phi<<std::endl;
-			//std::cout<<theta<<std::endl;
 
-			if(phi>180){
-				phi=-(360-phi);
-			}else if(phi<-180){
-				phi=360+phi;
+				R=I+v+v*v*(1-normal.dot(target))/cross.norm();
+				dir=R*dir;
+			}else{
+				dir*=-1;
 			}
+			
+			//std::cout << "normal = " << normal << std::endl;
+			//std::cout << "dir = " << dir << std::endl;
+			//std::cout << "target = " << target << std::endl;
+			//std::cout << "I = " << I << std::endl;
+			//std::cout << "cross = " << cross << std::endl;
+			//std::cout << "v = " << v << std::endl;
+			//std::cout << "R = " << R << std::endl;
+			//std::cout << "dir = " << dir << std::endl;
 
-			if(theta>90){
-				theta=(180-theta);
-			}else if(theta<0){
-				theta=0;
-			}
+			int phi=atan2(dir(1),dir(0))*180/M_PI;
+			int theta=acos(dir(2)/dir.norm())*180/M_PI;
 
-			if(phi>179){theta=179;}	//probably not needed
-			if(theta>89){theta=89;}	//probably not needed
+			//std::cout << "theta = " << theta << std::endl;
+			//std::cout << "phi = " << phi << std::endl;
+
+			if(phi>179)
+				phi=179;
+
 			angle=90*(phi+180)+theta;
 		}
 	}
@@ -167,7 +188,11 @@ public:
 				energy[i]=energy[i]/(-2*M_PI*(cos((i+1)*M_PI/180)-cos((i)*M_PI/180)));
 			}
 		}else{
-			//....
+			for(int j=0;j<360;j++){
+				for(int i=0;i<90;i++){
+					energy[j*90+i]=energy[j*90+i]/(-2*M_PI/360*(cos((i+1)*M_PI/180)-cos((i)*M_PI/180)));
+				}
+			}
 		}
 	}
 	void normalize_energy_density(){
@@ -177,7 +202,9 @@ public:
 				energy[i]=energy[i]*90/sum;
 			}
 		}else{
-			//....
+			for(int i=0;i<90*360;i++){
+				energy[i]=energy[i]*90*360/sum;
+			}
 		}
 	}
 };

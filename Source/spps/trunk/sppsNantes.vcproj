@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="..\..\isimpa\trunk\coreSrc\lib_interface;&quot;$(BOOST)&quot;;."
+				AdditionalIncludeDirectories="&quot;D:\Wojtek\I-SIMPA_sources\I-Simpa\Source\spps\trunk\&quot;;..\..\isimpa\trunk\coreSrc\lib_interface;&quot;$(BOOST)&quot;;."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="true"
