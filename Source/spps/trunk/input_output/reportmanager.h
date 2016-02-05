@@ -363,6 +363,11 @@ public:
 	static void SaveIncidenceAngle(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
 
 	/**
+	 * Export Echogram as CSV
+	 */
+	static void ExportAsCSV(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
+
+	/**
 	 * Sauvegarde le tableau contenants les données de vecteurs d'intensité
 	 */
 	static void SaveRecpIntensity(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);

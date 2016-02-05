@@ -342,21 +342,21 @@
 ~@destructor_t@~_String_val@ ( ::std::_String_val<wchar_t, std::allocator<wchar_t> >::* )(  )  ( ::std::_String_val<wchar_t, std::allocator<wchar_t> >::* )(  ) 
 ~@destructor_t@~_String_val@ ( ::std::_String_val<char, std::allocator<char> >::* )(  )  ( ::std::_String_val<char, std::allocator<char> >::* )(  ) 
 ~@enumeration_t@_Dummy_enum@::std::_Iosb< int >::_Dummy_enum
-~@enumeration_t@_Seekdir@::std::_Iosb< int >::_Seekdir
-~@enumeration_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/xutility', 2557)@::std::_Is_checked_iterator_helper< std::_Range_checked_iterator_tag >
+~@enumeration_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/xlocale', 680)@::std::codecvt_base
+~@enumeration_t@('D:/programy/MS Visual Cpp 2008/VC/include/xstring', 2067)@::std::wstring
+~@enumeration_t@('D:/programy/MS Visual Cpp 2008/VC/include/xstring', 2067)@::std::string
 ~@enumeration_t@_Openmode@::std::_Iosb< int >::_Openmode
-~@enumeration_t@_Iostate@::std::_Iosb< int >::_Iostate
-~@enumeration_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/xlocale', 680)@::std::codecvt_base
-~@enumeration_t@('D:/programy/MS Visual Studio 2008/VC/include/xstring', 2061)@::std::wstring
-~@enumeration_t@('D:/programy/MS Visual Studio 2008/VC/include/xstring', 2061)@::std::string
 ~@enumeration_t@_Uninitialized@::std::_Uninitialized
-~@enumeration_t@('D:/programy/MS Visual Studio 2008/VC/include/xstring', 2067)@::std::wstring
-~@enumeration_t@('D:/programy/MS Visual Studio 2008/VC/include/xstring', 2067)@::std::string
 +@enumeration_t@GABE_OBJECTTYPE@::formatGABE::GABE_OBJECTTYPE
+~@enumeration_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/xutility', 2557)@::std::_Is_checked_iterator_helper< std::_Range_checked_iterator_tag >
+~@enumeration_t@('D:/programy/MS Visual Cpp 2008/VC/include/xstring', 2061)@::std::wstring
+~@enumeration_t@('D:/programy/MS Visual Cpp 2008/VC/include/xstring', 2061)@::std::string
+~@enumeration_t@('D:/programy/MS Visual Cpp 2008/VC/include/xiosbase', 109)@::std::_Iosb< int >
+~@enumeration_t@_Seekdir@::std::_Iosb< int >::_Seekdir
 +@enumeration_t@NODE_TYPE@::formatCoreBIN::CformatBIN::NODE_TYPE
-~@enumeration_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/xlocale', 1355)@::std::ctype_base
+~@enumeration_t@_Iostate@::std::_Iosb< int >::_Iostate
+~@enumeration_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/xlocale', 1355)@::std::ctype_base
 ~@enumeration_t@_Fmtflags@::std::_Iosb< int >::_Fmtflags
-~@enumeration_t@('D:/programy/MS Visual Studio 2008/VC/include/xiosbase', 109)@::std::_Iosb< int >
 ~@enumeration_t@event@::std::ios_base::event
 ~@member_function_t@global@::std::locale (*)( ::std::locale const & )::std::locale (*)( ::std::locale const & )
 ~@member_function_t@sgetn@::std::streamsize ( ::std::basic_streambuf<wchar_t, std::char_traits<wchar_t> >::* )( wchar_t *,::std::streamsize ) ::std::streamsize ( ::std::basic_streambuf<wchar_t, std::char_traits<wchar_t> >::* )( wchar_t *,::std::streamsize ) 
@@ -2841,6 +2841,7 @@
 ~@class_declaration_t@reverse_iterator< std::_String_const_iterator< char, std::char_traits< char >, std::allocator< char > > >@::std::reverse_iterator< std::_String_const_iterator< char, std::char_traits< char >, std::allocator< char > > >
 ~@class_declaration_t@reverse_iterator< std::_Vector_iterator< formatMBIN::t_binNode, std::allocator< formatMBIN::t_binNode > > >@::std::reverse_iterator< std::_Vector_iterator< formatMBIN::t_binNode, std::allocator< formatMBIN::t_binNode > > >
 ~@class_declaration_t@ostreambuf_iterator< wchar_t, std::char_traits< wchar_t > >@::std::ostreambuf_iterator< wchar_t, std::char_traits< wchar_t > >
+~@class_declaration_t@_Enable_if< ! std::_Is_checked_iterator<_OutIt>::_Result, bool >@::std::_Enable_if< ! std::_Is_checked_iterator<_OutIt>::_Result, bool >
 ~@class_declaration_t@basic_ostringstream< char, std::char_traits< char >, std::allocator< char > >@::std::basic_ostringstream< char, std::char_traits< char >, std::allocator< char > >
 ~@class_declaration_t@basic_stringstream< char, std::char_traits< char >, std::allocator< char > >@::std::basic_stringstream< char, std::char_traits< char >, std::allocator< char > >
 ~@class_declaration_t@_Node@::std::_List_nod< volumes_splitter::VolumesSplitter::vol_t, std::allocator< volumes_splitter::VolumesSplitter::vol_t > >::_Node
@@ -2849,6 +2850,7 @@
 ~@class_declaration_t@_Vector_iterator< std::basic_string< char, std::char_traits< char >, std::allocator< char > >, std::allocator< std::basic_string< char, std::char_traits< char >, std::allocator< char > > > >@::std::_Vector_iterator< std::basic_string< char, std::char_traits< char >, std::allocator< char > >, std::allocator< std::basic_string< char, std::char_traits< char >, std::allocator< char > > > >
 ~@class_declaration_t@reverse_iterator< std::_Vector_const_iterator< formatCoreBIN::t_pos, std::allocator< formatCoreBIN::t_pos > > >@::std::reverse_iterator< std::_Vector_const_iterator< formatCoreBIN::t_pos, std::allocator< formatCoreBIN::t_pos > > >
 ~@class_declaration_t@ctype< short unsigned int >@::std::ctype< short unsigned int >
+~@class_declaration_t@_Enable_if< ! std::_Is_checked_iterator<_Iter>::_Result, void >@::std::_Enable_if< ! std::_Is_checked_iterator<_Iter>::_Result, void >
 ~@class_declaration_t@_Vector_const_iterator< formatMBIN::bintetrahedre, std::allocator< formatMBIN::bintetrahedre > >@::std::_Vector_const_iterator< formatMBIN::bintetrahedre, std::allocator< formatMBIN::bintetrahedre > >
 ~@class_declaration_t@num_get< wchar_t, std::istreambuf_iterator< wchar_t, std::char_traits< wchar_t > > >@::std::num_get< wchar_t, std::istreambuf_iterator< wchar_t, std::char_traits< wchar_t > > >
 ~@class_declaration_t@ostreambuf_iterator< char, std::char_traits< char > >@::std::ostreambuf_iterator< char, std::char_traits< char > >
@@ -2865,6 +2867,7 @@
 ~@class_declaration_t@num_put< short unsigned int, std::ostreambuf_iterator< short unsigned int, std::char_traits< short unsigned int > > >@::std::num_put< short unsigned int, std::ostreambuf_iterator< short unsigned int, std::char_traits< short unsigned int > > >
 ~@class_declaration_t@_Vector_const_iterator< int, std::allocator< int > >@::std::_Vector_const_iterator< int, std::allocator< int > >
 +@class_declaration_t@Octree44@::octreeTool::Octree44
+~@class_declaration_t@_EXCEPTION_POINTERS@::_EXCEPTION_POINTERS
 ~@class_declaration_t@reverse_iterator< std::_Vector_iterator< std::basic_string< char, std::char_traits< char >, std::allocator< char > >, std::allocator< std::basic_string< char, std::char_traits< char >, std::allocator< char > > > > >@::std::reverse_iterator< std::_Vector_iterator< std::basic_string< char, std::char_traits< char >, std::allocator< char > >, std::allocator< std::basic_string< char, std::char_traits< char >, std::allocator< char > > > > >
 ~@class_declaration_t@_CrtMemBlockHeader@::_CrtMemBlockHeader
 ~@class_declaration_t@basic_stringbuf< wchar_t, std::char_traits< wchar_t >, std::allocator< wchar_t > >@::std::basic_stringbuf< wchar_t, std::char_traits< wchar_t >, std::allocator< wchar_t > >
@@ -2894,7 +2897,7 @@
 +@class_declaration_t@SelfData_t@::surf_merge::SurfaceMerging::SelfData_t
 ~@class_declaration_t@reverse_iterator< std::_Vector_iterator< formatCoreBIN::ioFace, std::allocator< formatCoreBIN::ioFace > > >@::std::reverse_iterator< std::_Vector_iterator< formatCoreBIN::ioFace, std::allocator< formatCoreBIN::ioFace > > >
 ~@class_declaration_t@list< formatRSBIN::t_curve >@::std::list< formatRSBIN::t_curve >
-~@class_declaration_t@_EXCEPTION_POINTERS@::_EXCEPTION_POINTERS
+~@class_declaration_t@_If< (std::_Is_swap_move<typename std::_Move_operation_category<_Ty1>::_Move_cat>::_Value || std::_Is_swap_move<typename std::_Move_operation_category<_Ty2>::_Move_cat>::_Value), std::_Swap_move_tag, std::_Undefined_move_tag >@::std::_If< (std::_Is_swap_move<typename std::_Move_operation_category<_Ty1>::_Move_cat>::_Value || std::_Is_swap_move<typename std::_Move_operation_category<_Ty2>::_Move_cat>::_Value), std::_Swap_move_tag, std::_Undefined_move_tag >
 ~@class_declaration_t@_Vector_iterator< formatMBIN::bintetrahedre, std::allocator< formatMBIN::bintetrahedre > >@::std::_Vector_iterator< formatMBIN::bintetrahedre, std::allocator< formatMBIN::bintetrahedre > >
 ~@class_declaration_t@allocator< bool >@::std::allocator< bool >
 ~@class_declaration_t@reverse_iterator< std::_Vector_iterator< volumes_splitter::VolumesSplitter::facemodel_t, std::allocator< volumes_splitter::VolumesSplitter::facemodel_t > > >@::std::reverse_iterator< std::_Vector_iterator< volumes_splitter::VolumesSplitter::facemodel_t, std::allocator< volumes_splitter::VolumesSplitter::facemodel_t > > >
@@ -3080,6 +3083,10 @@
 ~@variable_t@_Gcount@::std::basic_streambuf< unsigned short, std::char_traits< unsigned short > >::_Gcount
 ~@variable_t@_LNan@::_LNan
 ~@variable_t@lconv_mon_refcount@::threadlocaleinfostruct::lconv_mon_refcount
+~@variable_t@('D:/programy/MS Visual Cpp 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
+~@variable_t@('D:/programy/MS Visual Cpp 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
+~@variable_t@('D:/programy/MS Visual Cpp 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
+~@variable_t@('D:/programy/MS Visual Cpp 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
 ~@variable_t@_Value@::std::_Is_swap_move< std::_Swap_move_tag >::_Value
 +@variable_t@fileInfoLength@::particleio::ParticuleIO::fileInfo_t::fileInfoLength
 +@variable_t@particleFile@::particleio::ParticuleIO::particleFile
@@ -3130,10 +3137,6 @@
 ~@variable_t@_Facetvec@::std::locale::_Locimp::_Facetvec
 +@variable_t@particleInfoLength@::particleio::ParticuleIO::fileInfo_t::particleInfoLength
 +@variable_t@neighboor@::formatMBIN::bintetraface::neighboor
-~@variable_t@('D:/programy/MS Visual Studio 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
-~@variable_t@('D:/programy/MS Visual Studio 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
-~@variable_t@('D:/programy/MS Visual Studio 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
-~@variable_t@('D:/programy/MS Visual Studio 2008/VC/include/ostream', 42)@::__vmi_class_type_info_pseudo1
 ~@variable_t@size@::_wfinddata32i64_t::size
 ~@variable_t@size@::_wfinddata64i32_t::size
 ~@variable_t@size@::_wfinddata32_t::size
@@ -3551,6 +3554,7 @@
 ~@class_t@rebind< formatCoreBIN::t_pos >@::std::allocator< formatCoreBIN::t_pos >::rebind< formatCoreBIN::t_pos >
 ~@class_t@t_HeaderFloat@::formatGABE::t_HeaderFloat
 ~@class_t@_iobuf@::_iobuf
+~@class_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@::threadlocaleinfostruct
 ~@class_t@allocator< formatMBIN::t_binNode >@::std::allocator< formatMBIN::t_binNode >
 ~@class_t@rebind< std::_List_nod<unsigned int, std::allocator<unsigned int> >::_Node >@::std::allocator< unsigned int >::rebind< std::_List_nod<unsigned int, std::allocator<unsigned int> >::_Node >
 +@class_t@vector< formatCoreBIN::ioFace >@::std::vector< formatCoreBIN::ioFace >
@@ -3693,7 +3697,6 @@
 ~@class_t@_heapinfo@::_heapinfo
 ~@class_t@iterator_traits< unsigned char >@::std::iterator_traits< unsigned char >
 ~@class_t@_Real_type< std::complex< long double > >@::_Real_type< std::complex< long double > >
-~@class_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@::threadlocaleinfostruct
 ~@class_t@_Complex_base< float, _C_float_complex >@::std::_Complex_base< float, _C_float_complex >
 ~@class_t@_Ptr_cat_helper< float const*, float* >@::std::_Ptr_cat_helper< float const*, float* >
 ~@class_t@_Allocator_base< formatMBIN::bintetrahedre >@::std::_Allocator_base< formatMBIN::bintetrahedre >
@@ -3993,6 +3996,7 @@
 ~@constructor_t@_Ranit_base@ ( ::std::_Ranit_base<char, int, char const*, char const&, std::_Iterator_base_secure>::* )(  )  ( ::std::_Ranit_base<char, int, char const*, char const&, std::_Iterator_base_secure>::* )(  ) 
 ~@constructor_t@tm@ ( ::tm::* )( ::tm const & )  ( ::tm::* )( ::tm const & ) 
 ~@constructor_t@tm@ ( ::tm::* )(  )  ( ::tm::* )(  ) 
+~@constructor_t@ctype_base@ ( ::std::ctype_base::* )( ::std::ctype_base const & )  ( ::std::ctype_base::* )( ::std::ctype_base const & ) 
 ~@constructor_t@ctype_base@ ( ::std::ctype_base::* )( ::size_t )  ( ::std::ctype_base::* )( ::size_t ) 
 ~@constructor_t@tagLC_ID@ ( ::tagLC_ID::* )( ::tagLC_ID const & )  ( ::tagLC_ID::* )( ::tagLC_ID const & ) 
 ~@constructor_t@tagLC_ID@ ( ::tagLC_ID::* )(  )  ( ::tagLC_ID::* )(  ) 
@@ -4198,8 +4202,6 @@
 ~@constructor_t@_Container_base_aux_alloc_real@ ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< formatCoreBIN::ioFace > > const & )  ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> > const & ) 
 +@constructor_t@CCalculsGenerauxThermodynamique@ ( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique::* )( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique const & )  ( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique::* )( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique const & ) 
 +@constructor_t@CCalculsGenerauxThermodynamique@ ( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique::* )(  )  ( ::CalculsGenerauxThermodynamique::CCalculsGenerauxThermodynamique::* )(  ) 
-~@constructor_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@ ( ::threadlocaleinfostruct::* )( ::threadlocaleinfostruct const & )  ( ::threadlocaleinfostruct::* )( ::threadlocaleinfostruct const & ) 
-~@constructor_t@('C:/Program Files (x86)/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@ ( ::threadlocaleinfostruct::* )(  )  ( ::threadlocaleinfostruct::* )(  ) 
 ~@constructor_t@forward_iterator_tag@ ( ::std::forward_iterator_tag::* )( ::std::forward_iterator_tag const & )  ( ::std::forward_iterator_tag::* )( ::std::forward_iterator_tag const & ) 
 ~@constructor_t@forward_iterator_tag@ ( ::std::forward_iterator_tag::* )(  )  ( ::std::forward_iterator_tag::* )(  ) 
 ~@constructor_t@_Fnarray@ ( ::std::ios_base::_Fnarray::* )( ::std::ios_base::_Fnarray const & )  ( ::std::ios_base::_Fnarray::* )( ::std::ios_base::_Fnarray const & ) 
@@ -4255,6 +4257,7 @@
 ~@constructor_t@GABE_Data@ ( ::formatGABE::GABE_Data<float, formatGABE::t_HeaderFloat>::* )( ::formatGABE::GABE_Data< float, formatGABE::t_HeaderFloat > const & )  ( ::formatGABE::GABE_Data<float, formatGABE::t_HeaderFloat>::* )( ::formatGABE::GABE_Data<float, formatGABE::t_HeaderFloat> const & ) 
 ~@constructor_t@_Unchecked_iterator_tag@ ( ::std::_Unchecked_iterator_tag::* )( ::std::_Unchecked_iterator_tag const & )  ( ::std::_Unchecked_iterator_tag::* )( ::std::_Unchecked_iterator_tag const & ) 
 ~@constructor_t@_Unchecked_iterator_tag@ ( ::std::_Unchecked_iterator_tag::* )(  )  ( ::std::_Unchecked_iterator_tag::* )(  ) 
+~@constructor_t@codecvt@ ( ::std::codecvt<wchar_t, char, int>::* )( ::std::codecvt< wchar_t, char, int > const & )  ( ::std::codecvt<wchar_t, char, int>::* )( ::std::codecvt<wchar_t, char, int> const & ) 
 ~@constructor_t@codecvt@ ( ::std::codecvt<wchar_t, char, int>::* )( ::size_t )  ( ::std::codecvt<wchar_t, char, int>::* )( ::size_t ) 
 ~@constructor_t@codecvt@ ( ::std::codecvt<wchar_t, char, int>::* )( ::std::_Locinfo const &,::size_t )  ( ::std::codecvt<wchar_t, char, int>::* )( ::std::_Locinfo const &,::size_t ) 
 ~@constructor_t@_Swap_move_tag@ ( ::std::_Swap_move_tag::* )( ::std::_Swap_move_tag const & )  ( ::std::_Swap_move_tag::* )( ::std::_Swap_move_tag const & ) 
@@ -4346,6 +4349,7 @@
 ~@constructor_t@_wfinddata32_t@ ( ::_wfinddata32_t::* )(  )  ( ::_wfinddata32_t::* )(  ) 
 ~@constructor_t@ctype@ ( ::std::ctype<wchar_t>::* )( ::size_t )  ( ::std::ctype<wchar_t>::* )( ::size_t ) 
 ~@constructor_t@ctype@ ( ::std::ctype<wchar_t>::* )( ::std::_Locinfo const &,::size_t )  ( ::std::ctype<wchar_t>::* )( ::std::_Locinfo const &,::size_t ) 
+~@constructor_t@ctype@ ( ::std::ctype<char>::* )( ::std::ctype< char > const & )  ( ::std::ctype<char>::* )( ::std::ctype<char> const & ) 
 ~@constructor_t@ctype@ ( ::std::ctype<char>::* )( short int const *,bool,::size_t )  ( ::std::ctype<char>::* )( short int const *,bool,::size_t ) 
 ~@constructor_t@ctype@ ( ::std::ctype<char>::* )( ::std::_Locinfo const &,::size_t )  ( ::std::ctype<char>::* )( ::std::_Locinfo const &,::size_t ) 
 ~@constructor_t@failure@ ( ::std::ios_base::failure::* )( ::std::ios_base::failure const & )  ( ::std::ios_base::failure::* )( ::std::ios_base::failure const & ) 
@@ -4463,7 +4467,10 @@
 ~@constructor_t@basic_ostream@ ( ::std::basic_ostream<char,std::char_traits<char> >::* )( ::std::_Uninitialized,bool )  ( ::std::basic_ostream<char,std::char_traits<char> >::* )( ::std::_Uninitialized,bool ) 
 ~@constructor_t@basic_ostream@ ( ::std::basic_ostream<unsigned short, std::char_traits<unsigned short> >::* )( ::std::basic_streambuf< unsigned short, std::char_traits< unsigned short > > *,bool )  ( ::std::basic_ostream<unsigned short, std::char_traits<unsigned short> >::* )( ::std::basic_streambuf<unsigned short, std::char_traits<unsigned short> > *,bool ) 
 ~@constructor_t@basic_ostream@ ( ::std::basic_ostream<unsigned short, std::char_traits<unsigned short> >::* )( ::std::_Uninitialized,bool )  ( ::std::basic_ostream<unsigned short, std::char_traits<unsigned short> >::* )( ::std::_Uninitialized,bool ) 
+~@constructor_t@ctype_byname@ ( ::std::ctype_byname<char>::* )( ::std::ctype_byname< char > const & )  ( ::std::ctype_byname<char>::* )( ::std::ctype_byname<char> const & ) 
 ~@constructor_t@ctype_byname@ ( ::std::ctype_byname<char>::* )( char const *,::size_t )  ( ::std::ctype_byname<char>::* )( char const *,::size_t ) 
+~@constructor_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@ ( ::threadlocaleinfostruct::* )( ::threadlocaleinfostruct const & )  ( ::threadlocaleinfostruct::* )( ::threadlocaleinfostruct const & ) 
+~@constructor_t@('C:/Python26/Lib/site-packages/gccxml/share/gccxml-0.9/Vc9/Include/crtdefs.h', 2065)@ ( ::threadlocaleinfostruct::* )(  )  ( ::threadlocaleinfostruct::* )(  ) 
 ~@constructor_t@_Winit@ ( ::std::_Winit::* )( ::std::_Winit const & )  ( ::std::_Winit::* )( ::std::_Winit const & ) 
 ~@constructor_t@_Winit@ ( ::std::_Winit::* )(  )  ( ::std::_Winit::* )(  ) 
 ~@constructor_t@underflow_error@ ( ::std::underflow_error::* )( ::std::underflow_error const & )  ( ::std::underflow_error::* )( ::std::underflow_error const & ) 
@@ -4754,6 +4761,7 @@
 ~@member_operator_t@operator=@::std::ios_base::_Iosarray & ( ::std::ios_base::_Iosarray::* )( ::std::ios_base::_Iosarray const & ) ::std::ios_base::_Iosarray & ( ::std::ios_base::_Iosarray::* )( ::std::ios_base::_Iosarray const & ) 
 ~@member_operator_t@operator=@::std::ios_base::_Fnarray & ( ::std::ios_base::_Fnarray::* )( ::std::ios_base::_Fnarray const & ) ::std::ios_base::_Fnarray & ( ::std::ios_base::_Fnarray::* )( ::std::ios_base::_Fnarray const & ) 
 ~@member_operator_t@operator=@::std::_Int_iterator_tag & ( ::std::_Int_iterator_tag::* )( ::std::_Int_iterator_tag const & ) ::std::_Int_iterator_tag & ( ::std::_Int_iterator_tag::* )( ::std::_Int_iterator_tag const & ) 
+~@member_operator_t@operator=@::std::ctype< char > & ( ::std::ctype<char>::* )( ::std::ctype< char > const & ) ::std::ctype<char> & ( ::std::ctype<char>::* )( ::std::ctype<char> const & ) 
 ~@member_operator_t@operator=@::std::_Float_iterator_tag & ( ::std::_Float_iterator_tag::* )( ::std::_Float_iterator_tag const & ) ::std::_Float_iterator_tag & ( ::std::_Float_iterator_tag::* )( ::std::_Float_iterator_tag const & ) 
 ~@member_operator_t@operator=@::std::_Init_locks & ( ::std::_Init_locks::* )( ::std::_Init_locks const & ) ::std::_Init_locks & ( ::std::_Init_locks::* )( ::std::_Init_locks const & ) 
 ~@member_operator_t@operator=@::std::complex< double > & ( ::std::complex<double>::* )( ::std::complex< double > const & ) ::std::complex<double> & ( ::std::complex<double>::* )( ::std::complex<double> const & ) 
@@ -4880,6 +4888,7 @@
 ~@member_operator_t@operator=@::std::_Container_base_secure & ( ::std::_Container_base_secure::* )( ::std::_Container_base_secure const & ) ::std::_Container_base_secure & ( ::std::_Container_base_secure::* )( ::std::_Container_base_secure const & ) 
 ~@member_operator_t@operator=@::std::_String_val< wchar_t, std::allocator< wchar_t > > & ( ::std::_String_val<wchar_t, std::allocator<wchar_t> >::* )( ::std::_String_val< wchar_t, std::allocator< wchar_t > > const & ) ::std::_String_val<wchar_t, std::allocator<wchar_t> > & ( ::std::_String_val<wchar_t, std::allocator<wchar_t> >::* )( ::std::_String_val<wchar_t, std::allocator<wchar_t> > const & ) 
 ~@member_operator_t@operator=@::std::_String_val< char, std::allocator< char > > & ( ::std::_String_val<char, std::allocator<char> >::* )( ::std::_String_val< char, std::allocator< char > > const & ) ::std::_String_val<char, std::allocator<char> > & ( ::std::_String_val<char, std::allocator<char> >::* )( ::std::_String_val<char, std::allocator<char> > const & ) 
+~@member_operator_t@operator=@::std::ctype_base & ( ::std::ctype_base::* )( ::std::ctype_base const & ) ::std::ctype_base & ( ::std::ctype_base::* )( ::std::ctype_base const & ) 
 ~@member_operator_t@operator=@::std::_Timevec & ( ::std::_Timevec::* )( ::std::_Timevec const & ) ::std::_Timevec & ( ::std::_Timevec::* )( ::std::_Timevec const & ) 
 ~@member_operator_t@operator=@::std::_Container_base_aux_alloc_real< std::allocator< volumes_splitter::VolumesSplitter::facemodel_t > > & ( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::facemodel_t> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< volumes_splitter::VolumesSplitter::facemodel_t > > const & ) ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::facemodel_t> > & ( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::facemodel_t> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::facemodel_t> > const & ) 
 ~@member_operator_t@operator=@::std::_Container_base_aux_alloc_real< std::allocator< volumes_splitter::VolumesSplitter::vol_t > > & ( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::vol_t> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< volumes_splitter::VolumesSplitter::vol_t > > const & ) ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::vol_t> > & ( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::vol_t> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<volumes_splitter::VolumesSplitter::vol_t> > const & ) 
@@ -4891,6 +4900,7 @@
 ~@member_operator_t@operator=@::std::_Container_base_aux_alloc_real< std::allocator< formatMBIN::bintetrahedre > > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatMBIN::bintetrahedre> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< formatMBIN::bintetrahedre > > const & ) ::std::_Container_base_aux_alloc_real<std::allocator<formatMBIN::bintetrahedre> > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatMBIN::bintetrahedre> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<formatMBIN::bintetrahedre> > const & ) 
 ~@member_operator_t@operator=@::std::_Container_base_aux_alloc_real< std::allocator< formatCoreBIN::t_pos > > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::t_pos> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< formatCoreBIN::t_pos > > const & ) ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::t_pos> > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::t_pos> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::t_pos> > const & ) 
 ~@member_operator_t@operator=@::std::_Container_base_aux_alloc_real< std::allocator< formatCoreBIN::ioFace > > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> >::* )( ::std::_Container_base_aux_alloc_real< std::allocator< formatCoreBIN::ioFace > > const & ) ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> > & ( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> >::* )( ::std::_Container_base_aux_alloc_real<std::allocator<formatCoreBIN::ioFace> > const & ) 
+~@member_operator_t@operator=@::std::ctype_byname< char > & ( ::std::ctype_byname<char>::* )( ::std::ctype_byname< char > const & ) ::std::ctype_byname<char> & ( ::std::ctype_byname<char>::* )( ::std::ctype_byname<char> const & ) 
 ~@member_operator_t@operator=@::std::_Swap_move_tag & ( ::std::_Swap_move_tag::* )( ::std::_Swap_move_tag const & ) ::std::_Swap_move_tag & ( ::std::_Swap_move_tag::* )( ::std::_Swap_move_tag const & ) 
 ~@member_operator_t@operator=@::std::bad_alloc & ( ::std::bad_alloc::* )( ::std::bad_alloc const & ) ::std::bad_alloc & ( ::std::bad_alloc::* )( ::std::bad_alloc const & ) 
 ~@member_operator_t@operator=@::std::_Iter_random_helper3< std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag > & ( ::std::_Iter_random_helper3<std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag>::* )( ::std::_Iter_random_helper3< std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag > const & ) ::std::_Iter_random_helper3<std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag> & ( ::std::_Iter_random_helper3<std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag>::* )( ::std::_Iter_random_helper3<std::random_access_iterator_tag, std::random_access_iterator_tag, std::random_access_iterator_tag> const & ) 
@@ -4905,6 +4915,7 @@
 ~@member_operator_t@operator=@::std::invalid_argument & ( ::std::invalid_argument::* )( ::std::invalid_argument const & ) ::std::invalid_argument & ( ::std::invalid_argument::* )( ::std::invalid_argument const & ) 
 ~@member_operator_t@operator=@::std::_Aux_cont & ( ::std::_Aux_cont::* )( ::std::_Aux_cont const & ) ::std::_Aux_cont & ( ::std::_Aux_cont::* )( ::std::_Aux_cont const & ) 
 ~@member_operator_t@operator=@::std::iterator< std::output_iterator_tag, void, void, void, void > & ( ::std::iterator<std::output_iterator_tag, void, void, void, void>::* )( ::std::iterator< std::output_iterator_tag, void, void, void, void > const & ) ::std::iterator<std::output_iterator_tag, void, void, void, void> & ( ::std::iterator<std::output_iterator_tag, void, void, void, void>::* )( ::std::iterator<std::output_iterator_tag, void, void, void, void> const & ) 
+~@member_operator_t@operator=@::std::codecvt< wchar_t, char, int > & ( ::std::codecvt<wchar_t, char, int>::* )( ::std::codecvt< wchar_t, char, int > const & ) ::std::codecvt<wchar_t, char, int> & ( ::std::codecvt<wchar_t, char, int>::* )( ::std::codecvt<wchar_t, char, int> const & ) 
 ~@member_operator_t@operator=@::std::tr1::hash< std::basic_string< wchar_t, std::char_traits< wchar_t >, std::allocator< wchar_t > > > & ( ::std::tr1::hash<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >::* )( ::std::tr1::hash< std::basic_string< wchar_t, std::char_traits< wchar_t >, std::allocator< wchar_t > > > const & ) ::std::tr1::hash<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > > & ( ::std::tr1::hash<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >::* )( ::std::tr1::hash<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > > const & ) 
 ~@member_operator_t@operator=@::std::tr1::hash< std::string > & ( ::std::tr1::hash<std::string>::* )( ::std::tr1::hash< std::string > const & ) ::std::tr1::hash<std::string> & ( ::std::tr1::hash<std::string>::* )( ::std::tr1::hash<std::string> const & ) 
 ~@member_operator_t@operator=@::std::underflow_error & ( ::std::underflow_error::* )( ::std::underflow_error const & ) ::std::underflow_error & ( ::std::underflow_error::* )( ::std::underflow_error const & ) 

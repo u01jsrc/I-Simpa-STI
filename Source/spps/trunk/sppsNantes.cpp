@@ -355,6 +355,11 @@ int MainProcess(int argc, char* argv[])
 
 	ReportManager::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
 	
+	if(*configManager.FastGetConfigValue(Core_Configuration::IPROP_EXPORT_AS_CSV)){
+	cout<<"Exporting data as CSV"<<endl;
+	ReportManager::ExportAsCSV("Results.csv",threadsData,reportParameter);
+	}
+
 	cout<<"Saving Angle of incidence statistics..."<<endl;
 	ReportManager::SaveAngleStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_ANGLE_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter,*configManager.FastGetConfigValue(Core_Configuration::IPROP_EXTENDED_ANGLE_STATS));
 	cout<<"End of save of Angle of incidence statistics."<<endl;

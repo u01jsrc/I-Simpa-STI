@@ -1,6 +1,7 @@
 #include "reportmanager.h"
 #include "tools/collision.h"
 #include <iostream>
+#include <fstream>
 
 const l_decimal p_0=1/pow((float)(20*pow(10.f,(int)-6)),(int)2);
 
@@ -1028,5 +1029,56 @@ void ReportManager::SaveIncidenceAngle(const CoreString& filename,std::vector<t_
 		}
 		recepteurPonctData.LockData();
 		recepteurPonctData.Save((currentRP->pathRp+filename).c_str());
+	}
+}
+
+void ReportManager::ExportAsCSV(const CoreString& filename,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
+{
+	uentier nbfreqUsed=0;
+	uentier nbfreqMax=params.configManager->freqList.size();
+	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
+	{
+		if(cols[idfreq].GabeColData)
+			nbfreqUsed++;
+	}
+
+	for(uentier idrecp=0;idrecp<params.configManager->recepteur_p_List.size();idrecp++)
+	{
+		t_Recepteur_P* currentRP=params.configManager->recepteur_p_List[idrecp];
+
+		ofstream resultsCSVFile;
+
+		resultsCSVFile.open((currentRP->pathRp+filename).c_str());
+		resultsCSVFile<<"freq,";
+		for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+			resultsCSVFile<<(CoreString::FromFloat((float)(params.timeStep*(idstep+1)*1000))+" ms").c_str()<<",";
+		resultsCSVFile<<"\n";
+		for(std::size_t idfreq=0;idfreq<params.configManager->freqList.size();idfreq++)
+		{
+			if(params.configManager->freqList[idfreq]->doCalculation)
+			{	
+				resultsCSVFile<<params.configManager->freqList[idfreq]->freqValue<<"Hz,";
+				for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+				{
+					resultsCSVFile<<10*log10((currentRP->energy_sum[idfreq][idstep]*currentRP->cdt_vol)*p_0)<<",";
+				}
+				resultsCSVFile<<"\n";
+				resultsCSVFile<<params.configManager->freqList[idfreq]->freqValue<<"Hz theta,";
+				for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+				{
+					resultsCSVFile<<cols[idfreq].GabeAngleInc[0][idrecp]->GetValue(idstep)<<",";
+				}
+				resultsCSVFile<<"\n";
+				resultsCSVFile<<params.configManager->freqList[idfreq]->freqValue<<"Hz phi,";
+				for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
+				{
+					resultsCSVFile<<cols[idfreq].GabeAngleInc[1][idrecp]->GetValue(idstep)<<",";
+				}
+				resultsCSVFile<<"\n";
+			}
+		}
+
+		resultsCSVFile<<"\n";
+		resultsCSVFile.close();
 	}
 }

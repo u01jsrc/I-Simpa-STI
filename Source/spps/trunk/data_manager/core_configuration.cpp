@@ -74,6 +74,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(IPROP_SPECULAR_WHEN_REACHED,simuNode->GetProperty("specular_when_order_reached").ToInt());
 			SetConfigInformation(IPROP_NORMALIZE_ANGLE_STATS,simuNode->GetProperty("normalize_angle_stats").ToInt());
 			SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS,simuNode->GetProperty("extended_angle_stats").ToInt());
+			SetConfigInformation(IPROP_EXPORT_AS_CSV,simuNode->GetProperty("export_as_CSV").ToInt());
 		}
 	}
 }

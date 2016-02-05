@@ -28,3 +28,8 @@ images/
 vc_msw/
 vc_mswd/
 *.tlog
+currentRelease/core/sppsNantes/sppsNantes.zip
+Source/isimpa/trunk/Output-Build.txt
+Source/isimpa/trunk/coreSrc/VolumetricMeshRepair/Release/mt.dep
+Source/isimpa/trunk/coreSrc/VolumetricMeshRepair/Release/mt.dep
+Source/isimpa/trunk/coreSrc/lib_interface/python_bindings/Release/mt.dep

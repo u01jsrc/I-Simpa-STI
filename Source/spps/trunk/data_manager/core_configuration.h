@@ -56,7 +56,8 @@ public:
 		I_PROP_OUTPUT_RECEIVER_BY_SOURCE,			/*! 0 Output soundprec.recp, 1 output soudprec.recp by source */
 		I_PROP_RANDOM_SEED,						/*! Random SEED */
 		IPROP_NORMALIZE_ANGLE_STATS,
-		IPROP_EXTENDED_ANGLE_STATS
+		IPROP_EXTENDED_ANGLE_STATS,
+		IPROP_EXPORT_AS_CSV
 	};
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML

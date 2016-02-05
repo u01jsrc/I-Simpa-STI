@@ -108,6 +108,9 @@ protected:
 	void InitExtendedAngleCalc(Element* confCore) {
 		confCore->AppendPropertyBool("extended_angle_stats",wxTRANSLATE("Calculate extended angle stats"),false,true);
 	}
+	void InitExportAsCSV(Element* confCore) {
+		confCore->AppendPropertyBool("export_as_CSV",wxTRANSLATE("Export results as CSV"),false,true);
+	}
 public:
 
 	E_Core_Spps( Element* parent, wxXmlNode* noeudCourant)
@@ -145,6 +148,9 @@ public:
 			if(!confCore->IsPropertyExist("extended_angle_stats")) {
 				InitExtendedAngleCalc(confCore);
 			}
+			if(!confCore->IsPropertyExist("export_as_CSV")) {
+				InitExportAsCSV(confCore);
+			}
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
@@ -169,6 +175,7 @@ public:
 		InitDiffusion_order(confCore);
 		InitDiffusion_when_reached(confCore);
 		InitExtendedAngleCalc(confCore);
+		InitExportAsCSV(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
 		std::vector<int> computationMethodsIndex;
