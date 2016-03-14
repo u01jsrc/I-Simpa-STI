@@ -97,7 +97,7 @@ enum SUM_OPERATION
 
 wxFloat32 GetSumLimit(wxInt32 idBandeFreq,wxFloat32 fromTime,wxFloat32 toTime,const std::vector<wxFloat32>& timeTable,const std::vector<std::vector<wxFloat32> >& tab_wj, SUM_OPERATION operation=SUM_OPERATION_Y,wxInt32* counter=NULL)
 {
-	int index=0;
+	/*int index=0;
 	std::vector<wxFloat32> timeTable2;
 
 	for(int i=0;i<tab_wj[idBandeFreq].size();i++){
@@ -113,20 +113,20 @@ wxFloat32 GetSumLimit(wxInt32 idBandeFreq,wxFloat32 fromTime,wxFloat32 toTime,co
 	for(int i=index;i<timeTable.size();i++){
 		timeTable2.push_back(timeTable[i]-timeTable[index]);
 	}
-
+	*/
 	wxFloat32 sumJ=0;
 	wxFloat32 currentTime;
-	for(int idStep=0;idStep<timeTable2.size();idStep++)
+	for(int idStep=0;idStep<timeTable.size();idStep++)
 	{
-		currentTime=timeTable2[idStep];
+		currentTime=timeTable[idStep];
 		if(currentTime>=fromTime && (currentTime<=toTime || toTime==-1.f))
 		{
 			if(counter)
 				(*counter)++;
 			if(operation==SUM_OPERATION_Y)
-				sumJ+=tab_wj2[idStep];
+				sumJ += tab_wj[idBandeFreq][idStep];
 			else if(operation==SUM_OPERATION_XY)
-				sumJ+=(tab_wj2[idStep]*currentTime);
+				sumJ += (tab_wj[idBandeFreq][idStep] * currentTime);
 			else if(operation==SUM_OPERATION_X)
 				sumJ+=currentTime;
 			else if(operation==SUM_OPERATION_X2)
@@ -199,14 +199,14 @@ formatGABE::GABE_Data_Float* Compute_TR_Param(wxFloat32 fromdbL,wxFloat32 todbL,
 
 	//Pour chaque bande de fréquence
 	wxFloat32 sum=0.f; 
-	for(int idFreq=0;idFreq<tab_schroeder.size();idFreq++)
+	for (int idFreq = 0; idFreq < tab_schroeder.size(); idFreq++)
 	{
-		wxFloat32 debT=0;
-		wxFloat32 endT=0;
+		wxFloat32 debT = 0;
+		wxFloat32 endT = 0;
 		//Calcul des des temps en fonction de dbL
 
-		GetTimeRange(fromdbL,todbL,&debT,&endT,timeTable,tab_schroeder[idFreq]);
-
+		GetTimeRange(fromdbL, todbL, &debT, &endT, timeTable, tab_schroeder[idFreq]);
+	
 		LinearRegressionResult regRes=ComputeLinearRegression(idFreq,debT,endT,timeTable,tab_schroeder);
 		if(idFreq!=tab_schroeder.size()-1) //Ne pas moyenner sur la ligne de somme
 			sum+=(-60.f/regRes.a)/1000.f;
@@ -221,7 +221,6 @@ formatGABE::GABE_Data_Float* Compute_TR_Param(wxFloat32 fromdbL,wxFloat32 todbL,
 		newParameter->SetLabel(wxString::Format(_("RT-%g (s)"),todbL-5));
 		newParameter->headerData.numOfDigits=3;
 	}
-
 	return newParameter;
 }
 formatGABE::GABE_Data_Float* dB_Sum_Param(const std::vector<wxFloat32>& timeTable,const std::vector<std::vector<wxFloat32> >& tab_wj)
@@ -762,7 +761,7 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 	wxString TRdefault="15;30";
 	wxString NCdefault="25";
 
-	if(!pyeventmode)
+	if (!pyeventmode)
 	{
 		wxCustomEntryDialog parametersDialog(mainFrame,_("Please, gives calculation parameters. Use ';' to separate several parameters"),_("Acoustic parameters calculation"));
 		parametersDialog.AddTextControl(_("Clarity (ms)"),Cdefault);
@@ -779,6 +778,7 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 			Ddefault=valeursChamps[1];
 			TRdefault=valeursChamps[2];
 			NCdefault=valeursChamps[3];
+
 		}else{
 			do_computation=false;
 		}
@@ -827,7 +827,7 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 				wxString timeStepVal(dataLbl->GetStringEquiv(idstep));
 				timeTable[idstep]=Convertor::ToFloat(timeStepVal.Left(timeStepVal.find(" ")));
 			}
-
+			
 			/////////////////////////////////////
 			// Création du tableau tab_wj[idBandeFrequence][idstep]
 			// Création du tableau schroeder[idBandeFrequence][idstep]
@@ -859,20 +859,20 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 			rowLbls->SetString(nbBandeFreq+1,_("Average"));
 
 			MakeSchroederArray(tab_wj,tab_schroeder);
-
+			
 			//////////////////////////////////////////
 			// Création du tableau des paramètres acoustiques
 			std::vector<GABE_Data_Float*> tabParameters;
 
 			//////////////////////////////////////////
 			// Calcul du niveau sonore cumulé (db et dbA) sur les pas de temps
-
+			
 			tabParameters.push_back(dB_Sum_Param(timeTable,tab_wj));
 
 			tabParameters.push_back(dBa_Sum_Param(timeTable,freqTab,tab_wj));
 			//////////////////////////////////////////
 			// Calcul de la clarté C
-			for(int idParam=0;idParam<CParams.size();idParam++)
+			for (int idParam = 0; idParam < CParams.size(); idParam++)
 				tabParameters.push_back(Compute_C_Param(CParams[idParam],timeTable,tab_wj));
 			//////////////////////////////////////////
 			// Calcul de la définition D
@@ -882,29 +882,28 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 			// Calcul du temps central TS
 			tabParameters.push_back(Compute_TS_Param(timeTable,tab_wj));
 
-
+			
 			//////////////////////////////////////////
 			// Calcul du temps de réponse TR
 			for(int idParam=0;idParam<TRParams.size();idParam++)
 				tabParameters.push_back(Compute_TR_Param(5,TRParams[idParam]+5,timeTable,tab_wj,tab_schroeder));
-
-
+			
 			//////////////////////////////////////////
 			// Calcul de la durée de réverberation initiale EDT
 			tabParameters.push_back(Compute_TR_Param(0,10,timeTable,tab_wj,tab_schroeder));
-
+			
             /////////////////////////////////////////
             // Calcul paramètre ST
             /////////////////////////////////////////
             tabParameters.push_back(Compute_ST_Param(10,20,100,timeTable,tab_wj));
-
+			
 			/////////////////////////////////////////
             // Calcul paramètre STI
             /////////////////////////////////////////
-            for(int idParam=0;idParam<NCParams.size();idParam++)
+			for (int idParam = 0; idParam < NCParams.size(); idParam++)
 				tabParameters.push_back(Compute_STI_Param(false,NCParams[idParam],'M',timeTable,tab_wj,freqTab));
-
-
+				
+			
 			//////////////////////////////////////////
 			// Enregistrement des données des paramètres acoustique
 
