@@ -57,8 +57,8 @@ class t_pos
 {
 public :
 	float v[3];
-	t_pos(float _x, float _y, float _z) : v{ _x, _y, _z } { }
-	t_pos() : v{ 0, 0, 0 } { }
+	t_pos(float _x, float _y, float _z){ v[0] = _x; v[1] = _y; v[2] = _z; }
+	t_pos(){ v[0] = 0; v[1] = 0; v[2] = 0; }
 	operator float*() { return this->v; }
 	int operator==(const t_pos &_v) {
 		return (fabs(v[0] - _v[0]) < EPSILON && fabs(v[1] - _v[1]) < EPSILON && fabs(v[2] - _v[2]) < EPSILON);

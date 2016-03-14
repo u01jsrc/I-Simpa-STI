@@ -348,7 +348,7 @@ int MainProcess(int argc, char* argv[])
 	#endif
 
 	cout<<"End of calculation."<<endl;
-
+	
 	//**************************************************
 	// 8: Une fois tout les threads de calculs fermés on compile les fichiers de resultats
 	reportCompilation(configManager,workingDir);
@@ -394,6 +394,7 @@ int MainProcess(int argc, char* argv[])
 		ReportManager::SauveRecepteursSurfaciquesCoupe(globalSurfCutPath,configManager.recepteur_scut_List,*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
 	#endif
 	cout<<"End of save Global Surface Receiver Data."<<endl;
+
 	//**************************************************
 	// 9: Libère l'espace mémoire
 	for(std::size_t idfreq=0;idfreq<threadsData.size();idfreq++)

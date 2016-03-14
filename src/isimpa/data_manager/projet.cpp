@@ -671,46 +671,46 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///	Verification des paramètres de calcul
 	///////////////////////////////////////////
 
-	if(ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources==0)
+	if (ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources == 0)
 	{
 		wxLogError(_("Calculation requires, at least, one active sound source"));
 		return;
 	}
 
-	if(this->sceneMesh.GetNumFaces()==0)
+	if (this->sceneMesh.GetNumFaces() == 0)
 	{
 		wxLogError(_("Your model doesn't have any face. Please create or import a model."));
 		return;
 	}
 
 	//On active l'onglet des messages
-	wxWindow* consoleWindow=mainFrame->FindWindowByName("console");
-	if(consoleWindow)
+	wxWindow* consoleWindow = mainFrame->FindWindowByName("console");
+	if (consoleWindow)
 	{
-		wxAuiNotebook* consoleNoteBook=wxStaticCast(consoleWindow,wxAuiNotebook);
+		wxAuiNotebook* consoleNoteBook = wxStaticCast(consoleWindow, wxAuiNotebook);
 		consoleNoteBook->SetSelection(0);
 	}
 
-	Element* elWithFreq=coreCalculation->GetElementByType(Element::ELEMENT_TYPE_CORE_CORE_BFREQSELECTION);
-	if(elWithFreq)
+	Element* elWithFreq = coreCalculation->GetElementByType(Element::ELEMENT_TYPE_CORE_CORE_BFREQSELECTION);
+	if (elWithFreq)
 	{
 		//On cherche un élément booléen à vrai
 		std::vector<Element*> lstFreq;
-		elWithFreq->GetAllElementByType(Element::ELEMENT_TYPE_BOOL_BFREQ,lstFreq);
-		bool zeroFreq=true;
-		for(int idfreq=0;idfreq<lstFreq.size();idfreq++)
+		elWithFreq->GetAllElementByType(Element::ELEMENT_TYPE_BOOL_BFREQ, lstFreq);
+		bool zeroFreq = true;
+		for (int idfreq = 0; idfreq < lstFreq.size(); idfreq++)
 		{
-			E_Data_Bool_Bfreq* elFreq=dynamic_cast<E_Data_Bool_Bfreq*>(lstFreq[idfreq]);
-			if(elFreq)
+			E_Data_Bool_Bfreq* elFreq = dynamic_cast<E_Data_Bool_Bfreq*>(lstFreq[idfreq]);
+			if (elFreq)
 			{
-				if(elFreq->GetValue())
+				if (elFreq->GetValue())
 				{
-					zeroFreq=false;
+					zeroFreq = false;
 					break;
 				}
 			}
 		}
-		if(zeroFreq)
+		if (zeroFreq)
 		{
 			wxLogError(_("Calculation requires do define a valid frequency band"));
 			return;
@@ -721,33 +721,33 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	///	Initialisation des paramètres
 	///////////////////////////////////////////
-	wxDateTime timeDebOperation=wxDateTime::UNow();
-	wxString modelFileName=coreCalculation->GetStringConfig("modelName");
-	wxString corePath=coreCalculation->GetStringConfig("corePath");
-	wxString reportFolderName=dossierCourant+ApplicationConfiguration::CONST_REPORT_FOLDER_PATH;
-	wxString xmlCoreFileName="config.xml";
-	wxString exeName=coreCalculation->GetStringConfig("exeName");
-	wxString tetraFileName=coreCalculation->GetStringConfig("tetrameshFileName");
-	wxString rootCorePath=this->PathCores+corePath;
+	wxDateTime timeDebOperation = wxDateTime::UNow();
+	wxString modelFileName = coreCalculation->GetStringConfig("modelName");
+	wxString corePath = coreCalculation->GetStringConfig("corePath");
+	wxString reportFolderName = dossierCourant + ApplicationConfiguration::CONST_REPORT_FOLDER_PATH;
+	wxString xmlCoreFileName = "config.xml";
+	wxString exeName = coreCalculation->GetStringConfig("exeName");
+	wxString tetraFileName = coreCalculation->GetStringConfig("tetrameshFileName");
+	wxString rootCorePath = this->PathCores + corePath;
 
 	///////////////////////////////////////////
 	//Ajout du dossier daté de résultat
 	///////////////////////////////////////////
-	wxDateTime maintenant=wxDateTime::UNow();
-	wxString folderDated=maintenant.Format("%Y-%m-%d_%Hh%Mm%Ss");
-	if(!wxDirExists(reportFolderName))
+	wxDateTime maintenant = wxDateTime::UNow();
+	wxString folderDated = maintenant.Format("%Y-%m-%d_%Hh%Mm%Ss");
+	if (!wxDirExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	reportFolderName+=coreCalculation->GetTreeLabel();
-	if(!wxDirExists(reportFolderName))
+	reportFolderName += coreCalculation->GetTreeLabel();
+	if (!wxDirExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	reportFolderName+=wxFileName::GetPathSeparator()+folderDated+wxFileName::GetPathSeparator();
-	if(!wxFileExists(reportFolderName))
+	reportFolderName += wxFileName::GetPathSeparator() + folderDated + wxFileName::GetPathSeparator();
+	if (!wxFileExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	wxString workingDir=reportFolderName;//this->PathCores+corePath+tempFolder;
+	wxString workingDir = reportFolderName;//this->PathCores+corePath+tempFolder;
 	///////////////////////////////////////////
 	///	Verifications de l'existance du coeur de calcul
 	///////////////////////////////////////////
-	if(!wxFileExists(this->PathCores+corePath+exeName))
+	if (!wxFileExists(this->PathCores + corePath + exeName))
 	{
 		wxLogError(_("Calculation .exe file not found."));
 		return;
@@ -755,7 +755,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	//  Maillage de la scène
 	///////////////////////////////////////////
-	if(!this->RunCoreMaillage(coreCalculation))
+	if (!this->RunCoreMaillage(coreCalculation))
 	{
 		wxLogError(_("Calculation requires a scene meshing"));
 		return;
@@ -766,23 +766,23 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	///	On exporte les fichiers utilisés par le code de calcul
 	///////////////////////////////////////////
-	if(!wxDirExists(workingDir))
+	if (!wxDirExists(workingDir))
 		wxMkdir(workingDir);
-	this->sceneMesh.Save(workingDir+modelFileName);
-	if(!tetraFileName.empty())
-		this->sceneMesh.SaveMaillage(workingDir+tetraFileName,true);
+	this->sceneMesh.Save(workingDir + modelFileName);
+	if (!tetraFileName.empty())
+		this->sceneMesh.SaveMaillage(workingDir + tetraFileName, true);
 	wxXmlDocument xmlCoreDocument;
-	wxXmlNode* rootConfig = new wxXmlNode(wxXML_ELEMENT_NODE,"configuration");
+	wxXmlNode* rootConfig = new wxXmlNode(wxXML_ELEMENT_NODE, "configuration");
 
-	LastComputationFolder=workingDir;
-	rootConfig->AddAttribute("workingdirectory",workingDir);
+	LastComputationFolder = workingDir;
+	rootConfig->AddAttribute("workingdirectory", workingDir);
 
 
 	xmlCoreDocument.SetRoot(rootConfig);
 	rootScene->SaveXMLCoreDoc(rootConfig);
 	coreCalculation->SaveXMLCoreDoc(rootConfig);
 	xmlCoreDocument.SetFileEncoding("iso-8859-1"); //tant que libinterface ne gère par l'utf-8 on utilise ca
-	xmlCoreDocument.Save(workingDir+xmlCoreFileName);
+	xmlCoreDocument.Save(workingDir + xmlCoreFileName);
 
 	///////////////////////////////////////////
 	///	Pour ne pas perdre les modifications en cas de crash, on sauvegarde le projet (sans écraser le fichier de projet)
@@ -796,30 +796,31 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	//Declaration du processus
 	wxString cmd;
 	//On attend que l'execution soit terminée
-	bool hasOutput=true;
-	wxProgressDialog progDialog(_("Calculation execution"),_("Calculation in progress..."),10000,mainFrame,wxPD_CAN_ABORT | wxPD_REMAINING_TIME |wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
+	bool hasOutput = true;
+	wxProgressDialog progDialog(_("Calculation execution"), _("Calculation in progress..."), 10000, mainFrame, wxPD_CAN_ABORT | wxPD_REMAINING_TIME | wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL);
 
-	wxString labelOutput=exeName+" :";
+	wxString labelOutput = exeName + " :";
 
-	wxDateTime timeDebCalculation=wxDateTime::UNow();
+	wxDateTime timeDebCalculation = wxDateTime::UNow();
 
 	wxFileName corefilename(exeName);
-	wxString ext=corefilename.GetExt();
-	if(ext=="py" || ext=="pyc")
-		cmd="python.exe -u \""+rootCorePath+exeName+"\" \""+workingDir+xmlCoreFileName+"\"";
+	wxString ext = corefilename.GetExt();
+	if (ext == "py" || ext == "pyc")
+		cmd = "python.exe -u \"" + rootCorePath + exeName + "\" \"" + workingDir + xmlCoreFileName + "\"";
 	else
-		cmd=rootCorePath+exeName+" \""+workingDir+xmlCoreFileName+"\"";
+		cmd = rootCorePath + exeName + " \"" + workingDir + xmlCoreFileName + "\"";
 
-	bool result=uiRunExe(mainFrame,cmd,labelOutput,&progDialog);
-	wxLongLong durationCalculation=wxDateTime::UNow().GetValue()-timeDebCalculation.GetValue();
+	bool result = uiRunExe(mainFrame, cmd, labelOutput, &progDialog);
 
-	wxLogInfo(_("Calculation time: %i ms"),durationCalculation.GetValue());
+	wxLongLong durationCalculation = wxDateTime::UNow().GetValue() - timeDebCalculation.GetValue();
+
+	wxLogInfo(_("Calculation time: %i ms"), durationCalculation.GetValue());
 
 	///////////////////////////////////////////
 	// Copie du fichier de projet XML dans le dossier de rapport de calcul
 	///////////////////////////////////////////
 	wxLogInfo(_("Copy of calculation parameters"));
-	this->UpdateXmlFile(reportFolderName+wxFileName::GetPathSeparator());
+	this->UpdateXmlFile(reportFolderName + wxFileName::GetPathSeparator());
 
 
 	///////////////////////////////////////////
@@ -831,7 +832,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 
 	wxLongLong durationOperation=wxDateTime::UNow().GetValue()-timeDebOperation.GetValue();
 	wxLogInfo(_("Total time calculation: %i ms"),durationOperation.GetValue());
-
+	
 
 }
 
