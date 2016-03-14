@@ -25,7 +25,8 @@ public:
 	{
 		SPROP_PARTICULE_FILE_PATH,					/*!< Nom du fichier de sortiedes particules (par bande) */
 		SPROP_PARTICULE_FOLDER_PATH,					/*!< Nom de dossier de sortie des particules (toute bande) */
-		SPROP_STATS_FILE_PATH						/*!< Nom du fichier de statistiques des particules */
+		SPROP_STATS_FILE_PATH,						/*!< Nom du fichier de statistiques des particules */
+		SPROP_ANGLE_FILE_PATH						/*!< Name of file with energy in funcion of angle file */
 	};
 	/**
 	 * Enumeration des propriétés de type float
@@ -41,6 +42,8 @@ public:
 	 */
 	enum IPROP
 	{
+		IPROP_DIFFUSION_ORDER,						/*!< Number of allowed splittings*/
+		IPROP_SPECULAR_WHEN_REACHED,				/*!< Number diffusion on or off when diffusion order reached*/
 		IPROP_QUANT_PARTICLE_CALCULATION,			/*!< Nombre total de particule dans la simulation par source*/
 		IPROP_QUANT_PARTICLE_OUTPUT,				/*!< Nombre total de particule à enregistrer par source */
 		IPROP_DO_CALC_ABS_ATMO,						/*!< Calcul de l'absorption atmosphérique */
@@ -52,9 +55,12 @@ public:
 		IPROP_DO_CALC_TRANSMISSION,
 		I_PROP_SURFACE_RECEIVER_MODE,				/*!< 0: Mode intensité avec pondération selon l'angle 2: Mode SPL */
 		I_PROP_OUTPUT_RECEIVER_BY_SOURCE,			/*!< 0 Output soundprec.recp, 1 output soudprec.recp by source */
-		I_PROP_RANDOM_SEED,							/*!< Random SEED */
+		I_PROP_RANDOM_SEED,						/*! Random SEED */
+		IPROP_NORMALIZE_ANGLE_STATS,
+		IPROP_EXTENDED_ANGLE_STATS,
         I_PROP_SAVE_SURFACE_INTERSECTION,           /*!< Save particle and surface intersection events*/
         I_PROP_SAVE_RECEIVER_INTERSECTION           /*!< Save particle and receiver intersection events*/
+		IPROP_EXPORT_AS_CSV
 	};
 
 	/**

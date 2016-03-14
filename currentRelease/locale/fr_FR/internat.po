@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: I-Simpa GUI\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-26 13:33+0100\n"
-"PO-Revision-Date: 2015-02-20 10:51+0100\n"
+"POT-Creation-Date: 2015-03-13 23:07+0100\n"
+"PO-Revision-Date: 2015-03-13 23:07+0100\n"
 "Last-Translator: Ifsttar <Judicael.Picaut@ifsttar.fr>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/i-simpa/language/"
 "fr/)\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.8\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-Poedit-Basepath: ../../\n"
 "X-Poedit-KeywordsList: _;wxTRANSLATE\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1086,15 +1086,15 @@ msgstr ""
 "Libellé élément : %s Nom du champ : %s"
 
 #: ../Source/isimpa/trunk/data_manager/generic_element/e_gammeabsorption.cpp:79
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:639
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:656
 #: ../Source/isimpa/trunk/Language/additionnal_univ.h:36
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:194
 msgid "Acoustic parameters"
 msgstr "Paramètres acoustiques"
 
 #: ../Source/isimpa/trunk/data_manager/generic_element/e_gammeabsorption.cpp:139
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:586
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:943
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:603
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:960
 msgid "Average"
 msgstr "Moyenne"
 
@@ -1113,8 +1113,8 @@ msgstr "Loi de diffusion"
 
 #: ../Source/isimpa/trunk/data_manager/generic_element/e_gammefrequence.cpp:158
 #: ../Source/isimpa/trunk/data_manager/generic_element/e_property_freq.cpp:190
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:585
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:942
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:602
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:959
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_gabe_recp.cpp:64
 msgid "Global"
 msgstr "Global"
@@ -1553,85 +1553,85 @@ msgstr "Chargement d'un modèle"
 msgid "Build of a 3D scene.\n"
 msgstr "Changement du modèle de la scène 3D, création d'un nouveau modèle\n"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:185
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:202
 msgid "EDT (s)"
 msgstr "EDT (s)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:188
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:205
 #, c-format
 msgid "RT-%g (s)"
 msgstr "TR-%g (s)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:210
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:227
 msgid "Sound level (dB)"
 msgstr "Niveau sonore (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:250
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:267
 msgid "Sound level (dBA)"
 msgstr "Niveau sonore (dBA)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:283
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:300
 msgid "ST (dB)"
 msgstr "ST (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:313
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:330
 #, c-format
 msgid "C-%g (dB)"
 msgstr "C-%g (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:339
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:356
 #, c-format
 msgid "D-%g (%%)"
 msgstr "D-%g (%%)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:366
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:383
 msgid "Ts (ms)"
 msgstr "Ts (ms)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:406
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:423
 #, c-format
 msgid "LF%i"
 msgstr "LF%i"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:424
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:441
 #, c-format
 msgid "LFC%i"
 msgstr "LFC%i"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:455
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:472
 msgid "LG (dB)"
 msgstr "LG (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:484
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:501
 msgid "G (dB)"
 msgstr "G (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:501
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:824
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:518
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:841
 msgid ""
 "Please, gives calculation parameters. Use ';' to separate several parameters"
 msgstr ""
 "Veuillez entrer les paramètres acoustiques à calculer.\n"
 "Le caractère ';' permet de séparer les paramètres."
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:501
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:824
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:518
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:841
 msgid "Acoustic parameters calculation"
 msgstr "Calculs des paramètres acoustiques"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:502
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:519
 msgid "Clarity (ms)"
 msgstr "Clarté (ms)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:503
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:520
 msgid "Definition (ms)"
 msgstr "Définition (ms)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:504
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:521
 msgid "Sound decay value for RT calculation (dB)"
 msgstr "Décroissance pour le calcul du TR (dB)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:539
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:556
 #, c-format
 msgid ""
 "The following file doesn't exist:\n"
@@ -1640,26 +1640,26 @@ msgstr ""
 "Le fichier de résultat suivant n'existe pas :\n"
 "%s"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:660
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:677
 msgid "Schroeder curves"
 msgstr "Décroissances lissées"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:825
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:842
 msgid "Early lateral fraction LF (ms)"
 msgstr "Fraction d'énergie latérale précoce LF (ms)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:826
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:843
 msgid "Early lateral fraction LFC (ms)"
 msgstr "Fraction d'énergie latérale précoce LFC (ms)"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:940
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:957
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_gabe_gap.cpp:82
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_gabe_gap.cpp:83
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_gabe_gap.cpp:84
 msgid " Hz"
 msgstr " Hz"
 
-#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:977
+#: ../Source/isimpa/trunk/data_manager/projet_calculation.cpp:994
 #: ../Source/isimpa/trunk/data_manager/tree_rapport/e_report_gabe_gap.cpp:42
 msgid "Advanced acoustic parameters"
 msgstr "Paramètres acoustiques avancés"
@@ -2856,37 +2856,37 @@ msgstr "Echogramme par source"
 msgid "Random seed"
 msgstr "Initialisation du générateur de nombres aléatoires"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:150
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:164
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:100
 msgid "Number of sound particles per source"
 msgstr "Particules par source"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:151
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:165
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:101
 msgid "Number of sound particles per source (display)"
 msgstr "Particules par source (rendu)"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:152
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:166
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:102
 msgid "Active calculation of atmospheric absorption"
 msgstr "Calcul Absorption atmosphérique"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:153
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:167
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:103
 msgid "Active calculation of diffusion by fitting objects"
 msgstr "Calcul Encombrement"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:154
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:168
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:104
 msgid "Active calculation of direct field only"
 msgstr "Calcul du Champ Direct uniquement"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:155
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:169
 #: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppsoctreecore.h:99
 msgid "Calculation method"
 msgstr "Méthode de calcul"
 
-#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:212
+#: ../Source/isimpa/trunk/data_manager/tree_core/e_core_sppscore.h:226
 #, c-format
 msgid ""
 "The size of the particle file, for each frequency band, is around %.2f Mo"

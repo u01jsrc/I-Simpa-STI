@@ -28,9 +28,9 @@ def GetPonctualReceiversData(folderwxid):
        : { "sound_level" : [],
            "rt30" : [],
            "edt" : []
-       
+
          }
-     }         
+     }
     """
     data={}
     #folder devient l'objet dossier
@@ -46,7 +46,7 @@ def GetPonctualReceiversData(folderwxid):
             recpdata={}
             #on recupere l'element parent (le dossier de récepteur ponctuel)
             pere=ui.element(recp.getinfos()["parentid"])
-            
+
             #on demande le calcul des paramètres sonores
             if pere.getelementbylibelle('acoustic_param')==-1:
                 ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"30"})
@@ -59,7 +59,7 @@ def GetPonctualReceiversData(folderwxid):
             gridparam=ui.application.getdataarray(params)
             rotated=zip(*gridparam)
             labels=gridparam[0]
-            tr30index=labels.index(ui._("TR-%g (s)") % (30))
+            tr30index=labels.index(ui._("RT-%g (s)") % (30))
             edt_index=labels.index(ui._("EDT (s)"))
             #on ajoute les données
             recpdata["sound_level"]=ui.application.getdataarray(recp)
@@ -76,7 +76,7 @@ def SaveDataToCSV(pr_data,workingdir):
         if len(pr_data)!=0:
             #####
             # Sound level
-            
+
             freq_lst=[ col[0] for col in pr_data[pr_data.keys()[0]]["sound_level"][1:]]
             spl_byfreq=[[] for i in range(len(freq_lst))]
             for ponctualreceiver_name, rp_data in buildhtmlreport.SortedDictByKeys(pr_data):
@@ -113,7 +113,7 @@ def SaveDataToCSV(pr_data,workingdir):
             spl_csv_writer=csv.writer(open(workingdir+workingdir.split("\\")[-2]+".csv","w"), delimiter=";", quoting=csv.QUOTE_NONE,lineterminator="\n")
             for line in csv_rows:
                 spl_csv_writer.writerow(line)
-            
+
 def MakeHtmlReport(folderwxid):
     #Actualisation de l'interface
     import buildhtmlreport
@@ -124,9 +124,12 @@ def MakeHtmlReport(folderwxid):
     ui.application.sendevent(mainfolder,ui.idevent.IDEVENT_RELOAD_FOLDER)
     subelementsid=mainfolder.childs()   #Recuperation des sous dossiers et fichiers
     rotated=zip(*subelementsid) #Inversion lignes, colonnes
-    
+
     #Recuperation des données pour les récepteurs ponctuels
-    prfolder=rotated[0][rotated[2].index(u'Punctual receivers')]
+    try:
+        prfolder=rotated[0][rotated[2].index(u'Punctual_receivers')]
+    except ValueError:
+        prfolder=rotated[0][rotated[2].index(u'Récepteurs_Ponctuels')]      
     pr_dict=GetPonctualReceiversData(prfolder)
     #Recuperation des données pour les récepteurs surfacique
     if 'recepteurss' in rotated[2]:
@@ -139,13 +142,13 @@ def MakeHtmlReport(folderwxid):
         if os.path.exists(rs_modelpath):
             rs_data.update(recsurf_report_stats.BuildSoundLevelDistributionArray(rs_modelpath))
         sppsreportbuilder.SetSurfaceReceiverData(rs_data)
-    
+
     #Generation du rapport
     sppsreportbuilder.SetPonctualReceiverData(pr_dict)
-    
+
     #Sauvegarde au format CSV
     SaveDataToCSV(pr_dict,mainfolder.buildfullpath())
-    
+
     #Sauvegarde du rapport
     sppsreportbuilder.BuildHtmlCode(ScriptFolder,mainfolder.buildfullpath(),ui.application.getlocale())
 
@@ -160,7 +163,7 @@ class manager:
         infos=el.getinfos()
         if infos["parentid"]>0:
             parent=ui.element(infos["parentid"])
-            if parent.getinfos()["label"]=="SPPS" or parent.getinfos()["label"]==u"Diffusion model":
+            if parent.getinfos()["label"]=="SPPS" or parent.getinfos()["label"]==u"Modèle de diffusion":
                 menu.insert(0,(_("Make report"),self.MakeReportEventId))
                 return True
             else:

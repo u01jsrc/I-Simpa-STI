@@ -70,6 +70,7 @@ protected:
 	{
 		/* this->AppendPropertyText("stats_filename",wxString(_("SPPS calculation statistics"))+wxString(".gabe"),true,true)->Hide(); */ 
 		this->AppendPropertyText("stats_filename","stats",wxTRANSLATE("statsSPPS")+wxString(".gabe"),true,true)->Hide();
+		this->AppendPropertyText("angle_filename","angle_stats",wxTRANSLATE("angle_stats")+wxString(".gabe"),true,true)->Hide();
 		this->AppendPropertyText("intensity_folder","intensity_folder",wxTRANSLATE("IntensityAnimation"),true,true)->Hide();
 		this->AppendPropertyText("intensity_filename","intensity_filename",wxTRANSLATE("Intensity vector")+wxString(".rpi"),true,true)->Hide();
 		this->AppendPropertyText("intensity_rp_filename","intensity_rp_filename","ponct_intensity.gabe",true,true)->Hide();
@@ -94,6 +95,21 @@ protected:
 	}
 	void InitRandomSeed(Element* confCore) {
 		confCore->AppendPropertyEntier("random_seed",wxTRANSLATE("Random seed"), 0,true, false, true);
+	}
+	void InitDiffusion_order(Element* confCore) {
+		confCore->AppendPropertyEntier("diffusion_order",wxTRANSLATE("Diffusion order"),0,true,false,true,0,0);	
+	}
+	void InitDiffusion_when_reached(Element* confCore) {
+		confCore->AppendPropertyBool("specular_when_order_reached",wxTRANSLATE("Specular when order reached"),false,true);
+	}
+	void InitNormalizeAngleStats(Element* confCore) {
+		confCore->AppendPropertyBool("normalize_angle_stats",wxTRANSLATE("Normalize angle stats"),true,true);
+	}
+	void InitExtendedAngleCalc(Element* confCore) {
+		confCore->AppendPropertyBool("extended_angle_stats",wxTRANSLATE("Calculate extended angle stats"),false,true);
+	}
+	void InitExportAsCSV(Element* confCore) {
+		confCore->AppendPropertyBool("export_as_CSV",wxTRANSLATE("Export results as CSV"),false,true);
 	}
 public:
 
@@ -120,6 +136,21 @@ public:
 			if(!confCore->IsPropertyExist("random_seed")) {
 				InitRandomSeed(confCore);
 			}
+			if(!confCore->IsPropertyExist("diffusion_order")) {
+				InitDiffusion_order(confCore);
+			}
+			if(!confCore->IsPropertyExist("specular_when_order_reached")) {
+				InitDiffusion_when_reached(confCore);
+			}
+			if(!confCore->IsPropertyExist("normalize_angle_stats")) {
+				InitNormalizeAngleStats(confCore);
+			}
+			if(!confCore->IsPropertyExist("extended_angle_stats")) {
+				InitExtendedAngleCalc(confCore);
+			}
+			if(!confCore->IsPropertyExist("export_as_CSV")) {
+				InitExportAsCSV(confCore);
+			}
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
@@ -141,6 +172,10 @@ public:
 		InitSurfaceReceiverMethod(confCore);
 		InitOutputRecpBySource(confCore);
 		InitRandomSeed(confCore);
+		InitDiffusion_order(confCore);
+		InitDiffusion_when_reached(confCore);
+		InitExtendedAngleCalc(confCore);
+		InitExportAsCSV(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
 		std::vector<int> computationMethodsIndex;
@@ -214,6 +249,9 @@ public:
 			}else if(filsInfo.libelleElement=="computation_method")
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
+				elConf->SetReadOnlyConfig("diffusion_order",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
+				elConf->UpdateEntierConfig("diffusion_order",0);
+				elConf->SetReadOnlyConfig("specular_when_order_reached",!elConf->GetListConfig("computation_method")==COMPUTATION_METHOD_ENERGETIQUE);
 			}
 		}
 		Element::Modified(eModif);

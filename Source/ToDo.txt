@@ -1,0 +1,10 @@
+To do list:
+
+1-incidence angle as theta and phi
+2-save results as csv or text
+3-STI bugfixes (proper frequency check)
+4-add option to save incidence angle for more than one plane
+
+5-don't throw results when no plane is selected
+
+6-option to choose auralization output or not???

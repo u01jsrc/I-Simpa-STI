@@ -345,6 +345,8 @@ struct t_Encombrement
  */
 struct t_cFace
 {
+	entier angle_group;
+	bool Rec_angle;							/*!< Sets if energy in funciton of angle is recorded for this face */
 	ivec3 sommets;							/*!< Indice des sommets */
 	vec3 normal;							/*!< Vecteur de normal */
 	t_Material* faceMaterial;				/*!< Pointeur vers le matériau associé (NULL si aucun) */
@@ -354,7 +356,6 @@ struct t_cFace
 	r_Surf_Face* recepteurS;				/*!<  Pointeur vers la face du récepteur surfacique correspondant */
 	t_cFace(){ faceMaterial=NULL;
 	recepteurS=NULL;
-
 	}
 };
 
@@ -419,6 +420,7 @@ public:
 	vec3 orientation; /*!< Orientation du récepteur ponctuel,vecteur normalisé */
 	l_decimal** energy_sum; /*!< Tableau (par bande de fréquence) de pointeurs vers le 1er élément d'un tableau (par pas de temps) contenant la puissance recue */
 	t_Bruit_Freq* bruit_spectre; /*!< Spectre du bruit du récepteur ponctuel */
+	vec3 orientation_sph;
 	t_Recepteur_P( uentier _nbfreq,	uentier _nbtimestep);
 	~t_Recepteur_P();
 	void InitFreq(uentier idfreq);

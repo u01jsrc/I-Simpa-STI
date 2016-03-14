@@ -59,7 +59,7 @@ def GetPonctualReceiversData(folderwxid):
             gridparam=ui.application.getdataarray(params)
             rotated=zip(*gridparam)
             labels=gridparam[0]
-            tr30index=labels.index(ui._("TR-%g (s)") % (30))
+            tr30index=labels.index(ui._("RT-%g (s)") % (30))
             edt_index=labels.index(ui._("EDT (s)"))
             #on ajoute les données
             recpdata["sound_level"]=ui.application.getdataarray(recp)
@@ -126,7 +126,10 @@ def MakeHtmlReport(folderwxid):
     rotated=zip(*subelementsid) #Inversion lignes, colonnes
 
     #Recuperation des données pour les récepteurs ponctuels
-    prfolder=rotated[0][rotated[2].index(u'Punctual receivers')]
+    try:
+        prfolder=rotated[0][rotated[2].index(u'Punctual_receivers')]
+    except ValueError:
+        prfolder=rotated[0][rotated[2].index(u'Récepteurs_Ponctuels')]      
     pr_dict=GetPonctualReceiversData(prfolder)
     #Recuperation des données pour les récepteurs surfacique
     if 'recepteurss' in rotated[2]:

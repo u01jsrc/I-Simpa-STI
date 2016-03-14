@@ -11,11 +11,10 @@ def GetCurrentProjectPath():
     projconfel=ui.element(ui.element(ui.application.getrootscene()).getelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_PROJET_CONFIGURATION))
     return projconfel.getstringconfig("urlsave")
 job_types={}
-
 class job(object):
     """
         Cette classe représente un travail
-        Elle peut être importée et exportée sous forme de chaînes de caractères
+        Elle peut être importé et exporté sous forme de chaine de caractère
     """
     def __init__(self,params):
         self.jobname=params[0]
@@ -31,13 +30,12 @@ class job(object):
         pass
     def from_str(self,params):
         """
-        Initialisation à partir d'un tableau de chaînes params
+        Initialisation à partir d'un tableau de chaines params
         """
         pass
-
 class job_run(job):
     """
-    Exécution d'un code de calcul
+    Execution d'un code de calcul
     """
     def _jobinit_(self,idel):
         self.typecore=ui.element(idel).getinfos()["name"]
@@ -49,11 +47,10 @@ class job_run(job):
         ui.application.sendevent(core,ui.idevent.IDEVENT_RUN_CALCULATION)
     def from_str(self,params):
         """
-        Initialisation à partir d'un tableau de chaînes params
+        Initialisation à partir d'un tableau de chaines params
         """
         self.typecore=params[1]
 job_types["RUN"]=job_run
-
 class job_openproject(job):
     """
     Ouverture d'un projet
@@ -67,7 +64,7 @@ class job_openproject(job):
             ui.application.loadproject(self.path)
     def from_str(self,params):
         """
-        Initialisation à partir d'un tableau de chaînes params
+        Initialisation à partir d'un tableau de chaines params
         """
         fullpath=""
         for piece in params[1:]:
@@ -88,10 +85,15 @@ class job_saveproject(job):
         ui.application.saveproject()
     def from_str(self,params):
         """
-        Initialisation à partir d'un tableau de chaînes params
+        Initialisation à partir d'un tableau de chaines params
         """
         pass
 job_types["SAVE_PROJECT"]=job_saveproject
+
+
+
+
+
 
 class JobManager(object):
     """
@@ -117,34 +119,41 @@ class JobManager(object):
         self.AddOpenProjectIfChanges()
         self.appendjob("RUN",idel)
         self.appendjob("SAVE_PROJECT",idel)
+    def AddRun10(self,idel):
+		self.AddOpenProjectIfChanges()
+		for i in range(10):
+			self.appendjob("RUN",idel)
+		self.appendjob("SAVE_PROJECT",idel)
     def ClearJobLst(self,idel):
         self.joblst=[]
-        self.lastprojectpath=""
     def ImportJobLst(self,idel):
         pass
     def ExportJobLst(self,idel):
         pass
     def PrintJobLst(self,idel):
-        print _(u"%i tasks:" % (len(self.joblst)))
+        print _(u"%i tasks :" % (len(self.joblst)))
         for job in self.joblst:
             print job.to_str()
-
+    
 class manager:
     def __init__(self):
         self.jmanager=JobManager()
         self.addcalculation_id=ui.application.register_event(self.jmanager.AddRun)
+        self.addcalculation10_id=ui.application.register_event(self.jmanager.AddRun10)
         self.clear_jobs_id=ui.application.register_event(self.jmanager.ClearJobLst)
         self.execute_jobs_id=ui.application.register_event(self.jmanager.ExecJobs)
         self.print_jobs_id=ui.application.register_event(self.jmanager.PrintJobLst)
+		
     def getmenu(self,typeel,idel,menu):
         submenu=[]
-        submenu.append((_(u"Add calculation in the job list"),self.addcalculation_id))
+        submenu.append((_(u"AddRun"),self.addcalculation_id))
+        submenu.append((_(u"AddRunx10"),self.addcalculation10_id))
         submenu.append(())
-        submenu.append((_(u"Clear job list"),[(_(u"Confirmation"),self.clear_jobs_id)]))
-        submenu.append((_(u"Run job list"),self.execute_jobs_id))
-        submenu.append((_(u"Show job list"),self.print_jobs_id))
+        submenu.append((_(u"ClearJobLst"),[(_(u"Confirmation"),self.clear_jobs_id)]))
+        submenu.append((_(u"ExecJobs"),self.execute_jobs_id))
+        submenu.append((_(u"PrintJobLst"),self.print_jobs_id))    
         menu.insert(2,())
-        menu.insert(2,(_(u"Job list"),submenu))
+        menu.insert(2,(_(u"JobLst"),submenu))
         return True
 menu_manager=manager()
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPS,menu_manager )

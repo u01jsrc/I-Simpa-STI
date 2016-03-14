@@ -78,7 +78,8 @@ struct CONF_PARTICULE
 	l_decimal energie_epsilon;					/*!< Limite d'energie pour laquelle où dû a la transmission la duplication de la particule est impossible (=Energie initiale*Paramètre de limite de transmission) */
 	decimal elapsedTime;						/*!< Temps écoulé depuis le début du pas de temps actuel pasCourant*/
 	unsigned int sourceid;						/*!< Indice de la source d'où cette particule a été tirée */
-	CONF_PARTICULE(){sourceid=0;currentTetra=NULL;distanceToNextEncombrementEle=0.f;stateParticule=PARTICULE_STATE_ALIVE;elapsedTime=0.;reflectionOrder=0;}
+	unsigned int diffOrd;						/*!< Diffusion order used to limit particles splitting*/
+	CONF_PARTICULE(){sourceid=0;currentTetra=NULL;distanceToNextEncombrementEle=0.f;stateParticule=PARTICULE_STATE_ALIVE;elapsedTime=0.;reflectionOrder=0;diffOrd=0;}
 };
 
 

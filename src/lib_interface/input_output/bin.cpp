@@ -84,6 +84,8 @@ namespace formatCoreBIN
 		bInt idMaterial;	/*!< Identifiant du matériau associé à la face */
 		bsInt idRs;			/*!< Identifiant du récepteur surfacique (aucun -1) */
 		bsInt idEn;			/*!< Identifiant de l'encombrement (aucun -1)*/
+		bool Rec_angle;		/*!< Sets if energy in funciton of angle is recorded for this face */
+		bsInt angle_group;	/*!< Definges the group of results for angle of incidence caluclation */
 	};
 
 	/*!
@@ -176,6 +178,8 @@ namespace formatCoreBIN
 			faceElement.idRs=modelImport.faces[f].idRs;
 			faceElement.idEn=modelImport.faces[f].idEn;
 			faceElement.idMaterial=modelImport.faces[f].idMat;
+			faceElement.Rec_angle=modelImport.faces[f].Rec_angle;
+			faceElement.angle_group=modelImport.faces[f].angle_group;
 			binFile.write((char*)&faceElement,sizeof(binaryFace));
 		}
 
@@ -251,6 +255,8 @@ namespace formatCoreBIN
 			nvFace.idMat=faceElement.idMaterial;
 			nvFace.idRs=faceElement.idRs;
 			nvFace.idEn=faceElement.idEn;
+			nvFace.Rec_angle=faceElement.Rec_angle;
+			nvFace.angle_group=faceElement.angle_group;
 			modelImport.faces.push_back(nvFace);
 		}
 		return true;
