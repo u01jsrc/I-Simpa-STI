@@ -180,6 +180,7 @@ set(ISIMPA_SOURCE_FILES
     data_manager/tree_core/e_core_sppscore.h
     data_manager/tree_core/e_core_sppsoctreecore.h
     data_manager/tree_core/e_core_tccore.h
+    data_manager/tree_core/e_core_spps_aghcore.h
     data_manager/tree_rapport/e_report.h
     data_manager/tree_rapport/e_report_file.cpp
     data_manager/tree_rapport/e_report_file.h
@@ -327,18 +328,21 @@ ENDIF()
 # project (isimpa.vcproj) under it
 set_property(TARGET isimpa PROPERTY FOLDER "executables")
 
+set(ISIMPA_RESSOURCES ${PROJECT_SOURCE_DIR}/currentRelease)  
+
 # Adds logic to INSTALL.vcproj to copy isimpa.exe to destination directory
 install (TARGETS isimpa
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin)
-        
-set(ISIMPA_RESSOURCES ${PROJECT_SOURCE_DIR}/currentRelease)         
-        
+        RUNTIME 
+	CONFIGURATIONS Debug
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug)
+                
 install (FILES 
 ${ISIMPA_RESSOURCES}/appconst.xml
 ${ISIMPA_RESSOURCES}/isimpa.ico
 ${ISIMPA_RESSOURCES}/Licence.pdf
 ${ISIMPA_RESSOURCES}/Licence.rtf
-         DESTINATION  ${PROJECT_BINARY_DIR}/bin)
+	CONFIGURATIONS Debug
+        DESTINATION  ${PROJECT_BINARY_DIR}/bin/Debug)
          
 install(DIRECTORY 
 ${ISIMPA_RESSOURCES}/Bitmaps
@@ -346,5 +350,34 @@ ${ISIMPA_RESSOURCES}/Doc
 ${ISIMPA_RESSOURCES}/Locale
 ${ISIMPA_RESSOURCES}/SystemScript
 ${ISIMPA_RESSOURCES}/UserScript
-DESTINATION  ${PROJECT_BINARY_DIR}/bin)
+${ISIMPA_RESSOURCES}/meshing
+	CONFIGURATIONS
+	Debug
+DESTINATION  ${PROJECT_BINARY_DIR}/bin/Debug)
+
+install (TARGETS isimpa
+        RUNTIME 
+	CONFIGURATIONS
+	Release
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Release)
+                
+install (FILES 
+${ISIMPA_RESSOURCES}/appconst.xml
+${ISIMPA_RESSOURCES}/isimpa.ico
+${ISIMPA_RESSOURCES}/Licence.pdf
+${ISIMPA_RESSOURCES}/Licence.rtf
+	CONFIGURATIONS
+	Release
+        DESTINATION  ${PROJECT_BINARY_DIR}/bin/Release)
+         
+install(DIRECTORY 
+${ISIMPA_RESSOURCES}/Bitmaps
+${ISIMPA_RESSOURCES}/Doc
+${ISIMPA_RESSOURCES}/Locale
+${ISIMPA_RESSOURCES}/SystemScript
+${ISIMPA_RESSOURCES}/UserScript
+${ISIMPA_RESSOURCES}/meshing
+	CONFIGURATIONS
+	Release
+DESTINATION  ${PROJECT_BINARY_DIR}/bin/Release)
         

@@ -77,3 +77,6 @@ http://www.kde-look.org/content/show.php?content=50667
 http://icones.pro/pack/futurosoft
 Licence : GPL  Licence GPL
 Usage commercial : Oui
+
+Icone "tree_advanced_settings", 
+Icon made by Freepik from www.flaticon.com 

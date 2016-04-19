@@ -19,4 +19,11 @@ set_property(TARGET preprocess PROPERTY FOLDER "executables")
 
 # Adds logic to INSTALL.vcproj to copy preprocess.exe to destination directory
 install (TARGETS preprocess
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/meshing/tetgen)
+        RUNTIME 
+	CONFIGURATIONS Debug
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/meshing/tetgen)
+
+install (TARGETS preprocess
+        RUNTIME 
+	CONFIGURATIONS Release
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/meshing/tetgen)

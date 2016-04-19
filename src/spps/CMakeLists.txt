@@ -14,7 +14,9 @@ set(SPPS_SOURCE_FILES
 set(Boost_USE_STATIC_LIBS   ON) 
 find_package(Boost REQUIRED COMPONENTS thread random system)
 link_directories( ${Boost_LIBRARY_DIRS} )  
-include_directories( ${Boost_INCLUDE_DIRS} )  
+include_directories( ${Boost_INCLUDE_DIRS} )
+
+include_directories( ${Eigen_INCLUDE_DIR} )
 
 # Set Properties->General->Configuration Type to Application(.exe)
 # Creates spps.exe with the listed sources
@@ -31,4 +33,9 @@ set_property(TARGET spps PROPERTY FOLDER "executables")
 
 # Adds logic to INSTALL.vcproj to copy spps.exe to destination directory
 install (TARGETS spps
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/core/sppsNantes)
+	CONFIGURATIONS Debug
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/spps)
+
+install (TARGETS spps
+	CONFIGURATIONS Release
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/core/spps)

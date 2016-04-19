@@ -26,4 +26,9 @@ set_property(TARGET vmr PROPERTY FOLDER "executables")
 
 # Adds logic to INSTALL.vcproj to copy vmr.exe to destination directory
 install (TARGETS vmr
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/meshing/vmr)
+	CONFIGURATIONS Debug
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/meshing/vmr)
+
+install (TARGETS vmr
+	CONFIGURATIONS Release
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/meshing/vmr)

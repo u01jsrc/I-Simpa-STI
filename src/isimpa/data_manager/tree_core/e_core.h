@@ -35,11 +35,13 @@
 
 #include "data_manager/element.h"
 #include "e_core_sppscore.h"
+#include "e_core_spps_aghcore.h"
 #if USE_OCTREE
 #include "e_core_sppsoctreecore.h"
 #endif
 #include "e_core_tccore.h"
 #include "e_core_tlmcore.h"
+
 
 
 /*! \file e_core.h
@@ -81,6 +83,8 @@ public:
 						this->AppendFils(new E_Core_Spps(this,currentChild));
 					else if(typeEle==Element::ELEMENT_TYPE_CORE_TC)
 						this->AppendFils(new E_Core_Tc(this,currentChild));
+					else if (typeEle == Element::ELEMENT_TYPE_CORE_SPPS_AGH)
+						this->AppendFils(new E_Core_Spps_AGH(this, currentChild));
 					else if(typeEle==Element::ELEMENT_TYPE_CORE_TLM)
 						this->AppendFils(new E_Core_Tlm(this,currentChild));
 
@@ -98,6 +102,7 @@ public:
 		eventBinded=false;
 		this->AppendFils(new E_Core_Spps(this));
 		this->AppendFils(new E_Core_Tc(this));
+		this->AppendFils(new E_Core_Spps_AGH(this));
 		this->elementInfo.expanded=true;
 	}
 	/**

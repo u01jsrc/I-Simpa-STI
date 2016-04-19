@@ -374,6 +374,12 @@ void uiTreeCtrl::InitTree()
 			case Element::GRAPH_USER_PREF_HISTORY:
 				imglist->Add(wxBitmap(ressourceFolder+"/Bitmaps/tree_el_history.png", wxBITMAP_TYPE_PNG));
 				break;
+			case Element::GRAPH_ADVANCED_PARAMETERS:
+				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_advanced_settings.png", wxBITMAP_TYPE_PNG));
+				break;
+			case Element::GRAPH_BASIC_PARAMETERS:
+				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_basic_settings.png", wxBITMAP_TYPE_PNG));
+				break;
 		}
 	}
 

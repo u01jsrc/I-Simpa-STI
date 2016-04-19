@@ -188,7 +188,9 @@ class Element
 			ELEMENT_TYPE_USER_PREFERENCE_NODE,					 /*!< \~french élément de noeud des préférences utilisateurs \~english User preference node, in the user prefrence tree*/
 			ELEMENT_TYPE_USER_PREFERENCE_ITEM,					/*!< \~french élément des préférences utilisateurs \~english User preference item, in the user prefrence tree*/
 			ELEMENT_TYPE_USER_PREFERENCE_ITEM_ISOTEMPLATE,		/*!< \~french élément des préférences utilisateurs qui liste les palettes de couleurs iso \~english User preference item, in the user prefrence tree where user can choose iso palette.*/
-			ELEMENT_TYPE_ROW_EXTBFREQ							/*!< \~french élément ligne de frequence contenant également une attenuation \~english Extanded freq row property */
+			ELEMENT_TYPE_ROW_EXTBFREQ,						/*!< \~french élément ligne de frequence contenant également une attenuation \~english Extanded freq row property */
+			ELEMENT_TYPE_CORE_SPPS_AGH,
+			ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED
 		};
 		/**
 		 * Indice des états des images
@@ -283,6 +285,8 @@ class Element
 			GRAPH_USER_PREF_MAINCONFIGURATION_OPEN,
 			GRAPH_USER_PREF_MAINCONFIGURATION_CLOSE,
 			GRAPH_USER_PREF_HISTORY,
+			GRAPH_BASIC_PARAMETERS,
+			GRAPH_ADVANCED_PARAMETERS,
 			GRAPH_LAST_STATIC_GRAPH		/*!< \~french Dernier icône \~english Last graph id */
 		};
 		/**

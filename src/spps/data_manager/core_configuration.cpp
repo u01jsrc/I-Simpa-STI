@@ -25,7 +25,6 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(SPROP_PARTICULE_FILE_PATH,simuNode->GetProperty("particules_filename"));
 			SetConfigInformation(SPROP_PARTICULE_FOLDER_PATH,simuNode->GetProperty("particules_directory"));
 			SetConfigInformation(SPROP_STATS_FILE_PATH,simuNode->GetProperty("stats_filename"));
-			SetConfigInformation(SPROP_ANGLE_FILE_PATH,simuNode->GetProperty("angle_filename"));
 			int nbpart=simuNode->GetProperty("nbparticules").ToInt();
 			if(nbpart<1)
 				nbpart=1;
@@ -44,13 +43,6 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			if(simuNode->IsPropertyExist("output_recp_bysource")) {
 				outputBySource = simuNode->GetProperty("output_recp_bysource").ToInt();
 			}
-
-			//if(simuNode->IsPropertyExist("diffusion_order")) {
-			int diffusion_order = simuNode->GetProperty("diffusion_order").ToInt();
-			//}else{
-			//	int diffusion_order = 2;
-			//}
-
 			SetConfigInformation(I_PROP_OUTPUT_RECEIVER_BY_SOURCE, outputBySource);
 			uentier_long seed = 0;
 			if(simuNode->IsPropertyExist("random_seed")) {
@@ -81,11 +73,6 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(IPROP_DO_CALC_TRANSMISSION,simuNode->GetProperty("trans_calc").ToInt());
 			SetConfigInformation(IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ,simuNode->GetProperty("output_recs_byfreq").ToInt());
 			SetConfigInformation(I_PROP_SURFACE_RECEIVER_MODE,simuNode->GetProperty("surf_receiv_method").ToInt());
-			SetConfigInformation(IPROP_DIFFUSION_ORDER,diffusion_order);
-			SetConfigInformation(IPROP_SPECULAR_WHEN_REACHED,simuNode->GetProperty("specular_when_order_reached").ToInt());
-			SetConfigInformation(IPROP_NORMALIZE_ANGLE_STATS,simuNode->GetProperty("normalize_angle_stats").ToInt());
-			SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS,simuNode->GetProperty("extended_angle_stats").ToInt());
-			SetConfigInformation(IPROP_EXPORT_AS_CSV,simuNode->GetProperty("export_as_CSV").ToInt());
 		}
 	}
 }

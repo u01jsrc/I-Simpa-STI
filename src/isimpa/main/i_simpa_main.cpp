@@ -28,6 +28,12 @@
 * or write to scientific.computing@ifsttar.fr
 * ----------------------------------------------------------------------*/
 
+/* ----------------------------------------------------------------------
+* This distribution is modified for resarch and educational purposes by
+* Wojciech Binek, AGH University of Science and Technology, Cracow, Poland
+* ----------------------------------------------------------------------*/
+
+
 #include "i_simpa_main.h"
 #include "IHM/customdialog/customdlg.h"
 #include <wx/aboutdlg.h>
@@ -363,6 +369,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 							wxTE_RICH | wxNO_BORDER | wxTE_MULTILINE | wxTE_READONLY);
 
     shellNotebook->AddPage(logWindow, _("Messages") , true);
+
 	#ifdef USE_PYTHON
 		PyConsole* consolePython=new PyConsole(this);
 		shellNotebook->AddPage(consolePython, _("Python(TM)") , false);

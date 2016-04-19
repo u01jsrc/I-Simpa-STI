@@ -19,4 +19,9 @@ set_property(TARGET ct PROPERTY FOLDER "executables")
 
 # Adds logic to INSTALL.vcproj to copy spps.exe to destination directory
 install (TARGETS ct
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/core/ct)
+	CONFIGURATIONS Debug
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/ct)
+
+install (TARGETS ct
+	CONFIGURATIONS Release
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/core/ct)

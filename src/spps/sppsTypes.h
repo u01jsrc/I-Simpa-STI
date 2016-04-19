@@ -1,3 +1,13 @@
+/* ---------------------------------------------------------------------------------------------------------
+* This code is based on sppsNantes 2.1.4 by Judicael Picaut and Nicolas Fortin - IFSTTAR
+*
+* It is modified for resarch and educational purposes by
+* Wojciech Binek, AGH University of Science and Technology, Cracow, Poland
+*
+* There is only one change in sources:
+*	- FIXED: particle slowing down when diffusion occures
+* ---------------------------------------------------------------------------------------------------------------*/
+
 #include "coreTypes.h"
 
 #ifndef SPPS_TYPES
@@ -78,8 +88,7 @@ struct CONF_PARTICULE
 	l_decimal energie_epsilon;					/*!< Limite d'energie pour laquelle où dû a la transmission la duplication de la particule est impossible (=Energie initiale*Paramètre de limite de transmission) */
 	decimal elapsedTime;						/*!< Temps écoulé depuis le début du pas de temps actuel pasCourant*/
 	unsigned int sourceid;						/*!< Indice de la source d'où cette particule a été tirée */
-	unsigned int diffOrd;						/*!< Diffusion order used to limit particles splitting*/
-	CONF_PARTICULE(){sourceid=0;currentTetra=NULL;distanceToNextEncombrementEle=0.f;stateParticule=PARTICULE_STATE_ALIVE;elapsedTime=0.;reflectionOrder=0;diffOrd=0;}
+	CONF_PARTICULE(){sourceid=0;currentTetra=NULL;distanceToNextEncombrementEle=0.f;stateParticule=PARTICULE_STATE_ALIVE;elapsedTime=0.;reflectionOrder=0;}
 };
 
 

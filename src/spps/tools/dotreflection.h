@@ -120,6 +120,6 @@ private:
 		}
 		retVal=faceNormal.Rotation(retVal,phi);
 		retVal=retVal.Rotation(faceNormal,theta);
-		return retVal/retVal.length();
+		return retVal / retVal.length();
 	}
 };

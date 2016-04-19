@@ -187,6 +187,6 @@ bool uiRunExe(wxFrame* parent,const wxString& path,const wxString& labelOutput, 
 	process->LogOutput(hasOutput,labelOutput,&percFinish);
 	while(hasOutput)
 		process->LogOutput(hasOutput,labelOutput,&percFinish);
-	delete process;
+	//delete process;
 	return true;
 }
