@@ -25,6 +25,7 @@ add_subdirectory (src/VolumetricMeshRepair)
 add_subdirectory (src/preprocess)
 add_subdirectory (src/spps)
 add_subdirectory (src/spps-agh)
+add_subdirectory (src/sppsNee-agh)
 add_subdirectory (src/isimpa)
 
 
