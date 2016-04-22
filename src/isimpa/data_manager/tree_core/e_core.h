@@ -67,30 +67,35 @@ public:
 		SetIcon(GRAPH_STATE_NORMAL,GRAPH_CORES_CLOSE);
 		eventBinded=false;
 		_("Calculation code");
-		if(noeudCourant!=NULL)
+		if (noeudCourant != NULL)
 		{
 			wxXmlNode* currentChild;
 			currentChild = noeudCourant->GetChildren();
 			// On va créer les fils de notre noeudCourant
 			wxString propValue;
-			while(currentChild!=NULL)
+			while (currentChild != NULL)
 			{
-				if(currentChild->GetAttribute("eid",&propValue))
+				if (currentChild->GetAttribute("eid", &propValue))
 				{
 					long typeEle;
 					propValue.ToLong(&typeEle);
-					if(typeEle==Element::ELEMENT_TYPE_CORE_SPPS)
-						this->AppendFils(new E_Core_Spps(this,currentChild));
-					else if(typeEle==Element::ELEMENT_TYPE_CORE_TC)
-						this->AppendFils(new E_Core_Tc(this,currentChild));
+					if (typeEle == Element::ELEMENT_TYPE_CORE_SPPS)
+						this->AppendFils(new E_Core_Spps(this, currentChild));
+					else if (typeEle == Element::ELEMENT_TYPE_CORE_TC)
+						this->AppendFils(new E_Core_Tc(this, currentChild));
 					else if (typeEle == Element::ELEMENT_TYPE_CORE_SPPS_AGH)
 						this->AppendFils(new E_Core_Spps_AGH(this, currentChild));
-					else if(typeEle==Element::ELEMENT_TYPE_CORE_TLM)
-						this->AppendFils(new E_Core_Tlm(this,currentChild));
+					else if (typeEle == Element::ELEMENT_TYPE_CORE_TLM)
+						this->AppendFils(new E_Core_Tlm(this, currentChild));
 
 				}
-				currentChild=currentChild->GetNext();
+				currentChild = currentChild->GetNext();
 			}
+
+			//check if node with new calculation code is present in project file. If not add new node.
+			bool found = find_if(fils.begin(), fils.end(), [&](Element* el) {return el->GetElementInfos().typeElement == Element::ELEMENT_TYPE_CORE_SPPS_AGH; }) != fils.end();
+			if (!found)
+				this->AppendFils(new E_Core_Spps_AGH(this));
 		}
 	}
 

@@ -16,8 +16,6 @@ find_package(Boost REQUIRED COMPONENTS thread random system)
 link_directories( ${Boost_LIBRARY_DIRS} )  
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-include_directories( ${Eigen_INCLUDE_DIR} )
-
 # Set Properties->General->Configuration Type to Application(.exe)
 # Creates spps.exe with the listed sources
 # Adds sources to the Solution Explorer

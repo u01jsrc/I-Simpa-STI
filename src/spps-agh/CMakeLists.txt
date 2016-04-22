@@ -7,9 +7,9 @@ set(SPPS_SOURCE_FILES
     input_output/reportmanager.cpp
     tools/dotdistribution.cpp
     CalculationCore.cpp
-    sppsInitialisation.cpp
-    sppsNantes.cpp
-    sppsTypes.cpp)
+    sppsAGHInitialisation.cpp
+    sppsAGH.cpp
+    sppsAGHTypes.cpp)
 
 set(Boost_USE_STATIC_LIBS   ON) 
 find_package(Boost REQUIRED COMPONENTS thread random system)
