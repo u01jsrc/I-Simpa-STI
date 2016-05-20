@@ -190,7 +190,9 @@ class Element
 			ELEMENT_TYPE_USER_PREFERENCE_ITEM_ISOTEMPLATE,		/*!< \~french élément des préférences utilisateurs qui liste les palettes de couleurs iso \~english User preference item, in the user prefrence tree where user can choose iso palette.*/
 			ELEMENT_TYPE_ROW_EXTBFREQ,						/*!< \~french élément ligne de frequence contenant également une attenuation \~english Extanded freq row property */
 			ELEMENT_TYPE_CORE_SPPS_AGH,
-			ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED
+			ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED,
+			ELEMENT_TYPE_CORE_SPPSNEE_AGH,
+			ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED
 		};
 		/**
 		 * Indice des états des images

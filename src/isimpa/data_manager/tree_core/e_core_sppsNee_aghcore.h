@@ -31,10 +31,10 @@
 #include "first_header_include.hpp"
 
 #include "data_manager/tree_core/e_core_core.h"
-#include "data_manager/tree_core/e_core_spps_agh_advanced.h"
+#include "data_manager/tree_core/e_core_sppsNee_agh_advanced.h"
 
-#ifndef __E_CORE_SPPS_AGH__
-#define __E_CORE_SPPS_AGH_
+#ifndef __E_CORE_SPPS_NEE_AGH__
+#define __E_CORE_SPPS_NEE_AGH__
 
 /*! \file e_core_sppscore.h
 \brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
@@ -48,7 +48,7 @@
 /**
 \brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
 */
-class E_Core_Spps_AGH : public E_Core_Core
+class E_Core_SppsNee_AGH : public E_Core_Core
 {
 protected:
 	void InitTransmission(E_Core_Core_Configuration* confCore)
@@ -96,8 +96,8 @@ protected:
 	}
 public:
 
-	E_Core_Spps_AGH(Element* parent, wxXmlNode* noeudCourant)
-		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPS_AGH, noeudCourant)
+	E_Core_SppsNee_AGH(Element* parent, wxXmlNode* noeudCourant)
+		:E_Core_Core(parent, "SPPS (NEE)-AGH", ELEMENT_TYPE_CORE_SPPSNEE_AGH, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_EXPANDED, GRAPH_SPPSCORE_OPEN);
 		SetIcon(GRAPH_STATE_NORMAL, GRAPH_SPPSCORE_CLOSE);
@@ -119,11 +119,11 @@ public:
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
-		this->AppendFils(new E_Core_Spps_AGH_advanced(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced(this));
 	}
 
-	E_Core_Spps_AGH(Element* parent)
-		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPS_AGH)
+	E_Core_SppsNee_AGH(Element* parent)
+		:E_Core_Core(parent, "SPPS (NEE)-AGH", ELEMENT_TYPE_CORE_SPPSNEE_AGH)
 	{
 
 		SetIcon(GRAPH_STATE_EXPANDED, GRAPH_SPPSCORE_OPEN);
@@ -171,17 +171,17 @@ public:
 		#endif */
 
 		this->AppendFils(new E_Core_Core_Bfreqselection(this));
-		this->AppendFils(new E_Core_Spps_AGH_advanced(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced(this));
 
 		this->AppendPropertyText("modelName", "", "mesh.cbin", true, true)->Hide();
-		this->AppendPropertyText("exeName", "", "spps-agh.exe")->Hide();
-		this->AppendPropertyText("corePath", "", wxString("spps-agh") + wxFileName::GetPathSeparator())->Hide();
+		this->AppendPropertyText("exeName", "", "sppsNee-agh.exe")->Hide();
+		this->AppendPropertyText("corePath", "", wxString("sppsNee-agh") + wxFileName::GetPathSeparator())->Hide();
 		this->AppendPropertyText("tetrameshFileName", "", "tetramesh.mbin", true, true)->Hide();
 	}
 	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent)
 	{
 		wxXmlNode* thisNode = E_Core_Core::SaveXMLDoc(NoeudParent);
-		thisNode->SetName("spps-agh");
+		thisNode->SetName("sppsNee-agh");
 		return thisNode;
 	}
 	void Modified(Element* eModif)
@@ -206,18 +206,13 @@ public:
 				if (nbpartrendu>0)
 				{
 					unsigned int nbpasdetemps = elConf->GetDecimalConfig("duree_simulation") / elConf->GetDecimalConfig("pasdetemps");
-					unsigned int total_data = nbpartrendu*nbpasdetemps*sizeof(float) * 4 * ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources_Actives;
+					unsigned int total_data = nbpartrendu*nbpasdetemps * sizeof(float) * 4 * ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources_Actives;
 					wxLogWarning(wxTRANSLATE("The size of the particle file, for each frequency band, is around %.2f Mo"), float(total_data) / pow(10.f, 6.f));
 				}
 			}
 			else if (filsInfo.libelleElement == "computation_method")
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
-
-				Element* elAdvancedConf = this->GetElementByType(ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED);
-				elAdvancedConf->SetReadOnlyConfig("diffusion_order", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
-				elAdvancedConf->UpdateEntierConfig("diffusion_order", 0);
-				elAdvancedConf->SetReadOnlyConfig("specular_when_order_reached", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
 			}
 		}
 		Element::Modified(eModif);

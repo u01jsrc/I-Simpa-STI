@@ -36,6 +36,7 @@
 #include "data_manager/element.h"
 #include "e_core_sppscore.h"
 #include "e_core_spps_aghcore.h"
+#include "e_core_sppsNee_aghcore.h"
 #if USE_OCTREE
 #include "e_core_sppsoctreecore.h"
 #endif
@@ -85,6 +86,8 @@ public:
 						this->AppendFils(new E_Core_Tc(this, currentChild));
 					else if (typeEle == Element::ELEMENT_TYPE_CORE_SPPS_AGH)
 						this->AppendFils(new E_Core_Spps_AGH(this, currentChild));
+					else if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH)
+						this->AppendFils(new E_Core_SppsNee_AGH(this, currentChild));
 					else if (typeEle == Element::ELEMENT_TYPE_CORE_TLM)
 						this->AppendFils(new E_Core_Tlm(this, currentChild));
 
@@ -96,6 +99,10 @@ public:
 			bool found = find_if(fils.begin(), fils.end(), [&](Element* el) {return el->GetElementInfos().typeElement == Element::ELEMENT_TYPE_CORE_SPPS_AGH; }) != fils.end();
 			if (!found)
 				this->AppendFils(new E_Core_Spps_AGH(this));
+
+			found = find_if(fils.begin(), fils.end(), [&](Element* el) {return el->GetElementInfos().typeElement == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH; }) != fils.end();
+			if (!found)
+				this->AppendFils(new E_Core_SppsNee_AGH(this));
 		}
 	}
 
@@ -108,6 +115,7 @@ public:
 		this->AppendFils(new E_Core_Spps(this));
 		this->AppendFils(new E_Core_Tc(this));
 		this->AppendFils(new E_Core_Spps_AGH(this));
+		this->AppendFils(new E_Core_SppsNee_AGH(this));
 		this->elementInfo.expanded=true;
 	}
 	/**
