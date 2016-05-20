@@ -8,7 +8,7 @@ set(SPPS_SOURCE_FILES
     tools/dotdistribution.cpp
     CalculationCore.cpp
     sppsNeeAGHInitialisation.cpp
-    sppsNeeAGHNantes.cpp
+    sppsNeeAGH.cpp
     sppsNeeAGHTypes.cpp)
 
 set(Boost_USE_STATIC_LIBS   ON) 
@@ -34,6 +34,6 @@ install (TARGETS sppsNee-agh
 	CONFIGURATIONS Debug
         RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/sppsNee-agh)
 
-install (TARGETS spps-Nee-agh
+install (TARGETS sppsNee-agh
 	CONFIGURATIONS Release
         RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/core/sppsNee-agh)

@@ -1,4 +1,4 @@
-#include "sppsTypes.h"
+#include "sppsNeeAGHTypes.h"
 
 
 #ifdef __USE_BOOST_RANDOM_GENERATOR__

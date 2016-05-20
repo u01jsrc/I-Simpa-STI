@@ -4,18 +4,20 @@
 * It is modified for resarch and educational purposes by
 * Wojciech Binek, AGH University of Science and Technology, Cracow, Poland
 *
-* There is only one change in sources:
-*	- FIXED: particle slowing down when diffusion occures
+* All added features are experimental and may require evaluation!
+* There is no warranty that they produce right results.
+*
+* This calculation code implements path tracing with next event estimation method based on oryginal SPPS code
 * ---------------------------------------------------------------------------------------------------------------*/
 
 #include "coreTypes.h"
 
-#ifndef SPPS_TYPES
-#define SPPS_TYPES
+#ifndef SPPSNEE_AGH_TYPES
+#define SPPSNEE_AGH_TYPES
 
 
 
-#define SPPS_VERSION "Spps 2.1.4 version december 13 2013"
+#define SPPSNEE_AGH_VERSION "Spps NEE AGH 0.1 (22.04.2016). Based on SPPS Nantes 2.1.4 version december 13 2013"
 #define __USE_BOOST_RANDOM_GENERATOR__
 #define UTILISER_MAILLAGE_OPTIMISATION
 
@@ -65,7 +67,8 @@ enum PARTICULE_STATE
 	PARTICULE_STATE_ABS_ATMO,			/*!< Supprimé car absorbé par l'atmosphère */
 	PARTICULE_STATE_ABS_SURF,			/*!< Supprimé car absorbé par une surface */
 	PARTICULE_STATE_LOOP,				/*!< Supprimé car impossible de résoudre un pas de temps (boucle infinie) */
-	PARTICULE_STATE_ABS_ENCOMBREMENT	/*!< Supprimé car absorbé par une surface */
+	PARTICULE_STATE_ABS_ENCOMBREMENT,	/*!< Supprimé car absorbé par une surface */
+	PARTICULE_STATE_SHADOW_RAY_REACHED_DST	/*!< Supprimé car absorbé par une surface */
 };
 /**
  * @brief Informations propres à une particule
@@ -88,9 +91,10 @@ struct CONF_PARTICULE
 	l_decimal energie_epsilon;					/*!< Limite d'energie pour laquelle où dû a la transmission la duplication de la particule est impossible (=Energie initiale*Paramètre de limite de transmission) */
 	decimal elapsedTime;						/*!< Temps écoulé depuis le début du pas de temps actuel pasCourant*/
 	unsigned int sourceid;						/*!< Indice de la source d'où cette particule a été tirée */
-	CONF_PARTICULE(){sourceid=0;currentTetra=NULL;distanceToNextEncombrementEle=0.f;stateParticule=PARTICULE_STATE_ALIVE;elapsedTime=0.;reflectionOrder=0;}
+	bool isShadowRay;							/*!< Defines if the particle is main ray or shadow ray	*/
+	t_Recepteur_P* targetReceiver;
+	CONF_PARTICULE() { targetReceiver = NULL; isShadowRay = false; sourceid = 0; currentTetra = NULL; distanceToNextEncombrementEle = 0.f; stateParticule = PARTICULE_STATE_ALIVE; elapsedTime = 0.; reflectionOrder = 0; }
 };
-
 
 
 #endif

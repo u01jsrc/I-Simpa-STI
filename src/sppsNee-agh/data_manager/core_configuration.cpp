@@ -44,15 +44,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 				outputBySource = simuNode->GetProperty("output_recp_bysource").ToInt();
 			}
 			SetConfigInformation(I_PROP_OUTPUT_RECEIVER_BY_SOURCE, outputBySource);
-			uentier_long seed = 0;
-			if(simuNode->IsPropertyExist("random_seed")) {
-				seed = simuNode->GetProperty("random_seed").ToInt();
-			}
-			if(seed != 0) {
-				// User define a random seed, multi-thread have to be deactivated in order to do the same computation
-				SetConfigInformation(IPROP_DO_MULTITHREAD,0);
-				std::cout<<"Random seed has been set; then multi-thread has been desactivated."<<std::endl;
-			}
+
             int saveSurfaceIntersection = 1;
             if (simuNode->IsPropertyExist("save_surface_intersection")) {
                 saveSurfaceIntersection = simuNode->GetProperty("save_surface_intersection").ToInt();
@@ -64,7 +56,6 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
             }
             SetConfigInformation(I_PROP_SAVE_RECEIVER_INTERSECTION, saveReceiversIntersection);
 
-			SetConfigInformation(I_PROP_RANDOM_SEED,seed);
 			SetConfigInformation(IPROP_DO_CALC_CHAMP_DIRECT,simuNode->GetProperty("direct_calc").ToInt());
 			SetConfigInformation(IPROP_DO_CALC_ENCOMBREMENT,simuNode->GetProperty("enc_calc").ToInt());
 			SetConfigInformation(IPROP_ENERGY_CALCULATION_METHOD,simuNode->GetProperty("computation_method").ToInt());
@@ -73,6 +64,22 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 			SetConfigInformation(IPROP_DO_CALC_TRANSMISSION,simuNode->GetProperty("trans_calc").ToInt());
 			SetConfigInformation(IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ,simuNode->GetProperty("output_recs_byfreq").ToInt());
 			SetConfigInformation(I_PROP_SURFACE_RECEIVER_MODE,simuNode->GetProperty("surf_receiv_method").ToInt());
+
+			CXmlNode* advancedNode = simuNode->GetChild("advanced");
+			if (advancedNode)
+			{
+				uentier_long seed = 0;
+				if (advancedNode->IsPropertyExist("random_seed")) {
+					seed = advancedNode->GetProperty("random_seed").ToInt();
+				}
+				if (seed != 0) {
+					// User define a random seed, multi-thread have to be deactivated in order to do the same computation
+					SetConfigInformation(IPROP_DO_MULTITHREAD, 0);
+					std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl;
+				}
+				SetConfigInformation(I_PROP_RANDOM_SEED, seed);
+				SetConfigInformation(I_PROP_BRDF_REFLECTION_MODEL, 0);
+			}
 		}
 	}
 }

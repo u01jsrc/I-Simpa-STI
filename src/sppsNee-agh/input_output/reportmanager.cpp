@@ -75,7 +75,7 @@ ReportManager::ReportManager(t_ParamReport& _paramReport)
 
 	particleFile = NULL;
 	particleSurfaceCSVFile = NULL;
-    particleReceiverCSVFile = NULL;
+	particleReceiverCSVFile = NULL;
 	lastParticuleFileHeaderInfo=0;
 
 	if(paramReport.nbParticles!=0)
@@ -89,8 +89,8 @@ void ReportManager::writeParticleFile()
 		delete particleFile;
 	if(particleSurfaceCSVFile)
 		delete particleSurfaceCSVFile;
-    if (particleReceiverCSVFile)
-        delete particleReceiverCSVFile;
+	if (particleReceiverCSVFile)
+		delete particleReceiverCSVFile;
 	//Création du dossier de particule
 	//_mkdir(paramReport._particlePath.c_str());
 	st_mkdir(paramReport._particlePath.c_str());
@@ -102,13 +102,13 @@ void ReportManager::writeParticleFile()
 	stringClass fileNamePath=freqFolder+paramReport._particleFileName;
 	particleFile = new fstream(fileNamePath.c_str() , ios::out | ios::binary);
 	stringClass fileCSVNamePath=freqFolder+"particle_surface_collision_statistics.csv";
-    stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
-    if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
-	    particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str() , ios::out);
-    }
-    if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
-        particleReceiverCSVFile = new fstream(fileReceiversCSVNamePath.c_str(), ios::out);
-    }
+	stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
+	if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
+		particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str() , ios::out);
+	}
+	if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
+		particleReceiverCSVFile = new fstream(fileReceiversCSVNamePath.c_str(), ios::out);
+	}
 
 	enteteSortie.nbParticles=paramReport.nbParticles;
 	enteteSortie.nbTimeStepMax=paramReport.nbTimeStep;
@@ -121,7 +121,7 @@ void ReportManager::writeParticleFile()
 	lastParticuleFileHeaderInfo=particleFile->tellp();
 	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 	*particleSurfaceCSVFile<<"id,collision coordinate,face normal,reflection order,incident vector,energy"<<std::endl;
-    *particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
+	*particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
 	realNbParticle=0;
 
 }
@@ -181,7 +181,7 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 		{
 			t_Recepteur_P* currentRecp=particleInfos.currentTetra->linkedRecepteurP->at(idrecp);
 			vec3 closestPointDuringPropagation=currentRecp->position.closestPointOnSegment(particleInfos.position,nextPosition);
-			if(closestPointDuringPropagation.distance(currentRecp->position)<*paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP))
+			if(closestPointDuringPropagation.distance(currentRecp->position)<*paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP) && particleInfos.targetReceiver == currentRecp)
 			{
 				//Calcul de la longueur de croisement
 				l_decimal mu1,mu2;
@@ -214,12 +214,18 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 						} else {
 							lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.sourceid]+=energy;
 						}
-                        if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
-                        {
-                            //Add intersection to history
-                            decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
-                            this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
-                        }
+						if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
+						{
+							//Add intersection to history
+							decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
+							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
+						}
+					}
+					if (mu2 < 1) 
+					{
+						particleInfos.energie = 0;
+						if (particleInfos.stateParticule == PARTICULE_STATE_ALIVE)
+							particleInfos.stateParticule = PARTICULE_STATE_SHADOW_RAY_REACHED_DST;
 					}
 				}
 			}
@@ -299,34 +305,34 @@ void ReportManager::CloseLastParticleHeader()
 			}
 		}
 	}
-    if (!this->receiverCollisionHistory.empty())
-    {
-        //Update CSV file
-        if (this->particleReceiverCSVFile != NULL)
-        {
-            while (!this->receiverCollisionHistory.empty())
-            {
-                t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
-                *this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
-                    << std::endl;
-                this->receiverCollisionHistory.pop_front();
-            }
-        }
-    }
+	if (!this->receiverCollisionHistory.empty())
+	{
+		//Update CSV file
+		if (this->particleReceiverCSVFile != NULL)
+		{
+			while (!this->receiverCollisionHistory.empty())
+			{
+				t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
+				*this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
+					<< std::endl;
+				this->receiverCollisionHistory.pop_front();
+			}
+		}
+	}
 }
 
 void ReportManager::CloseLastParticleFileHeader()
 {
 
-    particleFile->seekp(lastParticuleFileHeaderInfo);
-    enteteSortie.nbParticles=realNbParticle;
-    particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
+	particleFile->seekp(lastParticuleFileHeaderInfo);
+	enteteSortie.nbParticles=realNbParticle;
+	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 }
 
 formatGABE::GABE_Object* ReportManager::GetColStats()
 {
 	using namespace formatGABE;
-	GABE_Data_Integer* statValues=new GABE_Data_Integer(7);
+	GABE_Data_Integer* statValues=new GABE_Data_Integer(8);
 	statValues->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz").c_str());
 	statValues->Set(0,statReport.partAbsAtmo);
 	statValues->Set(1,statReport.partAbsSurf);
@@ -334,7 +340,8 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 	statValues->Set(3,statReport.partLoop);
 	statValues->Set(4,statReport.partLost);
 	statValues->Set(5,statReport.partAlive);
-	statValues->Set(6,statReport.partTotal);
+	statValues->Set(6,statReport.partShadowRay);
+	statValues->Set(7,statReport.partTotal);
 
 	return statValues;
 }
@@ -439,13 +446,13 @@ void ReportManager::SaveAndCloseParticleFile()
 		particleSurfaceCSVFile=NULL;
 		delete tmp;
 	}
-    if (particleReceiverCSVFile != NULL)
-    {
-        particleReceiverCSVFile->close();
-        fstream* tmp = particleReceiverCSVFile;
-        particleReceiverCSVFile = NULL;
-        delete tmp;
-    }
+	if (particleReceiverCSVFile != NULL)
+	{
+		particleReceiverCSVFile->close();
+		fstream* tmp = particleReceiverCSVFile;
+		particleReceiverCSVFile = NULL;
+		delete tmp;
+	}
 }
 
 void ReportManager::NewParticule(CONF_PARTICULE& particleInfos)
@@ -467,7 +474,7 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 
 	using namespace formatGABE;
 
-	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(7);
+	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(8);
 	/* statLbl->SetString(0,"Particules absorbées par l'atmosphère");
 	statLbl->SetString(1,"Particules absorbées par les matériaux");
 	statLbl->SetString(2,"Particules absorbées par les encombrements");
@@ -481,7 +488,8 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 	statLbl->SetString(3,"Particles lost by infinite loops");
 	statLbl->SetString(4,"Particles lost by meshing problems");
 	statLbl->SetString(5,"Particles remaining at the end of the calculation");
-	statLbl->SetString(6,"Total");
+	statLbl->SetString(6,"Schadow rays number");
+	statLbl->SetString(7,"Total");
 	uentier nbfreqUsed=0;
 	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
 	{

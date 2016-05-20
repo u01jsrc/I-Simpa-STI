@@ -1,4 +1,4 @@
-#include "sppsInitialisation.h"
+#include "sppsNeeAGHInitialisation.h"
 #include <iostream>
 inline bool ContainsRP(t_Recepteur_P* recepteurTest, std::vector<t_Recepteur_P*>* rpList)
 {

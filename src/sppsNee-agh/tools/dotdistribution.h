@@ -2,7 +2,7 @@
  * @file dotdistribution.h
  * @brief Classe de distribution de particules sur une source sonore
  */
-#include "sppsTypes.h"
+#include "sppsNeeAGHTypes.h"
 
 #ifndef __PARTICLE_DISTRIBUTION__
 #define __PARTICLE_DISTRIBUTION__

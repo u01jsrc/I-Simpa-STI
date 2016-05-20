@@ -1,4 +1,4 @@
-﻿#include "sppsTypes.h"	//les types de données sont déclaré ici
+﻿#include "sppsNeeAGHTypes.h"	//les types de données sont déclaré ici
 						// Il est déconseillé d'utiliser d'autre types que ceux déclaré dans ce fichier dans le programme
 #include "input_output/reportmanager.h"
 #include "data_manager/core_configuration.h"
@@ -59,19 +59,28 @@ public:
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
 	bool Run(CONF_PARTICULE configurationP);
+	void CalculateDirectSound(CONF_PARTICULE shadowRay, t_Source& sourceInfo, float distancePerTimeStep);
 
 private:
 	void Movement(CONF_PARTICULE &configurationP);
 	inline decimal GetDistance(CONF_PARTICULE &configurationP);
 	bool CollisionTest(CONF_PARTICULE &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);
 	void SetNextParticleCollision(CONF_PARTICULE &configurationP);
+	
 	/**
-	 * Réévalution de la distance entre la particule et un élément présent dans l'encombrement.(par tirage aléatoire)
-	 */
+	* Test visability for particule "configurationP" and the point TargetPosition
+	*
+	* @param configurationP particle to be tested
+	* @param TargetPosition destination
+	*/
+	bool VisabilityTest(CONF_PARTICULE &configurationP, vec3 &TargetPosition);
+
 	void SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE &configurationP);
+	
+
 	/**
-	 * Translation d'une particule dans un milieu libre de collisions avec la scène
-	 */
+		 * Translation d'une particule dans un milieu libre de collisions avec la scène
+		 */
 	void FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector);
 	/**
 	 * Permet de connaitre la collision de la particule sur la face du tetrahèdre courant

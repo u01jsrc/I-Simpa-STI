@@ -1,6 +1,7 @@
 #include "CalculationCore.h"
 #include "tools/collision.h"
 #include "tools/dotreflection.h"
+#include "tools/brdfreflection.h"
 #include "tools/dotdistribution.h"
 #include <iostream>
 #ifndef INTSIGN
@@ -35,6 +36,33 @@ void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTIC
 	{
 		//Tirage aléatoire de la distance
 		configurationP.distanceToNextEncombrementEle=-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].lambda*log((float)(1-GetRandValue()));
+	}
+}
+
+void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
+{
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+	CONF_PARTICULE shadowRay = prototypeParticle;
+
+	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
+	{
+		shadowRay.position = sourceInfo.Position;
+		vec3 toReceiver = (receiver->position - shadowRay.position);
+		shadowRay.isShadowRay = true;
+		shadowRay.targetReceiver = receiver;
+		shadowRay.direction = toReceiver;
+		shadowRay.direction.normalize();
+		shadowRay.direction *= distancePerTimeStep;
+		shadowRay.outputToParticleFile = false;
+
+		if (VisabilityTest(shadowRay, receiver->position)) {
+			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
+			shadowRay.energie = (1 / (4 * M_PI))*solidAngle*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}else
+		{
+			std::cout << "Receiver " << receiver->lblRp << " is not visible from source " << sourceInfo.sourceName << std::endl;
+		}
 	}
 }
 
@@ -105,6 +133,10 @@ bool CalculationCore::Run(CONF_PARTICULE configurationP)
 		case PARTICULE_STATE_LOST:
 			reportTool->statReport.partLost++;
 			break;
+		case PARTICULE_STATE_SHADOW_RAY_REACHED_DST:
+			reportTool->statReport.partShadowRay++;
+			break;
+
 	}
 	reportTool->statReport.partTotal++;
 	return true;
@@ -187,8 +219,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 		{
 			//Enregistrement de l'énergie passé à la paroi
 			reportTool->ParticuleCollideWithSceneMesh(configurationP);
-
-
+			
 			vec3 vecTranslation=configurationP.nextModelIntersection.collisionPosition-configurationP.position;
 			//On incrémente le temps de parcourt entre la position avant et aprés collision
 			configurationP.elapsedTime+=(vecTranslation/configurationP.direction.length()).length()*deltaT;
@@ -326,6 +357,43 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 					}else{
 						nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
 					}
+
+					//Calculate and cast shadow rays
+					for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
+					{
+						CONF_PARTICULE shadowRay = configurationP;
+						vec3 newDirection, toReceiver;
+
+						toReceiver = receiver->position - shadowRay.position;
+						newDirection = toReceiver;
+						newDirection.normalize();
+						shadowRay.direction = newDirection*distanceSurLePas;
+
+						if (VisabilityTest(shadowRay, receiver->position)) 
+						{
+							shadowRay.targetReceiver = receiver;
+							shadowRay.isShadowRay = true;
+
+							float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
+							shadowRay.energie *= energy;
+							shadowRay.energie_epsilon = 0.1* shadowRay.energie;
+
+							//fast forward particle to receiver surrounding
+							int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
+						
+							decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
+							shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
+							shadowRay.elapsedTime = 0;
+							shadowRay.pasCourant += timeStepNum;
+							shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
+							shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
+
+							confEnv.duplicatedParticles.push_back(shadowRay);
+							
+						}
+					}
+
+
 					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
 					configurationP.direction=nouvDirection*distanceSurLePas;
 					collisionResolution=true;
@@ -348,7 +416,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 		FreeParticleTranslation(configurationP,configurationP.direction);
 	}else{
 		//Il y a eu une ou plusieurs collisions sur le pas de temps courant
- 		FreeParticleTranslation(configurationP,configurationP.direction*((deltaT-configurationP.elapsedTime)/deltaT));
+		FreeParticleTranslation(configurationP,configurationP.direction*((deltaT-configurationP.elapsedTime)/deltaT));
 		configurationP.elapsedTime=0; //remise du compteur à 0
 	}
 }
@@ -357,8 +425,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 void CalculationCore::TraverserTetra(CONF_PARTICULE &configurationP, bool& collisionResolution)
 {
 	// Récuperation de l'information de la face
-	t_cFace* faceInfo=NULL;
-	faceInfo=configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
+	t_cFace* faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
 	//test de passage d'un tétraèdre à un autre
 	//PASSAGE DE TETRAEDRE
 
@@ -550,15 +617,50 @@ bool CalculationCore::CollisionTest(CONF_PARTICULE &configurationP,uentier &face
 #else
 void CalculationCore::SetNextParticleCollision(CONF_PARTICULE &configurationP)
 {
-	INTERSECTION_INFO collisionInfos;
+	//INTERSECTION_INFO collisionInfos;
 	float t;
 	configurationP.nextModelIntersection.idface=GetTetraFaceCollision(configurationP,configurationP.direction,t);
 
 	configurationP.nextModelIntersection.collisionPosition=configurationP.position+configurationP.direction*t;
 }
+
+bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &TargetPosition)
+{
+	float obst_dist;
+	float t;
+	float rec_dist = (configurationP.position - TargetPosition).length();
+
+	configurationP.nextModelIntersection.idface = GetTetraFaceCollision(configurationP, configurationP.direction, t);
+	configurationP.nextModelIntersection.collisionPosition = configurationP.position + configurationP.direction*t;
+
+	obst_dist = configurationP.direction.length()*t;
+
+	CONF_PARTICULE testParticle = configurationP;
+
+	int maxIteration = 5000;
+	int iteration = 0;
+
+	while (testParticle.currentTetra->faces[testParticle.nextModelIntersection.idface].face_scene == NULL && iteration++<maxIteration)
+	{
+		testParticle.position = testParticle.nextModelIntersection.collisionPosition;
+		testParticle.currentTetra = testParticle.currentTetra->voisins[testParticle.nextModelIntersection.idface];
+
+		testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
+		testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
+		obst_dist += testParticle.direction.length()*t;
+
+		if (rec_dist < obst_dist)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CalculationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector)
 {
-	reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
+	if(configurationP.isShadowRay) reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel
 	if(configurationP.currentTetra->volumeEncombrement)
 		configurationP.distanceToNextEncombrementEle-=translationVector.length();

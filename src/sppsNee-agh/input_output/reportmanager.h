@@ -1,6 +1,6 @@
 #include <input_output/gabe/gabe.h>
 #include <input_output/baseReportManager.h>
-#include <sppsTypes.h>
+#include <sppsNeeAGHTypes.h>
 #include <input_output/particles/part_binary.h>
 #include <data_manager/core_configuration.h>
 #include <list>
@@ -212,6 +212,7 @@ public:
 		uentier_long partAbsAtmo;
 		uentier_long partAbsSurf;
 		uentier_long partAbsEncombrement;
+		uentier_long partShadowRay;
 		uentier_long partLoop;
 		uentier_long partAlive;
 		uentier_long partTotal;

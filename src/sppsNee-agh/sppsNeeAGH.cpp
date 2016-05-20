@@ -4,8 +4,8 @@
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
 	#ifdef _WIN32
-        #include <crtdbg.h>
-    #endif
+		#include <crtdbg.h>
+	#endif
 	#include <input_output/gabe/gabe.h>
 	#define __USE_MULTITHREAD__ 0
 #else
@@ -20,7 +20,7 @@
 #include <coreinitialisation.h>
 #include "CalculationCore.h"
 #include "tools/dotdistribution.h"
-#include "sppsInitialisation.h"
+#include "sppsNeeAGHInitialisation.h"
 
 #if __USE_MULTITHREAD__
 	#include <boost/thread/thread.hpp>
@@ -57,7 +57,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 {
 	if(!sourceInfo.currentVolume)
 	{
-	    #if __USE_MULTITHREAD__
+		#if __USE_MULTITHREAD__
 		boost::mutex::scoped_lock lock(mutex);
 		#endif
 		std::cerr<<"Unable to find the source position!";
@@ -88,6 +88,8 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 	if((*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_TIMESTEP))>confPartFrame.pasCourant)
 	{
 		int lastmill=-1;
+
+		applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse);
 
 		for(uentier idpart=1;idpart<=quandparticules;idpart++)
 		{
@@ -156,7 +158,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
  */
 void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager::t_ParamReport reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE confPartFrame)
 {
-    using namespace std;
+	using namespace std;
 	//Reserve l'espace mémoire pour cette bande de fréquence
 	InitRecepteurSBfreq(applicationTools.configurationTool->recepteur_s_List,threadData->freqInfos->freqIndex,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_TIMESTEP));
 	//Initialisation du gestionnaire de sortie de données
@@ -225,7 +227,7 @@ int MainProcess(int argc, char* argv[])
 
 	using namespace std;
 
-	cout<<SPPS_VERSION<<endl;
+	cout<<SPPSNEE_AGH_VERSION<<endl;
 	//**************************************************
 	//Initialisation
 	t_ToolBox applicationToolBox;
@@ -367,7 +369,7 @@ int MainProcess(int argc, char* argv[])
 	stringClass globalRecSurfPath=workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH)+"Global\\";
 	//Création du dossier Global
 	st_mkdir(globalRecSurfPath.c_str());
-    stringClass globalSurfCutPath=globalRecSurfPath+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
+	stringClass globalSurfCutPath=globalRecSurfPath+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
 	globalRecSurfPath+=*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_PATH);
 	cout<<"Saving Global Surface Receiver Data..."<<endl;
 	#ifndef _PROFILE_
@@ -392,7 +394,7 @@ int main(int argc, char* argv[])
 {
 	MainProcess(argc,argv);
 
-    #ifdef _WIN32
+	#ifdef _WIN32
 	#ifdef _DEBUG
 		_CrtDumpMemoryLeaks(); //Affiche les fuites mémoires
 	#endif
