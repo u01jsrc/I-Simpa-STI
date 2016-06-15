@@ -42,18 +42,19 @@ void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTIC
 void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
 {
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+
 	CONF_PARTICULE shadowRay = prototypeParticle;
+	shadowRay.position = sourceInfo.Position;
+	shadowRay.isShadowRay = true;
+	shadowRay.outputToParticleFile = false;
 
 	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
 	{
-		shadowRay.position = sourceInfo.Position;
 		vec3 toReceiver = (receiver->position - shadowRay.position);
-		shadowRay.isShadowRay = true;
 		shadowRay.targetReceiver = receiver;
 		shadowRay.direction = toReceiver;
 		shadowRay.direction.normalize();
 		shadowRay.direction *= distancePerTimeStep;
-		shadowRay.outputToParticleFile = false;
 
 		if (VisabilityTest(shadowRay, receiver->position)) {
 			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
@@ -348,12 +349,12 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 					vec3 nouvDirection;
 					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
 					{
-						vec3 faceDirection;
+						vec3 faceNormal;
 						if(!doInvertNormal)
-							faceDirection=-faceInfo->normal;
+							faceNormal =-faceInfo->normal;
 						else
-							faceDirection=faceInfo->normal;
-						nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo,faceDirection,configurationP);
+							faceNormal =faceInfo->normal;
+						nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo, faceNormal,configurationP);
 					}else{
 						nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
 					}
@@ -376,7 +377,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 
 							float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
 							shadowRay.energie *= energy;
-							shadowRay.energie_epsilon = 0.1* shadowRay.energie;
+							shadowRay.energie_epsilon = 0.05* shadowRay.energie;
 
 							//fast forward particle to receiver surrounding
 							int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;

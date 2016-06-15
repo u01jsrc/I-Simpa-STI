@@ -221,6 +221,10 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
 						}
 					}
+
+
+					if (mu1 > mu2) { mu2 = mu1; }
+
 					if (mu2 < 1) 
 					{
 						particleInfos.energie = 0;

@@ -77,7 +77,7 @@ ReportManager::ReportManager(t_ParamReport& _paramReport)
 
 	particleFile = NULL;
 	particleSurfaceCSVFile = NULL;
-    particleReceiverCSVFile = NULL;
+	particleReceiverCSVFile = NULL;
 	lastParticuleFileHeaderInfo=0;
 
 	if(paramReport.nbParticles!=0)
@@ -91,8 +91,8 @@ void ReportManager::writeParticleFile()
 		delete particleFile;
 	if(particleSurfaceCSVFile)
 		delete particleSurfaceCSVFile;
-    if (particleReceiverCSVFile)
-        delete particleReceiverCSVFile;
+	if (particleReceiverCSVFile)
+		delete particleReceiverCSVFile;
 	//Création du dossier de particule
 	//_mkdir(paramReport._particlePath.c_str());
 	st_mkdir(paramReport._particlePath.c_str());
@@ -104,13 +104,13 @@ void ReportManager::writeParticleFile()
 	stringClass fileNamePath=freqFolder+paramReport._particleFileName;
 	particleFile = new fstream(fileNamePath.c_str() , ios::out | ios::binary);
 	stringClass fileCSVNamePath=freqFolder+"particle_surface_collision_statistics.csv";
-    stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
-    if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
-	    particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str() , ios::out);
-    }
-    if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
-        particleReceiverCSVFile = new fstream(fileReceiversCSVNamePath.c_str(), ios::out);
-    }
+	stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
+	if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
+		particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str() , ios::out);
+	}
+	if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
+		particleReceiverCSVFile = new fstream(fileReceiversCSVNamePath.c_str(), ios::out);
+	}
 
 	enteteSortie.nbParticles=paramReport.nbParticles;
 	enteteSortie.nbTimeStepMax=paramReport.nbTimeStep;
@@ -123,7 +123,7 @@ void ReportManager::writeParticleFile()
 	lastParticuleFileHeaderInfo=particleFile->tellp();
 	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 	*particleSurfaceCSVFile<<"id,collision coordinate,face normal,reflection order,incident vector,energy"<<std::endl;
-    *particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
+	*particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
 	realNbParticle=0;
 
 }
@@ -241,12 +241,12 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 						} else {
 							lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.sourceid]+=energy;
 						}
-                        if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
-                        {
-                            //Add intersection to history
-                            decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
-                            this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
-                        }
+						if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
+						{
+							//Add intersection to history
+							decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
+							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
+						}
 					}
 				}
 			}
@@ -341,27 +341,27 @@ void ReportManager::CloseLastParticleHeader()
 			}
 		}
 	}
-    if (!this->receiverCollisionHistory.empty())
-    {
-        //Update CSV file
-        if (this->particleReceiverCSVFile != NULL)
-        {
-            while (!this->receiverCollisionHistory.empty())
-            {
-                t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
-                *this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
-                    << std::endl;
-                this->receiverCollisionHistory.pop_front();
-            }
-        }
-    }
+	if (!this->receiverCollisionHistory.empty())
+	{
+		//Update CSV file
+		if (this->particleReceiverCSVFile != NULL)
+		{
+			while (!this->receiverCollisionHistory.empty())
+			{
+				t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
+				*this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
+					<< std::endl;
+				this->receiverCollisionHistory.pop_front();
+			}
+		}
+	}
 }
 
 void ReportManager::CloseLastParticleFileHeader()
 {
-    particleFile->seekp(lastParticuleFileHeaderInfo);
-    enteteSortie.nbParticles=realNbParticle;
-    particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
+	particleFile->seekp(lastParticuleFileHeaderInfo);
+	enteteSortie.nbParticles=realNbParticle;
+	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 }
 
 formatGABE::GABE_Object* ReportManager::GetColStats()
@@ -536,13 +536,13 @@ void ReportManager::SaveAndCloseParticleFile()
 		particleSurfaceCSVFile=NULL;
 		delete tmp;
 	}
-    if (particleReceiverCSVFile != NULL)
-    {
-        particleReceiverCSVFile->close();
-        fstream* tmp = particleReceiverCSVFile;
-        particleReceiverCSVFile = NULL;
-        delete tmp;
-    }
+	if (particleReceiverCSVFile != NULL)
+	{
+		particleReceiverCSVFile->close();
+		fstream* tmp = particleReceiverCSVFile;
+		particleReceiverCSVFile = NULL;
+		delete tmp;
+	}
 }
 
 void ReportManager::NewParticule(CONF_PARTICULE& particleInfos)

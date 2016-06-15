@@ -61,7 +61,7 @@ float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
-	double specularEnergy = 0, lambertEnergy = 0;
+	double specularEnergy = 0, lambertEnergy;
 	l_decimal mu1, mu2;
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
 
