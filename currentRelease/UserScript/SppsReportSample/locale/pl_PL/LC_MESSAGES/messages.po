@@ -11,7 +11,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.8.7\n"
+"Language: pl_PL\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
 #: ../../../buildhtmlreport.py:77
