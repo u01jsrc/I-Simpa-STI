@@ -53,24 +53,6 @@ public:
 		if (!this->IsPropertyExist("random_seed")) {
 			InitRandomSeed(this);
 		}
-		//if (!this->IsPropertyExist("diffusion_order")) {
-		//	InitDiffusion_order(this);
-		//}
-		//if (!this->IsPropertyExist("specular_when_order_reached")) {
-		//	InitDiffusion_when_reached(this);
-		//}
-		//if (!this->IsPropertyExist("normalize_angle_stats")) {
-		//	InitNormalizeAngleStats(this);
-		//}
-		//if (!this->IsPropertyExist("extended_angle_stats")) {
-		//	InitExtendedAngleCalc(this);
-		//}
-		//if (!this->IsPropertyExist("export_as_CSV")) {
-		//	InitExportAsCSV(this);
-		//}
-		//if (!this->IsPropertyExist("export_receiver_incidence_angle")) {
-		//	InitExportReceiverIncidenceAngle(this);
-		//}
 	}
 
 	E_Core_SppsNee_AGH_advanced(Element* parent)
@@ -103,24 +85,6 @@ protected:
 	void InitRandomSeed(Element* confCore) {
 		confCore->AppendPropertyEntier("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
 	}
-	//void InitDiffusion_order(Element* confCore) {
-	//	confCore->AppendPropertyEntier("diffusion_order", wxTRANSLATE("Diffusion order"), 0, true, false, true, 0, 0);
-	//}
-	//void InitDiffusion_when_reached(Element* confCore) {
-	//	confCore->AppendPropertyBool("specular_when_order_reached", wxTRANSLATE("Specular when order reached"), false, true);
-	//}
-	//void InitNormalizeAngleStats(Element* confCore) {
-	//	confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
-	//}
-	//void InitExtendedAngleCalc(Element* confCore) {
-	//	confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
-	//}
-	//void InitExportAsCSV(Element* confCore) {
-	//	confCore->AppendPropertyBool("export_as_CSV", wxTRANSLATE("Export results as CSV"), false, true);
-	//}
-	//void InitExportReceiverIncidenceAngle(Element* confCore) {
-	//	confCore->AppendPropertyBool("export_receiver_incidence_angle", wxTRANSLATE("Export receiver incidence angle"), false, true);
-	//}
 
 	/**
 	Initialisation des propriétés communes à tout les mailleurs ( fait avant l'initialisation des mailleurs spécialisés )
@@ -128,12 +92,6 @@ protected:
 	void InitProperties()
 	{
 		InitRandomSeed(this);
-		//InitDiffusion_order(this);
-		//InitDiffusion_when_reached(this);
-		//InitExtendedAngleCalc(this);
-		//InitExportAsCSV(this);
-		//InitNormalizeAngleStats(this);
-		//InitExportReceiverIncidenceAngle(this);
 	}
 
 };

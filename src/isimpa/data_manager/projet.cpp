@@ -69,6 +69,7 @@
 #include "data_manager/tree_scene/e_scene_bdd_materiaux.h"
 #include "manager/boollocker.h"
 #include "last_cpp_include.hpp"
+#include "e_data_row_materiau.h"
 
 wxDEFINE_SCOPED_PTR_TYPE(wxZipEntry);
 
@@ -608,6 +609,10 @@ void ProjectManager::ElementEvent(wxCommandEvent& eventElement,eventCtrl fromCtr
 			case Element::IDEVENT_CONVERT_VOL_TO_FITTING:
 				this->OnConvertSubVolumeToFitting(elementSelected);
 				break;
+			case Element::IDEVENT_SET_ALL_MAT_TO_LAMBERT:
+			case Element::IDEVENT_SET_ALL_MAT_TO_PHONG:
+				this->OnSetAllMaterialsReflection(elementSelected, idEvenementElement);
+				break;
 			default:
 				wxLogDebug("Event not generated %i ",idEvenementElement);
 			};
@@ -681,6 +686,35 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	{
 		wxLogError(_("Your model doesn't have any face. Please create or import a model."));
 		return;
+	}
+
+	if (coreCalculation->GetElementInfos().typeElement != Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH)
+	{
+		std::vector<Element*> lstMatRow, egroupeSurf;
+		std::vector<long> usedIdx;
+
+		rootScene->GetAllElementByType(Element::ELEMENT_TYPE_SCENE_GROUPESURFACES_GROUPE, egroupeSurf);
+
+		for (int i = 0; i < egroupeSurf.size(); i++)
+		{
+			E_Scene_Groupesurfaces_Groupe* group = dynamic_cast<E_Scene_Groupesurfaces_Groupe*>(egroupeSurf[i]);
+			int idx = group->GetEntierConfig("idmat");
+
+			E_Materiau* mat = ApplicationConfiguration::GetMateriau(idx);
+			mat->GetAllElementByType(Element::ELEMENT_TYPE_ROW_MATERIAU, lstMatRow);
+
+
+			for (int j = 0; j < lstMatRow.size(); j++)
+			{
+				E_Data_Row_Materiau* elFreq = dynamic_cast<E_Data_Row_Materiau*>(lstMatRow[j]);
+				if (elFreq->GetListConfig("loi") == 7)
+				{
+					wxLogError(_("Cannot use Phong reflection model with code other than SppsNee-AGH"));
+					return;
+				}
+			}
+		}
+
 	}
 
 	//On active l'onglet des messages
@@ -3245,4 +3279,28 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 		GlFrame->SetSimulationRefreshRate((1/animationPropertyElement->GetDecimalConfig("animation_rate"))*1000);
 		particulesContainer.EnableRendering(animationPropertyElement->GetBoolConfig("showparticle"));
 		recepteursSContainer.EnableRendering(animationPropertyElement->GetBoolConfig("showrecepteurss"));
+	}
+
+	void ProjectManager::OnSetAllMaterialsReflection(Element* sellectedElement, Element::IDEVENT preselectionMode)
+	{
+
+		std::vector <Element*> lstMatRow;
+		sellectedElement->GetAllElementByType(Element::ELEMENT_TYPE_ROW_MATERIAU, lstMatRow);
+
+
+		for (int j = 0; j < lstMatRow.size(); j++)
+		{
+			E_Data_Row_Materiau* elFreq = dynamic_cast<E_Data_Row_Materiau*>(lstMatRow[j]);
+
+			switch (preselectionMode) {
+			case Element::IDEVENT_SET_ALL_MAT_TO_LAMBERT:
+				elFreq->UpdateListConfig("loi", 2);
+				break;
+			case Element::IDEVENT_SET_ALL_MAT_TO_PHONG:
+				elFreq->UpdateListConfig("loi", 7);
+				break;
+			}
+
+		}
+
 	}

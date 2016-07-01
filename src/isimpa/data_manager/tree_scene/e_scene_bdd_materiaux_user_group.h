@@ -196,6 +196,14 @@ public:
 	{
 		leMenu->Append(GetMenuItem(leMenu,Element::IDEVENT_NEW_USERMAT, _("New material"),"./Bitmaps/popup_new.png"));
 		leMenu->Append(GetMenuItem(leMenu,Element::IDEVENT_NEW_MATERIAL_GROUP, _("Create group"),"./Bitmaps/popup_new.png"));
+
+		leMenu->AppendSeparator();
+
+		wxMenu* submenupreselect = new wxMenu();
+		submenupreselect->Append(Element::GetMenuItem(submenupreselect, Element::IDEVENT_SET_ALL_MAT_TO_LAMBERT, _("Set all to Lambert")));
+		submenupreselect->Append(Element::GetMenuItem(submenupreselect, Element::IDEVENT_SET_ALL_MAT_TO_PHONG, _("Set all to Phong")));
+		leMenu->AppendSubMenu(submenupreselect, _("Set reflection model"));
+
 		Element::OnRightClic(leMenu);
 	}
 	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent)

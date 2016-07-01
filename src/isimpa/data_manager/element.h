@@ -349,6 +349,8 @@ class Element
 			IDEVENT_NEW_RECEPTEUR_S_COUPE,				/*!< \~english Add a cutting plan receiver event \~french Ajouter une récepteur en coupe */
 			IDEVENT_BFREQ_PRESELECTION_ALL,		        /*!< \~english built-in event \~french Séléction automatique des bandes de fréquences */
 			IDEVENT_RECEPTEURS_COMPUTE_STI,
+			IDEVENT_SET_ALL_MAT_TO_LAMBERT,
+			IDEVENT_SET_ALL_MAT_TO_PHONG,
 			IDEVENT_LAST_FIXED			
 		};
 		/**

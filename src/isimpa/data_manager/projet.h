@@ -651,6 +651,7 @@ private:
 	void OnMenuDeleteFolder(uiTreeCtrl* fromCtrl,Element* eRoot,Element* folderel);
 	void OnMenuLoadRecepteurssSimulation(uiTreeCtrl* fromCtrl,Element* eRoot,Element* elRsRecord,Element::IDEVENT loadingMethod);
 	void OnMenuLoadRecepteurspSimulation(Element* elRpRecord,Element::IDEVENT loadingMethod);
+	void OnSetAllMaterialsReflection(Element* elementSellected, Element::IDEVENT preselectionMode);
 
 	void OnOpenFolder(Element* folder);
 	void OnDrawableElementDelete();

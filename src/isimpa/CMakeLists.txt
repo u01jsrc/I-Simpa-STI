@@ -355,6 +355,14 @@ ${ISIMPA_RESSOURCES}/meshing
 	Debug
 DESTINATION  ${PROJECT_BINARY_DIR}/bin/Debug)
 
+# on visual studio we want to copy the seperate debug-info file
+if(MSVC)
+	INSTALL(FILES ${PROJECT_BINARY_DIR}/src/isimpa/Debug/isimpa.pdb
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug
+	CONFIGURATIONS Debug
+)
+endif()
+
 install (TARGETS isimpa
         RUNTIME 
 	CONFIGURATIONS
