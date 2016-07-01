@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: I-SIMPA\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-21 15:51+0200\n"
-"PO-Revision-Date: 2016-05-21 16:11+0200\n"
+"POT-Creation-Date: 2016-06-21 13:23+0200\n"
+"PO-Revision-Date: 2016-06-21 13:33+0200\n"
 "Last-Translator: Ifsttar <Judicael.Picaut@ifsttar.fr>\n"
 "Language-Team: Nicolas Fortin, Judicaël Picaut <i-simpa@ifsttar.fr>\n"
 "Language: pl_PL\n"
@@ -2746,17 +2746,29 @@ msgid "Test mesh topology"
 msgstr "Testuj topologię siatki"
 
 #: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:49
-#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:77
+#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:62
 #: isimpa/data_manager/tree_core/e_core_spps_agh_advanced.h:49
 #: isimpa/data_manager/tree_core/e_core_spps_agh_advanced.h:77
 msgid "Advanced"
 msgstr ""
 
-#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:104
+#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:89
 #: isimpa/data_manager/tree_core/e_core_spps_agh_advanced.h:104
 #: isimpa/data_manager/tree_core/e_core_sppscore.h:96
 msgid "Random seed"
-msgstr "Ziarno losowe"
+msgstr "Ziarno generatora"
+
+#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:95
+msgid "Lambert + Specular"
+msgstr ""
+
+#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:97
+msgid "Phong"
+msgstr ""
+
+#: isimpa/data_manager/tree_core/e_core_sppsNee_agh_advanced.h:99
+msgid "Reflection model"
+msgstr "Model odbicia"
 
 #: isimpa/data_manager/tree_core/e_core_sppsNee_aghcore.h:56
 #: isimpa/data_manager/tree_core/e_core_spps_aghcore.h:56
@@ -3731,7 +3743,7 @@ msgstr ""
 
 #: isimpa/doxDoc/demos/demos_add_element_parent.h:41
 msgid "Projet"
-msgstr ""
+msgstr "Projekt"
 
 #: isimpa/main/i_simpa_main.h:362
 msgid "Fatal error: "
@@ -3754,10 +3766,12 @@ msgid ""
 "Many old sessions of the user interface are available.\n"
 "Do you want to retrieve an old session?"
 msgstr ""
+"Dostępne jest wiele sesji programu.\n"
+"Czy chcesz przywrócić poprzednią sesję?"
 
 #: isimpa/main/i_simpa_main.h:498
 msgid "Please choose the application instance"
-msgstr ""
+msgstr "Proszę wybierz instancję aplikacji"
 
 #: isimpa/manager/processManager.h:69
 msgid "Calculation output:"
@@ -3867,100 +3881,100 @@ msgstr "Nazwa źródła"
 
 #: UserScript/preceiv_sourceTracker/__init__.py:140
 msgid "Source selection"
-msgstr ""
+msgstr "Wybór źródła"
 
 #: UserScript/preceiv_sourceTracker/__init__.py:140
 #: UserScript/preceiv_sourceTracker/__init__.py:166
 #: UserScript/preceiv_sourceTracker/__init__.py:172
 msgid "Please choose the source:"
-msgstr ""
+msgstr "Wybierz źródło:"
 
 #: UserScript/preceiv_sourceTracker/__init__.py:169
 msgid "Delete the link with the source"
-msgstr ""
+msgstr "Usuń powiązanie ze źródłem"
 
 #: UserScript/recp_tool/__init__.py:51
 msgid "Orient the group to a position"
-msgstr ""
+msgstr "Skieruj grupę na punkt"
 
 #: UserScript/recp_tool/__init__.py:52
 msgid "Translation of receivers"
-msgstr ""
+msgstr "Przesunięcie odbiorników"
 
 #: UserScript/recp_tool/__init__.py:53
 msgid "Rotation of receivers"
-msgstr ""
+msgstr "Obrót odbiorników"
 
 #: UserScript/recp_tool/__init__.py:55 UserScript/recp_tool/__init__.py:69
 msgid "Create a receiver grid"
-msgstr ""
+msgstr "Stwórz siatkę odbiorników"
 
 #: UserScript/recp_tool/__init__.py:58 UserScript/source_tools/__init__.py:56
 msgid "Starting position [x,y,z] (m)"
-msgstr ""
+msgstr "Punkt początkowy [x,y,z] (m)"
 
 #: UserScript/recp_tool/__init__.py:59
 msgid "Number of rows"
-msgstr ""
+msgstr "Ilość wierszy"
 
 #: UserScript/recp_tool/__init__.py:60
 msgid "Number of cols"
-msgstr ""
+msgstr "Ilość kolumn"
 
 #: UserScript/recp_tool/__init__.py:61
 msgid "Row step [x,y,z] (m)"
-msgstr ""
+msgstr "Krok - wiersz [x,y,z] (m)"
 
 #: UserScript/recp_tool/__init__.py:62
 msgid "Col step [x,y,z] (m)"
-msgstr ""
+msgstr "Krok - kolumna [x,y,z] (m)"
 
 #: UserScript/recp_tool/__init__.py:70
 msgid "Please fill the following fields to create the receivers points grid"
-msgstr ""
+msgstr "Wypełnij poniższe pola aby utworzyć siatkę odbiorników"
 
 #: UserScript/recp_tool/__init__.py:81
 msgid "Orient to position [x,y,z]"
-msgstr ""
+msgstr "Skieruj na punkt [x,y,z]"
 
 #: UserScript/recp_tool/__init__.py:82
 msgid "Orient a group of receivers to a point"
-msgstr ""
+msgstr "Skieruj grupę odbiorników na punkt"
 
 #: UserScript/recp_tool/__init__.py:83
 msgid "Please enter the coordinates of the orientation point"
-msgstr ""
+msgstr "Proszę podaj współrzędne punktu docelowego"
 
 #: UserScript/recp_tool/__init__.py:94
 msgid "Vector of rotation (m)"
-msgstr ""
+msgstr "Wektor obrotu (m)"
 
 #: UserScript/recp_tool/__init__.py:95
 msgid "Angle of rotation (degrees)"
-msgstr ""
+msgstr "Kąt obrotu (stopnie)"
 
 #: UserScript/recp_tool/__init__.py:96
 msgid "Rotation center (m)"
-msgstr ""
+msgstr "Środek obrotu"
 
 #: UserScript/recp_tool/__init__.py:108
 msgid "Rotation of a group of receivers"
-msgstr ""
+msgstr "Obrót grupy odbiorników"
 
 #: UserScript/recp_tool/__init__.py:120 UserScript/recp_tool/__init__.py:137
 #: UserScript/source_tools/__init__.py:71
 #: UserScript/source_tools/__init__.py:113
 #: UserScript/source_tools/__init__.py:134
 msgid "Wrong parameters"
-msgstr ""
+msgstr "Złe parametry"
 
 #: UserScript/recp_tool/__init__.py:128 UserScript/source_tools/__init__.py:125
 msgid "Direction (m)"
-msgstr ""
+msgstr "Kierunek (m)"
 
 #: UserScript/recp_tool/__init__.py:129
 msgid "Translation of a group of receivers"
-msgstr ""
+msgstr "Przesunięcie grupy odbiorników"
 
 #: UserScript/source_tools/__init__.py:45
 #: isimpa/data_manager/python_interface/py_ui_module/samples/__init__.py:66
@@ -3974,52 +3988,52 @@ msgstr "Wyłącz"
 
 #: UserScript/source_tools/__init__.py:48
 msgid "Rotation"
-msgstr ""
+msgstr "Obrót"
 
 #: UserScript/source_tools/__init__.py:49
 msgid "Translation"
-msgstr ""
+msgstr "Przesunięcie"
 
 #: UserScript/source_tools/__init__.py:51
 msgid "All sources"
-msgstr ""
+msgstr "Wszystkie źródła"
 
 #: UserScript/source_tools/__init__.py:53
 #: UserScript/source_tools/__init__.py:59
 msgid "Create a line of sound sources"
-msgstr ""
+msgstr "Utwórz linię źródeł"
 
 #: UserScript/source_tools/__init__.py:57
 msgid "Number of sources"
-msgstr ""
+msgstr "Ilość źródeł"
 
 #: UserScript/source_tools/__init__.py:58
 msgid "Step [x,y,z] (m)"
-msgstr ""
+msgstr "Krok [x,y,z] (m)"
 
 #: UserScript/source_tools/__init__.py:60
 msgid "Please fill the following fields to create the sound source line"
-msgstr ""
+msgstr "Wypełnij poniższe pola aby utworzyć linię źródeł"
 
 #: UserScript/source_tools/__init__.py:86
 msgid "Vector of rotation"
-msgstr ""
+msgstr "Wektor obrotu"
 
 #: UserScript/source_tools/__init__.py:87
 msgid "Angle (degrees)"
-msgstr ""
+msgstr "Kąt (stopnie)"
 
 #: UserScript/source_tools/__init__.py:88
 msgid "Rotation centre"
-msgstr ""
+msgstr "Środek obrotu"
 
 #: UserScript/source_tools/__init__.py:101
 msgid "Rotation of a group of sound sources"
-msgstr ""
+msgstr "Obrót grupy źródeł"
 
 #: UserScript/source_tools/__init__.py:126
 msgid "Translation of a group of sound sources"
-msgstr ""
+msgstr "Przesunięcie grupy źródeł"
 
 #: isimpa/data_manager/python_interface/py_ui_module/samples/__init__.py:67
 msgid "All emitters"
