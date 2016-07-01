@@ -35,9 +35,9 @@
 
 
 /*! \file Mathlib.h
-    \brief Ce fichier contient la librairie mathématique de l'interface
+	\brief Ce fichier contient la librairie mathématique de l'interface
 
-    Le type vecteur est déclaré ici, ainsi que les opérations sur ces vecteurs.
+	Le type vecteur est déclaré ici, ainsi que les opérations sur ces vecteurs.
 */
 #ifndef __HMATHLIB__
 #define __HMATHLIB__
@@ -153,9 +153,17 @@ public:
 		this->y = y;
 		this->x = x;
 	}
+
+	base_vec3 cross_ret(const base_vec3 &v2) {
+		base_t x = this->y * v2.z - this->z * v2.y;
+		base_t y = this->z * v2.x - this->x * v2.z;
+		base_t z = this->x * v2.y - this->y * v2.x;
+		return base_vec3(x, y, z);
+	}
+
 	base_t cosinus(const base_vec3 &ac){
-	    return (this->x*ac.x + this->y*ac.y + this->z*ac.z)/(length() * ac.length());
-    }
+		return (this->x*ac.x + this->y*ac.y + this->z*ac.z)/(length() * ac.length());
+	}
 	base_t dot(const base_vec3 &v) const { return ((this->x*v.x) + (this->y*v.y) + (this->z*v.z)); } // Produit scalaire
 	// this < _v
 	bool compare(const base_vec3 &_v,base_t epsi=EPSILON) { return (fabs(this->x - _v.x) < epsi && fabs(this->y - _v.y) < epsi && fabs(this->z - _v.z) < epsi); }
@@ -184,16 +192,16 @@ public:
 	/** @brief Calcul la distance entre deux points
 	 * @return Résultat du calcul
 	 */
-    double distance(const base_vec3& a_vector) const
-    {
-      // compute distance between both points
-      double dx = x - a_vector.x;
-      double dy = y - a_vector.y;
-      double dz = z - a_vector.z;
+	double distance(const base_vec3& a_vector) const
+	{
+	  // compute distance between both points
+	  double dx = x - a_vector.x;
+	  double dy = y - a_vector.y;
+	  double dz = z - a_vector.z;
 
-      // return result
-      return(sqrt( dx * dx + dy * dy + dz * dz ));
-    }
+	  // return result
+	  return(sqrt( dx * dx + dy * dy + dz * dz ));
+	}
 	/** @brief Rotation d'un vecteur selon deux angles
 	 *
 	 * Fonction pour le calcul du changement de coordonnées du vecteur
@@ -565,7 +573,7 @@ public:
 	/**
 	 * Return vertices index corresponding to ccw triangle side
 	 */
-    ivec2 sideVertices(short idside)
+	ivec2 sideVertices(short idside)
 	{
 		switch(idside)
 		{
@@ -740,12 +748,12 @@ inline int LineLineIntersect(
    p43.y = p4.y - p3.y;
    p43.z = p4.z - p3.z;
    if (fabs(p43.x)  < EPSILON && fabs(p43.y)  < EPSILON && fabs(p43.z)  < EPSILON)
-      return(false);
+	  return(false);
    p21.x = p2.x - p1.x;
    p21.y = p2.y - p1.y;
    p21.z = p2.z - p1.z;
    if (fabs(p21.x)  < EPSILON && fabs(p21.y)  < EPSILON && fabs(p21.z)  < EPSILON)
-      return(false);
+	  return(false);
 
    d1343 = p13.x * p43.x + p13.y * p43.y + p13.z * p43.z;
    d4321 = p43.x * p21.x + p43.y * p21.y + p43.z * p21.z;
@@ -755,7 +763,7 @@ inline int LineLineIntersect(
 
    denom = d2121 * d4343 - d4321 * d4321;
    if (fabs(denom) < EPSILON)
-      return(false);
+	  return(false);
    numer = d1343 * d4321 - d1321 * d4343;
 
    *mua = numer / denom;
@@ -801,235 +809,326 @@ inline decimal ClosestDistanceBetweenDotAndTriangle(
 	vec3 E0 = (vb -va);
 	vec3 E1 = (vc - va);
 
-    vec3 kDiff = (va - P);
-    decimal fA00 = E0 * E0;
-    decimal fA01 = E0 * E1;
-    decimal fA11 = E1 * E1;
-    decimal fB0  = kDiff * E0;
+	vec3 kDiff = (va - P);
+	decimal fA00 = E0 * E0;
+	decimal fA01 = E0 * E1;
+	decimal fA11 = E1 * E1;
+	decimal fB0  = kDiff * E0;
 	decimal fB1  = kDiff * E1;
 	decimal fC   = kDiff * kDiff;
-    decimal fDet = (decimal) fabs(fA00*fA11-fA01*fA01);
-    decimal fS   = fA01*fB1-fA11*fB0;
-    decimal fT   = fA01*fB0-fA00*fB1;
-    decimal fSqrDist;
+	decimal fDet = (decimal) fabs(fA00*fA11-fA01*fA01);
+	decimal fS   = fA01*fB1-fA11*fB0;
+	decimal fT   = fA01*fB0-fA00*fB1;
+	decimal fSqrDist;
 
 	if (fabs(fDet) < 0.00000001f)
 		return 100000000.0f;
 
-    if ( fS + fT <= fDet )
-    {
-        if ( fS < (decimal)0.0 )
-        {
-            if ( fT < (decimal)0.0 )  // region 4
-            {
-                if ( fB0 < (decimal)0.0 )
-                {
-                    fT = (decimal)0.0;
-                    if ( -fB0 >= fA00 )
-                    {
-                        fS = (decimal)1.0;
-                        fSqrDist = fA00+((decimal)2.0)*fB0+fC;
-                    }
-                    else
-                    {
-                        fS = -fB0/fA00;
-                        fSqrDist = fB0*fS+fC;
-                    }
-                }
-                else
-                {
-                    fS = (decimal)0.0;
-                    if ( fB1 >= (decimal)0.0 )
-                    {
-                        fT = (decimal)0.0;
-                        fSqrDist = fC;
-                    }
-                    else if ( -fB1 >= fA11 )
-                    {
-                        fT = (decimal)1.0;
-                        fSqrDist = fA11+((decimal)2.0)*fB1+fC;
-                    }
-                    else
-                    {
-                        fT = -fB1/fA11;
-                        fSqrDist = fB1*fT+fC;
-                    }
-                }
-            }
-            else  // region 3
-            {
-                fS = (decimal)0.0;
-                if ( fB1 >= (decimal)0.0 )
-                {
-                    fT = (decimal)0.0;
-                    fSqrDist = fC;
-                }
-                else if ( -fB1 >= fA11 )
-                {
-                    fT = (decimal)1.0;
-                    fSqrDist = fA11+((decimal)2.0)*fB1+fC;
-                }
-                else
-                {
-                    fT = -fB1/fA11;
-                    fSqrDist = fB1*fT+fC;
-                }
-            }
-        }
-        else if ( fT < (decimal)0.0 )  // region 5
-        {
-            fT = (decimal)0.0;
-            if ( fB0 >= (decimal)0.0 )
-            {
-                fS = (decimal)0.0;
-                fSqrDist = fC;
-            }
-            else if ( -fB0 >= fA00 )
-            {
-                fS = (decimal)1.0;
-                fSqrDist = fA00+((decimal)2.0)*fB0+fC;
-            }
-            else
-            {
-                fS = -fB0/fA00;
-                fSqrDist = fB0*fS+fC;
-            }
-        }
-        else  // region 0
-        {
-            // minimum at interior point
-            decimal fInvDet = ((decimal)1.0)/fDet;
-            fS *= fInvDet;
-            fT *= fInvDet;
-            fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
-                fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
-        }
-    }
-    else
-    {
-        decimal fTmp0, fTmp1, fNumer, fDenom;
+	if ( fS + fT <= fDet )
+	{
+		if ( fS < (decimal)0.0 )
+		{
+			if ( fT < (decimal)0.0 )  // region 4
+			{
+				if ( fB0 < (decimal)0.0 )
+				{
+					fT = (decimal)0.0;
+					if ( -fB0 >= fA00 )
+					{
+						fS = (decimal)1.0;
+						fSqrDist = fA00+((decimal)2.0)*fB0+fC;
+					}
+					else
+					{
+						fS = -fB0/fA00;
+						fSqrDist = fB0*fS+fC;
+					}
+				}
+				else
+				{
+					fS = (decimal)0.0;
+					if ( fB1 >= (decimal)0.0 )
+					{
+						fT = (decimal)0.0;
+						fSqrDist = fC;
+					}
+					else if ( -fB1 >= fA11 )
+					{
+						fT = (decimal)1.0;
+						fSqrDist = fA11+((decimal)2.0)*fB1+fC;
+					}
+					else
+					{
+						fT = -fB1/fA11;
+						fSqrDist = fB1*fT+fC;
+					}
+				}
+			}
+			else  // region 3
+			{
+				fS = (decimal)0.0;
+				if ( fB1 >= (decimal)0.0 )
+				{
+					fT = (decimal)0.0;
+					fSqrDist = fC;
+				}
+				else if ( -fB1 >= fA11 )
+				{
+					fT = (decimal)1.0;
+					fSqrDist = fA11+((decimal)2.0)*fB1+fC;
+				}
+				else
+				{
+					fT = -fB1/fA11;
+					fSqrDist = fB1*fT+fC;
+				}
+			}
+		}
+		else if ( fT < (decimal)0.0 )  // region 5
+		{
+			fT = (decimal)0.0;
+			if ( fB0 >= (decimal)0.0 )
+			{
+				fS = (decimal)0.0;
+				fSqrDist = fC;
+			}
+			else if ( -fB0 >= fA00 )
+			{
+				fS = (decimal)1.0;
+				fSqrDist = fA00+((decimal)2.0)*fB0+fC;
+			}
+			else
+			{
+				fS = -fB0/fA00;
+				fSqrDist = fB0*fS+fC;
+			}
+		}
+		else  // region 0
+		{
+			// minimum at interior point
+			decimal fInvDet = ((decimal)1.0)/fDet;
+			fS *= fInvDet;
+			fT *= fInvDet;
+			fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
+				fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
+		}
+	}
+	else
+	{
+		decimal fTmp0, fTmp1, fNumer, fDenom;
 
-        if ( fS < (decimal)0.0 )  // region 2
-        {
-            fTmp0 = fA01 + fB0;
-            fTmp1 = fA11 + fB1;
-            if ( fTmp1 > fTmp0 )
-            {
-                fNumer = fTmp1 - fTmp0;
-                fDenom = fA00-2.0f*fA01+fA11;
-                if ( fNumer >= fDenom )
-                {
-                    fS = (decimal)1.0;
-                    fT = (decimal)0.0;
-                    fSqrDist = fA00+((decimal)2.0)*fB0+fC;
-                }
-                else
-                {
-                    fS = fNumer/fDenom;
-                    fT = (decimal)1.0 - fS;
-                    fSqrDist = fS*(fA00*fS+fA01*fT+2.0f*fB0) +
-                        fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
-                }
-            }
-            else
-            {
-                fS = (decimal)0.0;
-                if ( fTmp1 <= (decimal)0.0 )
-                {
-                    fT = (decimal)1.0;
-                    fSqrDist = fA11+((decimal)2.0)*fB1+fC;
-                }
-                else if ( fB1 >= (decimal)0.0 )
-                {
-                    fT = (decimal)0.0;
-                    fSqrDist = fC;
-                }
-                else
-                {
-                    fT = -fB1/fA11;
-                    fSqrDist = fB1*fT+fC;
-                }
-            }
-        }
-        else if ( fT < (decimal)0.0 )  // region 6
-        {
-            fTmp0 = fA01 + fB1;
-            fTmp1 = fA00 + fB0;
-            if ( fTmp1 > fTmp0 )
-            {
-                fNumer = fTmp1 - fTmp0;
-                fDenom = fA00-((decimal)2.0)*fA01+fA11;
-                if ( fNumer >= fDenom )
-                {
-                    fT = (decimal)1.0;
-                    fS = (decimal)0.0;
-                    fSqrDist = fA11+((decimal)2.0)*fB1+fC;
-                }
-                else
-                {
-                    fT = fNumer/fDenom;
-                    fS = (decimal)1.0 - fT;
-                    fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
-                        fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
-                }
-            }
-            else
-            {
-                fT = (decimal)0.0;
-                if ( fTmp1 <= (decimal)0.0 )
-                {
-                    fS = (decimal)1.0;
-                    fSqrDist = fA00+((decimal)2.0)*fB0+fC;
-                }
-                else if ( fB0 >= (decimal)0.0 )
-                {
-                    fS = (decimal)0.0;
-                    fSqrDist = fC;
-                }
-                else
-                {
-                    fS = -fB0/fA00;
-                    fSqrDist = fB0*fS+fC;
-                }
-            }
-        }
-        else  // region 1
-        {
-            fNumer = fA11 + fB1 - fA01 - fB0;
-            if ( fNumer <= (decimal)0.0 )
-            {
-                fS = (decimal)0.0;
-                fT = (decimal)1.0;
-                fSqrDist = fA11+((decimal)2.0)*fB1+fC;
-            }
-            else
-            {
-                fDenom = fA00-2.0f*fA01+fA11;
-                if ( fNumer >= fDenom )
-                {
-                    fS = (decimal)1.0;
-                    fT = (decimal)0.0;
-                    fSqrDist = fA00+((decimal)2.0)*fB0+fC;
-                }
-                else
-                {
-                    fS = fNumer/fDenom;
-                    fT = (decimal)1.0 - fS;
-                    fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
-                        fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
-                }
-            }
-        }
-    }
+		if ( fS < (decimal)0.0 )  // region 2
+		{
+			fTmp0 = fA01 + fB0;
+			fTmp1 = fA11 + fB1;
+			if ( fTmp1 > fTmp0 )
+			{
+				fNumer = fTmp1 - fTmp0;
+				fDenom = fA00-2.0f*fA01+fA11;
+				if ( fNumer >= fDenom )
+				{
+					fS = (decimal)1.0;
+					fT = (decimal)0.0;
+					fSqrDist = fA00+((decimal)2.0)*fB0+fC;
+				}
+				else
+				{
+					fS = fNumer/fDenom;
+					fT = (decimal)1.0 - fS;
+					fSqrDist = fS*(fA00*fS+fA01*fT+2.0f*fB0) +
+						fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
+				}
+			}
+			else
+			{
+				fS = (decimal)0.0;
+				if ( fTmp1 <= (decimal)0.0 )
+				{
+					fT = (decimal)1.0;
+					fSqrDist = fA11+((decimal)2.0)*fB1+fC;
+				}
+				else if ( fB1 >= (decimal)0.0 )
+				{
+					fT = (decimal)0.0;
+					fSqrDist = fC;
+				}
+				else
+				{
+					fT = -fB1/fA11;
+					fSqrDist = fB1*fT+fC;
+				}
+			}
+		}
+		else if ( fT < (decimal)0.0 )  // region 6
+		{
+			fTmp0 = fA01 + fB1;
+			fTmp1 = fA00 + fB0;
+			if ( fTmp1 > fTmp0 )
+			{
+				fNumer = fTmp1 - fTmp0;
+				fDenom = fA00-((decimal)2.0)*fA01+fA11;
+				if ( fNumer >= fDenom )
+				{
+					fT = (decimal)1.0;
+					fS = (decimal)0.0;
+					fSqrDist = fA11+((decimal)2.0)*fB1+fC;
+				}
+				else
+				{
+					fT = fNumer/fDenom;
+					fS = (decimal)1.0 - fT;
+					fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
+						fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
+				}
+			}
+			else
+			{
+				fT = (decimal)0.0;
+				if ( fTmp1 <= (decimal)0.0 )
+				{
+					fS = (decimal)1.0;
+					fSqrDist = fA00+((decimal)2.0)*fB0+fC;
+				}
+				else if ( fB0 >= (decimal)0.0 )
+				{
+					fS = (decimal)0.0;
+					fSqrDist = fC;
+				}
+				else
+				{
+					fS = -fB0/fA00;
+					fSqrDist = fB0*fS+fC;
+				}
+			}
+		}
+		else  // region 1
+		{
+			fNumer = fA11 + fB1 - fA01 - fB0;
+			if ( fNumer <= (decimal)0.0 )
+			{
+				fS = (decimal)0.0;
+				fT = (decimal)1.0;
+				fSqrDist = fA11+((decimal)2.0)*fB1+fC;
+			}
+			else
+			{
+				fDenom = fA00-2.0f*fA01+fA11;
+				if ( fNumer >= fDenom )
+				{
+					fS = (decimal)1.0;
+					fT = (decimal)0.0;
+					fSqrDist = fA00+((decimal)2.0)*fB0+fC;
+				}
+				else
+				{
+					fS = fNumer/fDenom;
+					fT = (decimal)1.0 - fS;
+					fSqrDist = fS*(fA00*fS+fA01*fT+((decimal)2.0)*fB0) +
+						fT*(fA01*fS+fA11*fT+((decimal)2.0)*fB1)+fC;
+				}
+			}
+		}
+	}
 
-    if ( pfSParam )
-        *pfSParam = fS;
+	if ( pfSParam )
+		*pfSParam = fS;
 
-    if ( pfTParam )
-        *pfTParam = fT;
+	if ( pfTParam )
+		*pfTParam = fT;
 
-    return (decimal) fabs(fSqrDist);
+	return (decimal) fabs(fSqrDist);
 }
+
+/*****************************************************************************/
+/*                                                                           */
+/* Matrix3x3                                                                   */
+/*                                                                           */
+/*****************************************************************************/
+
+/**
+* @brief Matrix 3x3
+* Vecteur comprenant 3x3 flottants
+*/
+template<typename base_M>
+class base_Matrix3 {
+public:
+	base_Matrix3(void) : x11(0), x12(0), x13(0), x21(0), x22(0), x23(0), x31(0), x32(0), x33(0) { }
+	base_Matrix3(const base_M& _x11, const base_M& _x12, const base_M& _x13, const base_M& _x21, const base_M& _x22, const base_M& _x23, const base_M& _x31, const base_M& _x32, const base_M& _x33) : x11(_x11), x12(_x12), x13(_x13), x21(_x21), x22(_x22), x23(_x23), x31(_x31), x32(_x32), x33(_x33) { }
+
+	int operator==(const base_Matrix3 &_v) { return (fabs(this->x11 - _v.x11) < EPSILON && fabs(this->x12 - _v.x12) < EPSILON && fabs(this->x13 - _v.x13) < EPSILON &&...
+													fabs(this->x21 - _v.x21) < EPSILON && fabs(this->x22 - _v.x22) < EPSILON && fabs(this->x23 - _v.x23) < EPSILON &&...
+													fabs(this->x31 - _v.x31) < EPSILON && fabs(this->x32 - _v.x32) < EPSILON && fabs(this->x33 - _v.x33) < EPSILON); }
+	int operator!=(const base_Matrix3 &_v) { return !(*this == _v); }
+
+	base_Matrix3 &operator=(base_M _f) { this->x11 = _f; this->x12 = _f; this->x13 = _f; this->x21 = _f; this->x22 = _f; this->x23 = _f; this->x31 = _f; this->x32 = _f; this->x33 = _f; return (*this); }
+	const base_Matrix3 operator*(base_M _f) const { return base_Matrix3(this->x11 * _f, this->x12 * _f, this->x13 * _f, this->x21 * _f, this->x22 * _f, this->x23 * _f, this->x31 * _f, this->x32 * _f, this->x33 * _f); }
+	const base_Matrix3 operator/(base_M _f) const {
+		if (fabs(_f) < EPSILON) return *this;
+		_f = 1.0f / _f;
+		return (*this) * _f;
+	}
+
+	const base_Matrix3 operator+(const base_Matrix3 &_v) const { return base_Matrix3(this->x11 + _v.x11, this->x12 + _v.x12, this->x13 + _v.x13, this->x21 + _v.x21, this->x22 + _v.x22, this->x23 + _v.x23, this->x31 + _v.x31, this->x32 + _v.x32, this->x33 + _v.x33); }
+	const base_Matrix3 operator-() const { return base_Matrix3(-this->x11, -this->x12, -this->x13, -this->x21, -this->x22, -this->x23, -this->x31, -this->x32, -this->x33); }
+	const base_Matrix3 operator-(const base_Matrix3 &_v) const { return base_Matrix3(this->x11 - _v.x11, this->x12 - _v.x12, this->x13 - _v.x13, this->x21 - _v.x21, this->x22 - _v.x22, this->x23 - _v.x23, this->x31 - _v.x31, this->x32 - _v.x32, this->x33 - _v.x33); }
+
+	base_Matrix3 &operator*=(base_M _f) { return *this = *this * _f; }
+	base_Matrix3 &operator/=(base_M _f) { return *this = *this / _f; }
+	base_Matrix3 &operator+=(const base_Matrix3 &_v) { return *this = *this + _v; }
+	base_Matrix3 &operator-=(const base_Matrix3 &_v) { return *this = *this - _v; }
+
+	base_vec3<base_M> operator*(const base_vec3<base_M> &_v) const {
+		return base_vec3<base_M>(x11*_v.x + x12*_v.y + x13*_v.z, x21*_v.x + x22*_v.y + x23*_v.z, x31*_v.x + x32*_v.y + x33*_v.z);
+	}
+
+	base_Matrix3 operator*(const base_Matrix3 &_v) const {
+		return base_Matrix3(x11*_v.x11 + x12*_v.x21 + x13*_v.x31,	x11*_v.x12 + x12*_v.x22 + x13*_v.x32,	x11*_v.x13 + x12*_v.x23 + x13*_v.x33, 
+							x21*_v.x11 + x22*_v.x21 + x23*_v.x31,	x21*_v.x12 + x22*_v.x22 + x23*_v.x32,	x21*_v.x13 + x22*_v.x23 + x23*_v.x33, 
+							x31*_v.x11 + x32*_v.x21 + x33*_v.x31,	x31*_v.x12 + x32*_v.x22 + x33*_v.x32,	x31*_v.x13 + x32*_v.x23 + x33*_v.x33);
+	}
+
+	operator base_M*() { return this->v; }
+	operator const base_M*() const { return this->v; }
+	base_M &operator[](int _i) { return this->v[_i]; }
+	const base_M &operator[](int _i) const { return this->v[_i]; }
+
+	void set(base_M _x11, base_M _x12, base_M _x13, base_M _x21, base_M _x22, base_M _x23, base_M _x31, base_M _x32, base_M _x33) { this->x11 = _x11; this->x12 = _x12; this->x13 = _x13; this->x21 = _x21; this->x22 = _x22; this->x23 = _x23; this->x31 = _x31; this->x32 = _x32; this->x33 = _x33;}
+	void set(const base_Matrix3 &_v) { this->x11 = _v.x11; this->x12 = _v.x12; this->x13 = _v.x13; this->x21 = _v.x21; this->x22 = _v.x22; this->x23 = _v.x23; this->x31 = _v.x31; this->x32 = _v.x32; this->x33 = _v.x33; }
+	void eye() { this->x11 = 1; this->x12 = 0; this->x13 = 0; this->x21 =0; this->x22 = 1; this->x23 = 0; this->x31 = 0; this->x32 = 0; this->x33 = 1; }
+
+	void calculateRotationMatrix(base_vec3<base_M> from ,base_vec3<base_M> target)
+	{
+		vec3 cross;
+		Matrix3 I, v;
+		I.eye();
+
+		from.normalize();
+		target.normalize();
+		cross = from.cross_ret(target);
+
+		if (cross.length()>0.00000001) {
+			v.set(0, -cross.z, cross.y,
+				cross.z, 0, -cross.x,
+				-cross.y, cross.x, 0);
+
+
+			this->set(I + v + v*v*(1 - from.dot(target)) / cross.length());
+		}
+		else {
+			this->set(-1, 0, 0,
+				0, -1, 0,
+				0, 0, -1);
+		}
+	}
+
+	union {
+		struct { base_M x11, x12, x13, x21, x22, x23, x31, x32, x33; };
+		base_M v[9];
+	};
+};
+typedef base_Matrix3<decimal> Matrix3;
+
+
 }; //fin namespace
 using namespace core_mathlib;
 #endif // __HMATHLIB__

@@ -89,7 +89,8 @@ enum REFLECTION_LAW
 	REFLECTION_LAW_W2,			/*!<  Loi de reflexion w2 */
 	REFLECTION_LAW_W3,			/*!<  Loi de reflexion w3 */
 	REFLECTION_LAW_W4,			/*!<  Loi de reflexion w4 */
-	REFLECTION_LAW_SEMI_DIFFUS	/*!<  Loi de reflexion semis diffus */
+	REFLECTION_LAW_SEMI_DIFFUS,	/*!<  Loi de reflexion semis diffus */
+	REFLECTION_LAW_PHONG		/*!<  Phong reflection law */
 };
 /**
  * Enumération des types des sources
