@@ -6,6 +6,7 @@ set(SPPS_SOURCE_FILES
     data_manager/core_configuration.cpp
     input_output/reportmanager.cpp
     tools/dotdistribution.cpp
+    tools/brdfreflection.cpp
     CalculationCore.cpp
     sppsNeeAGHInitialisation.cpp
     sppsNeeAGH.cpp
@@ -33,6 +34,14 @@ set_property(TARGET sppsNee-agh PROPERTY FOLDER "executables")
 install (TARGETS sppsNee-agh
 	CONFIGURATIONS Debug
         RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/sppsNee-agh)
+
+# on visual studio we want to copy the seperate debug-info file
+if(MSVC)
+	INSTALL(FILES ${PROJECT_BINARY_DIR}/src/sppsNee-agh/Debug/sppsNee-agh.pdb
+	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/sppsNee-agh
+	CONFIGURATIONS Debug
+)
+endif()
 
 install (TARGETS sppsNee-agh
 	CONFIGURATIONS Release

@@ -55,7 +55,6 @@ public:
 		I_PROP_RANDOM_SEED,							/*!< Random SEED */
         I_PROP_SAVE_SURFACE_INTERSECTION,           /*!< Save particle and surface intersection events*/
         I_PROP_SAVE_RECEIVER_INTERSECTION,           /*!< Save particle and receiver intersection events*/
-		I_PROP_BRDF_REFLECTION_MODEL				/*!< 0: Specular + Lambert 1:Phong BRDF */
 	};
 
 	/**

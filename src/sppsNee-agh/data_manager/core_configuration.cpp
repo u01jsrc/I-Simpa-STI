@@ -78,7 +78,6 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 					std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl;
 				}
 				SetConfigInformation(I_PROP_RANDOM_SEED, seed);
-				SetConfigInformation(I_PROP_BRDF_REFLECTION_MODEL, 0);
 			}
 		}
 	}
