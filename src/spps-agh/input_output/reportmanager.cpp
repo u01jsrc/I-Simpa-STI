@@ -293,7 +293,7 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 				this->angle_energy[i].fill_empty_data(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::IPROP_EXTENDED_ANGLE_STATS)));
 		}	
 		this->angle_energy[face->face_scene->angle_group-1].calc_angle(particleInfos,*face->face_scene);
-		this->angle_energy[face->face_scene->angle_group-1].add_eng(particleInfos);
+		this->angle_energy[face->face_scene->angle_group-1].add_energy(particleInfos);
 	}
 
 	if(face->recepteurS)

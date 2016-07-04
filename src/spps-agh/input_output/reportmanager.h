@@ -6,10 +6,7 @@
 #include <list>
 #include <iostream>
 #include <numeric>
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
 
-using namespace Eigen;
 /**
  * @file reportmanager.h
  * @brief Implémentation du gestionnaire de fichiers de rapports
@@ -130,43 +127,16 @@ public:
 			if(angle>89){angle=89;}	//probably not needed
 			else if(angle<0){angle=0;}	//probably not needed
 		}else{
-			Vector3f normal(face.normal.x,face.normal.y,face.normal.z);
-			Vector3f dir(particleInfos.direction.x,particleInfos.direction.y,particleInfos.direction.z);
-			Vector3f target(0,0,1);
-			Vector3f cross,res;
-			Matrix3f I,R,v;
-			I.setIdentity(3,3);
+			vec3 normal(face.normal.x,face.normal.y,face.normal.z);
+			vec3 dir(particleInfos.direction.x,particleInfos.direction.y,particleInfos.direction.z);
+			vec3 target(0,0,1);
+			Matrix3 R;
 
-			dir=dir/dir.norm();
-			normal=normal/normal.norm();
-			cross=normal.cross(target);
+			R.calculateRotationMatrix(normal, target);
+			dir = R*dir;
 			
-			if(cross.norm()>0.00000001){
-				v<<0,-cross(2), cross(1),
-					cross(2), 0 ,-cross(0),
-					-cross(1), cross(0),0;
-
-
-				R=I+v+v*v*(1-normal.dot(target))/cross.norm();
-				dir=R*dir;
-			}else{
-				dir*=-1;
-			}
-			
-			//std::cout << "normal = " << normal << std::endl;
-			//std::cout << "dir = " << dir << std::endl;
-			//std::cout << "target = " << target << std::endl;
-			//std::cout << "I = " << I << std::endl;
-			//std::cout << "cross = " << cross << std::endl;
-			//std::cout << "v = " << v << std::endl;
-			//std::cout << "R = " << R << std::endl;
-			//std::cout << "dir = " << dir << std::endl;
-
-			int phi=atan2(dir(1),dir(0))*180/M_PI;
-			int theta=acos(dir(2)/dir.norm())*180/M_PI;
-
-			//std::cout << "theta = " << theta << std::endl;
-			//std::cout << "phi = " << phi << std::endl;
+			int phi=atan2(dir.y,dir.x)*180/M_PI;
+			int theta=acos(dir.z/dir.length())*180/M_PI;
 
 			if(phi>179)
 				phi=179;
@@ -174,7 +144,7 @@ public:
 			angle=90*(phi+180)+theta;
 		}
 	}
-	void add_eng(CONF_PARTICULE& particleInfos)
+	void add_energy(CONF_PARTICULE& particleInfos)
 	{
 		y=particleInfos.energie-correction[angle];
 		t=energy[angle]+y;
@@ -241,24 +211,24 @@ public:
 	};
 	std::vector <t_angle_energy> angle_energy;	//zmiana!!!
 private:
-    /**
-    * For csv files, collision history with particles and receivers sphere
-    */
-    struct t_receiver_collision_history
-    {
-        decimal time;
-        vec3 incidentVector;
-        decimal energy;
-        uentier idrp;
+	/**
+	* For csv files, collision history with particles and receivers sphere
+	*/
+	struct t_receiver_collision_history
+	{
+		decimal time;
+		vec3 incidentVector;
+		decimal energy;
+		uentier idrp;
 
-        t_receiver_collision_history(const decimal& _time,const vec3& _incidentVector, const decimal& _energy, const uentier& _idrp)
-            : time(_time), incidentVector(_incidentVector), energy(_energy), idrp(_idrp)
-        {
-        }
-    };
-    /**
-     * For csv files, collision history with particles and scene surfaces
-     */
+		t_receiver_collision_history(const decimal& _time,const vec3& _incidentVector, const decimal& _energy, const uentier& _idrp)
+			: time(_time), incidentVector(_incidentVector), energy(_energy), idrp(_idrp)
+		{
+		}
+	};
+	/**
+	 * For csv files, collision history with particles and scene surfaces
+	 */
 	struct t_collision_history
 	{
 		vec3 collisionCoordinate;
@@ -280,8 +250,8 @@ private:
 	t_ParamReport paramReport;
 	std::fstream* particleFile;
 	std::fstream* particleSurfaceCSVFile; // put data from collisionHistory
-    std::fstream* particleReceiverCSVFile; // put data from receiverCollisionHistory
-    
+	std::fstream* particleReceiverCSVFile; // put data from receiverCollisionHistory
+	
 	uentier_long lastParticuleFileHeaderInfo;
 	binaryFHeader enteteSortie;
 	uentier_long nbPasDeTempsMax;
@@ -291,7 +261,7 @@ private:
 	entier firstTimeStep;
 	std::vector<binaryPTimeStep> positionsCurrentParticule;
 	std::list<t_collision_history> collisionHistory; /*!< Records of surface collision history */
-    std::list<t_receiver_collision_history> receiverCollisionHistory; /*!< Records of receiver collision history*/
+	std::list<t_receiver_collision_history> receiverCollisionHistory; /*!< Records of receiver collision history*/
 	l_decimal* tabEnergyByTimeStep; /*!< Tableau de l'energie global en fonction du temps */
 
 
