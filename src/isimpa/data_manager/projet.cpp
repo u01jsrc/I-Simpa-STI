@@ -2162,26 +2162,26 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 	wxString tmpFileName=zipfilename+".tmp";
 	using namespace std;
 	auto_ptr<wxFFileInputStream> in(new wxFFileInputStream(zipfilename));
-    wxTempFileOutputStream out(tmpFileName);
+	wxTempFileOutputStream out(tmpFileName);
 
-    wxZipInputStream inzip(*in);
+	wxZipInputStream inzip(*in);
 	wxProgressDialog progInfo(_("Saving project"),_("Updating project backup"),100,mainFrame,wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
 
-    wxZipOutputStream outzip(out);
+	wxZipOutputStream outzip(out);
 
-    wxZipEntryPtr entry;
+	wxZipEntryPtr entry;
 
-    // transfer any meta-data for the archive as a whole (the zip comment
-    // in the case of zip)
-    outzip.CopyArchiveMetaData(inzip);
+	// transfer any meta-data for the archive as a whole (the zip comment
+	// in the case of zip)
+	outzip.CopyArchiveMetaData(inzip);
 
-    // call CopyEntry for each entry except those matching the pattern
+	// call CopyEntry for each entry except those matching the pattern
 	//////////////////////////////////////////////////////////////////
 	// Mise à jour des fichiers déjà présent dans l'archive
 	//////////////////////////////////////////////////////////////////
 	int nbUpdated=0;
 	int nbToUpdate=inzip.GetTotalEntries();
-    while (entry.reset(inzip.GetNextEntry()), entry.get() != NULL)
+	while (entry.reset(inzip.GetNextEntry()), entry.get() != NULL)
 	{
 		nbUpdated++;
 		//Si le fichier existe toujours
@@ -2238,8 +2238,8 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 		}
 	}
 
-    // Ferme le flux afin de pouvoir continuer à transferer des données
-    in.reset();
+	// Ferme le flux afin de pouvoir continuer à transferer des données
+	in.reset();
 
 
 	//////////////////////////////////////////////////////////////////
@@ -2271,8 +2271,8 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 
 
 
-    // Verifie le bon déroulement de l'enregistrement du fichier
-    bool success = inzip.Eof() && outzip.Close() && out.Commit();
+	// Verifie le bon déroulement de l'enregistrement du fichier
+	bool success = inzip.Eof() && outzip.Close() && out.Commit();
 
 	if(success)
 	{
@@ -2313,7 +2313,7 @@ bool ProjectManager::ZipFolder(const wxString&folderfrom,const wxString&zipfilen
 	this->GetAllFolderItems(folderfrom,tabFichiers);
 	wxFFileOutputStream out(zipfilename);
 
-    wxZipOutputStream zip(out);
+	wxZipOutputStream zip(out);
 
 	long nbfichier=tabFichiers.Count();
 	if(nbfichier>0)
@@ -2472,16 +2472,16 @@ bool ProjectManager::UnZipFolder(const wxString&zipfilename,const wxString&folde
 {
 	wxProgressDialog progInfo(_("Project decompression"),_("Project files decompression in progress ..."),100,mainFrame,wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
 	wxString fto(folderTo);
-    wxZipEntryPtr entry;
-    wxFFileInputStream in(zipfilename);
-    wxZipInputStream zip(in);
+	wxZipEntryPtr entry;
+	wxFFileInputStream in(zipfilename);
+	wxZipInputStream zip(in);
 
 	int nbfichier=zip.GetTotalEntries();
 	int i=0;
-    while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
-    {
-        // access meta-data
-        wxString name = entry->GetName();
+	while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
+	{
+		// access meta-data
+		wxString name = entry->GetName();
 		wxFileName fichToCreate(name);
 		fichToCreate.RemoveDir(0);
 		fichToCreate.SetPath(fto+fichToCreate.GetPath());
@@ -2507,7 +2507,7 @@ bool ProjectManager::UnZipFolder(const wxString&zipfilename,const wxString&folde
 				fichToCreate.SetTimes(NULL,&entry->GetDateTime(),&entry->GetDateTime());
 			}
 		}
-    }
+	}
 	return true;
 }
 
@@ -2722,7 +2722,7 @@ void ProjectManager::OnModeOriginalPaint(wxCommandEvent& event)
 	renderOriginalMaterial=true;
 	ApplicationConfiguration::GLOBAL_VAR.drawMaterialColors=false;
 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelMaterialFaces,false);
- 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelFaces,true);
+	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelFaces,true);
 	this->GlFrame->RefreshElementDraw();
 }
 void ProjectManager::OnModeMaterialPaint(wxCommandEvent& event)
@@ -3295,9 +3295,11 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 			switch (preselectionMode) {
 			case Element::IDEVENT_SET_ALL_MAT_TO_LAMBERT:
 				elFreq->UpdateListConfig("loi", 2);
+				elFreq->Modified(elFreq);
 				break;
 			case Element::IDEVENT_SET_ALL_MAT_TO_PHONG:
 				elFreq->UpdateListConfig("loi", 7);
+				elFreq->Modified(elFreq);
 				break;
 			}
 

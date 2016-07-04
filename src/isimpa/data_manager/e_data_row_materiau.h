@@ -116,7 +116,7 @@ public:
 			NoeudCourant->DeleteAttribute("affaiblissement");
 		return NoeudCourant;
 	}
-protected:
+
 	void Modified(Element* eModif)
 	{
 		t_elementInfo filsInfo=eModif->GetElementInfos();
@@ -164,7 +164,8 @@ protected:
 					this->UpdateListConfig("loi",0);
 				}else{
 					this->SetReadOnlyConfig("loi",false);
-					this->UpdateListConfig("loi",2); //2 lambert par défaut
+					if(this->GetListConfig("loi")==0)
+						this->UpdateListConfig("loi",2); //2 lambert par défaut
 				}
 								
 			}else if(filsInfo.libelleElement=="loi")
