@@ -347,16 +347,18 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 				}else{
 					// Choix de la méthode de reflexion en fonction de la valeur de diffusion
 					vec3 nouvDirection;
+					vec3 faceNormal;
+					if (!doInvertNormal)
+						faceNormal = -faceInfo->normal;
+					else
+						faceNormal = faceInfo->normal;
+
+					//Get direction for diffuse or specular part based on material info
 					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
 					{
-						vec3 faceNormal;
-						if(!doInvertNormal)
-							faceNormal =-faceInfo->normal;
-						else
-							faceNormal =faceInfo->normal;
-						nouvDirection=ReflectionLaws::SolveReflection(configurationP.direction,*materialInfo, faceNormal,configurationP);
+						nouvDirection=ReflectionLaws::SolveDiffusePart(configurationP.direction,*materialInfo, faceNormal,configurationP);
 					}else{
-						nouvDirection=ReflectionLaws::SpecularReflection(configurationP.direction,faceInfo->normal);
+						nouvDirection=ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
 					}
 
 					//Calculate and cast shadow rays

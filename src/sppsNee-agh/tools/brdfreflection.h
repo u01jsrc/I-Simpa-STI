@@ -77,4 +77,5 @@ public:
 	* @param configurationTool Simulation configuration
 	*/
 	static float SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool);
+	static void evaluatePhongAtPoint(float n, float diffusion, float solidAngle, float weight, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, vec3 subFaceNormal, double& result);
 };

@@ -17,7 +17,7 @@ public:
 	 * @param AB Vecteur perpendiculaire à la normal de la face
 	 * @return Vecteur réflexion normalisé
 	 */
-	static vec3 SolveReflection(vec3 &vectorDirection,t_Material_BFreq &materialInfo,vec3& faceNormal, CONF_PARTICULE& particuleInfo)
+	static vec3 SolveDiffusePart(vec3 &vectorDirection,t_Material_BFreq &materialInfo,vec3& faceNormal, CONF_PARTICULE& particuleInfo)
 	{
 		switch(materialInfo.reflectionLaw)
 		{
@@ -39,8 +39,23 @@ public:
 			case REFLECTION_LAW_W4:
 				return BaseWnReflection(vectorDirection,faceNormal,4,particuleInfo);
 				break;
+			case REFLECTION_LAW_PHONG:
+				return BaseWnReflection(vectorDirection, faceNormal, 1, particuleInfo);
+				break;
 			default:
 				return SpecularReflection(vectorDirection,faceNormal);
+		};
+	}
+
+	static vec3 SolveSpecularPart(vec3 &vectorDirection, t_Material_BFreq &materialInfo, vec3& faceNormal, CONF_PARTICULE& particuleInfo)
+	{
+		switch (materialInfo.reflectionLaw)
+		{
+		case REFLECTION_LAW_PHONG:
+			return PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, materialInfo);
+			break;
+		default:
+			return SpecularReflection(vectorDirection, faceNormal);
 		};
 	}
 	/**
@@ -121,5 +136,28 @@ private:
 		retVal=faceNormal.Rotation(retVal,phi);
 		retVal=retVal.Rotation(faceNormal,theta);
 		return retVal / retVal.length();
+	}
+
+	static vec3 PhongSpecularPart(vec3 &vectorDirection, vec3 &faceNormal, CONF_PARTICULE& particuleInfo, t_Material_BFreq &material)
+	{
+		float n = powf(10, powf(-0.82662*material.diffusion, 3) + 1.5228);
+		vec3 specularDir = SpecularReflection(vectorDirection, faceNormal);
+
+		Matrix3 rotationMatrix;
+		rotationMatrix.calculateRotationMatrix(faceNormal, specularDir);
+
+		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n, particuleInfo);
+		target = rotationMatrix*target;
+
+
+
+		//test if reflected ray is pointing into ground
+		if(abs(target.dot(-faceNormal)) >= 2*M_PI)
+		{
+			//if it is get new random direction
+			target = PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, material);
+		}
+
+		return target/target.length();
 	}
 };

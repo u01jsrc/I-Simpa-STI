@@ -51,88 +51,6 @@ BRDFs::Initializer::Initializer()
 	calcPixelizedReceivers(19.5, pixelizedCircle40pt);
 }
 
-vec3 BRDFs::SolveSpecularReflection(vec3 &incomingDirection, vec3 &faceNormal)
-{
-	vec3 retVal = (incomingDirection - (faceNormal*(incomingDirection.dot(faceNormal)) * 2));
-	return retVal / retVal.length();
-}
-
-float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
-{
-	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
-	double specularEnergy = 0, lambertEnergy;
-	l_decimal mu1, mu2;
-	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
-
-	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 5000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
-	{
-		specularEnergy = (1 - material.diffusion) * abs(mu2 - mu1) * (specular * 5000).length();
-	}
-
-	double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
-
-	toReceiver.normalize();
-	lambertEnergy = material.diffusion*(1 / M_PI)*solidAngle*faceNormal.dot(toReceiver*-1);
-	
-	return  specularEnergy + lambertEnergy;
-}
-
-float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
-{
-	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
-	Matrix3 rotMatrix;
-	rotMatrix.calculateRotationMatrix(vec3(0, 0, 1), toReceiver);
-
-	double specularTerm = 0, diffuseTerm = 0, solidAngle, dl;
-
-	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
-	std::vector<subSurface> sellectedParametrization;
-
-	if (receiverRadius / toReceiver.length() < 0.1)
-	{
-		dl = (1 / 3.5) * receiverRadius;
-		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
-		sellectedParametrization = pixelizedCircle10pt;
-	}else if(receiverRadius / toReceiver.length() < 1)
-	{
-		dl = (1 / 9.5) * receiverRadius;
-		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
-		sellectedParametrization = pixelizedCircle20pt;
-	}else
-	{
-		dl = (1 / 19.5) * receiverRadius;
-		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
-		sellectedParametrization = pixelizedCircle40pt;
-	}
-	
-
-	float n = powf(10,powf(-0.82662*material.diffusion, 3) + 1.5228);
-
-	for each(subSurface subSurf in sellectedParametrization)
-	{		
-		vec3 position = rotMatrix*subSurf.center + shadowRay.targetReceiver->position;
-		vec3 toSubSurf = position - shadowRay.position;
-		vec3 normal = rotMatrix * vec3(0,0,1);
-
-		toSubSurf.normalize();
-		toReceiver.normalize();
-
-		double cosFace = faceNormal.dot(toSubSurf*-1);
-		double cosSubFace = normal.dot(toSubSurf);
-		double cosPowN = powf(specular.dot(toSubSurf), n);
-		double scalingFactor = ((n + 2) / (2 * M_PI));
-
-		diffuseTerm += material.diffusion*(1. / M_PI)*solidAngle*cosFace*cosSubFace*subSurf.weight;
-
-		if(cosPowN*scalingFactor > 0.000001)
-			specularTerm += (1.-material.diffusion)*scalingFactor*cosPowN*cosFace*solidAngle*cosSubFace*subSurf.weight;
-	}
-
-	return  diffuseTerm + specularTerm;
-}
-
 float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE &shadowRay, vec3 incomingDirection, Core_Configuration *configurationTool)
 {
 	switch (material.reflectionLaw)
@@ -148,6 +66,108 @@ float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CON
 	}
 }
 
+vec3 BRDFs::SolveSpecularReflection(vec3 &incomingDirection, vec3 &faceNormal)
+{
+	vec3 retVal = (incomingDirection - (faceNormal*(incomingDirection.dot(faceNormal)) * 2));
+	return retVal / retVal.length();
+}
+
+float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
+{
+	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
+	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	double specularEnergy = 0, lambertEnergy;
+	l_decimal mu1, mu2;
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+
+	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
+	{
+		specularEnergy = (1 - material.diffusion) * abs(mu2 - mu1) * specular.length()*1000;
+	}
+
+	double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
+
+	toReceiver.normalize();
+	lambertEnergy = material.diffusion*(1 / M_PI)*solidAngle*faceNormal.dot(-toReceiver);
+	
+	return  specularEnergy + lambertEnergy;
+}
+
+float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
+{
+	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
+	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	Matrix3 rotMatrix;
+	double energyFactor = 0, solidAngle, dl;	
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+	std::vector<subSurface> sellectedParametrization;
+
+	//calculate Phong exponent based on experiments (used also in dotreflection - remember to change in both places)
+	float n = powf(10, powf(-0.82662*material.diffusion, 3) + 1.5228);
+
+	//receiver is small and/or it is far from reflection point - evaluated as one point
+		//consider taking n into accont - small n means slowly changing Phong function.
+	if (receiverRadius / toReceiver.length() < 0.01)
+	{
+		solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
+		evaluatePhongAtPoint(n, material.diffusion, solidAngle, 1, shadowRay.targetReceiver->position, shadowRay.position, faceNormal, specular, toReceiver / toReceiver.length(), energyFactor);
+		return energyFactor;
+	}
+
+	//receiver is bigger and/or it is closer to reflection point - evaluated set of few points
+	else if (receiverRadius / toReceiver.length() < 0.1)
+	{
+		dl = (1 / 3.5) * receiverRadius;
+		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
+		sellectedParametrization = pixelizedCircle10pt;
+
+	//receiver is big and/or it is close to reflection point - evaluated set of many points
+	}else if(receiverRadius / toReceiver.length() < 1)
+	{
+		dl = (1 / 9.5) * receiverRadius;
+		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
+		sellectedParametrization = pixelizedCircle20pt;
+
+	//receiver is huge and/or it is very close to reflection point - evaluated set of very many points
+	}else
+	{
+		dl = (1 / 19.5) * receiverRadius;
+		solidAngle = (dl*dl) / (toReceiver.length()*toReceiver.length());
+		sellectedParametrization = pixelizedCircle40pt;
+	}
+	
+	toReceiver.normalize();
+	rotMatrix.calculateRotationMatrix(vec3(0, 0, 1), toReceiver);		//calculate rotation matrix to to properly place the subFace
+	
+	//calculate and sum energy factors for all subfaces
+	for each(subSurface subSurf in sellectedParametrization)
+	{		
+		vec3 subFacePosition = rotMatrix*subSurf.center + shadowRay.targetReceiver->position;
+		vec3 subFaceNormal = rotMatrix * vec3(0, 0, 1);
+
+		evaluatePhongAtPoint(n, material.diffusion, solidAngle, subSurf.weight, subFacePosition, shadowRay.position, faceNormal, specular, subFaceNormal, energyFactor);
+	}
+	return  energyFactor;
+}
+
+void BRDFs::evaluatePhongAtPoint(float n, float diffusion, float solidAngle, float weight, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, vec3 subFaceNormal, double &result)
+{
+	vec3 toSubSurf = target - position;
+	
+	toSubSurf.normalize();
+
+	double cosFace = faceNormal.dot(toSubSurf*-1);
+	double cosSubFace = subFaceNormal.dot(toSubSurf);
+	double cosPow = specular.dot(toSubSurf);
+	double cosPowN = powf(cosPow, n);
+	double scalingFactor = ((n + 2) / (2 * M_PI));
+
+	result += diffusion*(1. / M_PI)*solidAngle*cosFace*cosSubFace*weight;
+
+	if (cosPowN*scalingFactor > 0.0000001)
+		result += (1. - diffusion)*scalingFactor*cosPowN*cosFace*solidAngle*cosSubFace*weight;
+
+}
 
 void BRDFs::calcPixelizedReceivers(float n_elements, std::vector<subSurface>& pixelSet)
 {
