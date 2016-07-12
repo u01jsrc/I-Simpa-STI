@@ -36,14 +36,12 @@
 #ifndef __E_CORE_SPPS_NEE_AGH__
 #define __E_CORE_SPPS_NEE_AGH__
 
-/*! \file e_core_sppscore.h
-\brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
-*/
-//enum COMPUTATION_METHOD
-//{
-//	COMPUTATION_METHOD_ALEATOIRE,
-//	COMPUTATION_METHOD_ENERGETIQUE
-//};
+enum CALCULATION_CORES
+{
+	CLASSIC_SPPS,
+	NEXT_EVENT_ESTIMATION,				/*!<  Path tracing with next event estimation  */
+	MLT									/*!<  Kelemen style MLT*/
+};
 
 /**
 \brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
@@ -67,6 +65,21 @@ protected:
 		surfMethodIndex.push_back(1);
 		confCore->AppendPropertyList("surf_receiv_method", wxTRANSLATE("Surface receiver export"), surfMethod, 0, false, 1, surfMethodIndex, true);
 	}
+
+	void InitCalculationCores(E_Core_Core_Configuration* confCore)
+	{
+		std::vector<wxString> coreMethod;
+		std::vector<int> coreMethodIndex;
+		coreMethod.push_back(wxTRANSLATE("SPPS"));
+		coreMethodIndex.push_back(CALCULATION_CORES::CLASSIC_SPPS);
+		coreMethod.push_back(wxTRANSLATE("SPPS + Next Event Estimation"));
+		coreMethodIndex.push_back(CALCULATION_CORES::NEXT_EVENT_ESTIMATION);
+		coreMethod.push_back(wxTRANSLATE("MLT (Kelemen)"));
+		coreMethodIndex.push_back(CALCULATION_CORES::MLT);
+		confCore->AppendPropertyList("calculation_core", wxTRANSLATE(" CALCULATION CORE"), coreMethod, 0, false, 1, coreMethodIndex, true);
+	}
+
+
 	void InitNewProperties() //Nouvelle proprietes 07/04/2009
 	{
 		/* this->AppendPropertyText("stats_filename",wxString(_("SPPS calculation statistics"))+wxString(".gabe"),true,true)->Hide(); */
@@ -113,6 +126,8 @@ public:
 			}
 			if (!confCore->IsPropertyExist("surf_receiv_method"))
 				InitSurfaceReceiverMethod(confCore);
+			if (!confCore->IsPropertyExist("calculation_core"))
+				InitCalculationCores(confCore);
 			if (!confCore->IsPropertyExist("output_recp_bysource")) {
 				InitOutputRecpBySource(confCore);
 			}
@@ -136,6 +151,7 @@ public:
 		InitNewProperties();
 		InitExportRs(confCore);
 		InitSurfaceReceiverMethod(confCore);
+		InitCalculationCores(confCore);
 		InitOutputRecpBySource(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
@@ -213,6 +229,30 @@ public:
 			else if (filsInfo.libelleElement == "computation_method")
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
+			}
+			else if (filsInfo.libelleElement == "calculation_core")
+			{
+				switch (elConf->GetListConfig("calculation_core")) 
+				{
+				case CALCULATION_CORES::CLASSIC_SPPS:
+					elConf->SetReadOnlyConfig("computation_method", false);
+					elConf->SetReadOnlyConfig("surf_receiv_method", false);
+					break;
+
+				case CALCULATION_CORES::MLT:
+					elConf->UpdateEntierConfig("computation_method", 0);
+					elConf->SetReadOnlyConfig("computation_method", true);
+
+					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+					break;
+
+				case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
+					elConf->UpdateEntierConfig("computation_method", 1);
+					elConf->SetReadOnlyConfig("computation_method", true);
+
+					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+					break;
+				}
 			}
 		}
 		Element::Modified(eModif);

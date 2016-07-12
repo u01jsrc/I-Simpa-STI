@@ -1,4 +1,4 @@
-#include <input_output/gabe/gabe.h>
+﻿#include <input_output/gabe/gabe.h>
 #include <input_output/baseReportManager.h>
 #include <sppsNeeAGHTypes.h>
 #include <input_output/particles/part_binary.h>
@@ -189,10 +189,11 @@ public:
 	 * A appeler avant la translation d'une particule
 	 */
 	void ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, const vec3& nextPosition);
+	void ShadowRayFreeTranslation(CONF_PARTICULE& particleInfos, const vec3& nextPosition);
 	/**
-	 * Une particule est entrée en collision avec une face du modèle
-	 * L'appel doit se faire avant la recherche de la prochaine collision
-	 */
+		 * Une particule est entrée en collision avec une face du modèle
+		 * L'appel doit se faire avant la recherche de la prochaine collision
+		 */
 	void ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos);
 
 	void SaveAndCloseParticleFile();

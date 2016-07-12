@@ -82,13 +82,17 @@ float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal
 
 	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
 	{
-		specularEnergy = (1 - material.diffusion) * abs(mu2 - mu1) * specular.length()*1000;
+		specularEnergy = (1 - material.diffusion) * (abs(mu2 - mu1) * specular.length()*1000)/(2*receiverRadius);
 	}
 
 	double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
 
 	toReceiver.normalize();
-	lambertEnergy = material.diffusion*(1 / M_PI)*solidAngle*faceNormal.dot(-toReceiver);
+
+	//0.66 is normalization factor used to acount for not treating receiver as sphere 
+	//- points far from sphere center ar treated with the same weight as ones in the middle,
+	//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+	lambertEnergy = material.diffusion*(1 / M_PI)*solidAngle*faceNormal.dot(-toReceiver)*0.66;
 	
 	return  specularEnergy + lambertEnergy;
 }
@@ -111,7 +115,7 @@ float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PAR
 	{
 		solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
 		evaluatePhongAtPoint(n, material.diffusion, solidAngle, 1, shadowRay.targetReceiver->position, shadowRay.position, faceNormal, specular, toReceiver / toReceiver.length(), energyFactor);
-		return energyFactor;
+		return energyFactor*0.66;
 	}
 
 	//receiver is bigger and/or it is closer to reflection point - evaluated set of few points

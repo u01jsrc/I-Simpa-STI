@@ -21,6 +21,8 @@
 #include "CalculationCore.h"
 #include "tools/dotdistribution.h"
 #include "sppsNeeAGHInitialisation.h"
+#include "calculation_cores/NextEventEstimationCore.h"
+#include <memory>
 
 #if __USE_MULTITHREAD__
 	#include <boost/thread/thread.hpp>
@@ -89,7 +91,8 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 	{
 		int lastmill=-1;
 
-		applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse);
+		if(applicationTools.calculationTool->doDirectSoundCalculation)
+			applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse);
 
 		for(uentier idpart=1;idpart<=quandparticules;idpart++)
 		{
@@ -178,8 +181,23 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 
 	ReportManager outputTool(reportParameter);
 	applicationTools.outputTool=&outputTool;
-	CalculationCore calculationTool(*applicationTools.sceneMesh,*applicationTools.tetraMesh,applicationTools.confCalc,*applicationTools.configurationTool,&outputTool);
-	applicationTools.calculationTool=&calculationTool;
+
+	//sellect calculation code based on sellection
+	CalculationCore* calculationTool = nullptr;
+	switch (*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::I_PROP_CALCULATION_CORE_SELLECTION))
+	{
+	case CALCULATION_CORES::CLASSIC_SPPS:
+		calculationTool = new CalculationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
+		break;
+	case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
+		calculationTool = new NextEventEstimationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
+		break;
+	default:
+		calculationTool = new NextEventEstimationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
+		break;
+	}
+	
+	applicationTools.calculationTool=calculationTool;
 
 	confPartFrame.frequenceIndex=threadData->freqInfos->freqIndex;
 	//Pour chaque source
@@ -214,10 +232,10 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 		outputTool.FillWithLefData(*threadData); //Recupere les données du lef (utilisé pour le calcul du LF et LFC)
 		cout<<"End of calculation at "<<threadData->freqInfos->freqValue<<" Hz."<<endl;
 
-
 	#if __USE_MULTITHREAD__
 		}
 	#endif
+		delete calculationTool;
 }
 
 

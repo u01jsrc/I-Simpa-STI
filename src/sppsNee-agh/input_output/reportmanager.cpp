@@ -181,7 +181,7 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 		{
 			t_Recepteur_P* currentRecp=particleInfos.currentTetra->linkedRecepteurP->at(idrecp);
 			vec3 closestPointDuringPropagation=currentRecp->position.closestPointOnSegment(particleInfos.position,nextPosition);
-			if(closestPointDuringPropagation.distance(currentRecp->position)<*paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP) && particleInfos.targetReceiver == currentRecp)
+			if(closestPointDuringPropagation.distance(currentRecp->position)<*paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP))
 			{
 				//Calcul de la longueur de croisement
 				l_decimal mu1,mu2;
@@ -221,11 +221,70 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+void ReportManager::ShadowRayFreeTranslation(CONF_PARTICULE& particleInfos, const vec3& nextPosition)
+{
+	vec3 direction(nextPosition - particleInfos.position);
+
+	//Si le prochain tetrahèdre contient un ou des recepteurs ponctuel
+	if (particleInfos.currentTetra->linkedRecepteurP)
+	{
+
+		for (std::size_t idrecp = 0; idrecp<particleInfos.currentTetra->linkedRecepteurP->size(); idrecp++)
+		{
+			t_Recepteur_P* currentRecp = particleInfos.currentTetra->linkedRecepteurP->at(idrecp);
+			vec3 closestPointDuringPropagation = currentRecp->position.closestPointOnSegment(particleInfos.position, nextPosition);
+			if (closestPointDuringPropagation.distance(currentRecp->position)<*paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP) && particleInfos.targetReceiver == currentRecp)
+			{
+				//Calcul de la longueur de croisement
+				l_decimal mu1, mu2;
+
+				if (RaySphere(particleInfos.position, nextPosition, currentRecp->position, *paramReport.configManager->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP), &mu1, &mu2))
+				{
+					if (mu2<0)
+						mu2 = 0;
+					else if (mu2>1)
+						mu2 = 1;
+					if (mu1<0)
+						mu1 = 0;
+					else if (mu1>1)
+						mu1 = 1;
+					float norm_dir = (direction).length();
+					l_decimal Lintersect = abs(mu2 - mu1)*norm_dir;
+					if (Lintersect>0)
+					{
+						l_decimal cosphi = cos(M_PIDIV2 - direction.angle(currentRecp->orientation));
+						const l_decimal energy = particleInfos.energie*Lintersect;
+						currentRecp->energy_sum[particleInfos.frequenceIndex][particleInfos.pasCourant] += energy;
+
+						lst_rp_lef[currentRecp->idrp].Lf[particleInfos.pasCourant] += energy*pow(cosphi, 2);
+						lst_rp_lef[currentRecp->idrp].Lfc[particleInfos.pasCourant] += energy*fabs(cosphi);
+
+						vec3 particleIntensity((particleInfos.direction / particleInfos.direction.length())*energy);
+						lst_rp_lef[currentRecp->idrp].intensity[particleInfos.pasCourant] += veci_t(particleIntensity.x, particleIntensity.y, particleIntensity.z);
+						if (timeStepInSourceOutput) {
+							lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.pasCourant*nbSource + particleInfos.sourceid] += energy;
+						}
+						else {
+							lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.sourceid] += energy;
+						}
+						if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
+						{
+							//Add intersection to history
+							decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
+							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
+						}
+					}
 
 
 					if (mu1 > mu2) { mu2 = mu1; }
 
-					if (mu2 < 1) 
+					if (mu2 < 1)
 					{
 						particleInfos.energie = 0;
 						if (particleInfos.stateParticule == PARTICULE_STATE_ALIVE)
@@ -236,6 +295,7 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 		}
 	}
 }
+
 void ReportManager::ParticuleGoToNextTetrahedra(CONF_PARTICULE& particleInfos,t_Tetra* nextTetra)
 {
 
@@ -479,13 +539,7 @@ void ReportManager::SaveThreadsStats(const CoreString& filename,const CoreString
 	using namespace formatGABE;
 
 	GABE_Data_ShortString* statLbl=new GABE_Data_ShortString(8);
-	/* statLbl->SetString(0,"Particules absorbées par l'atmosphère");
-	statLbl->SetString(1,"Particules absorbées par les matériaux");
-	statLbl->SetString(2,"Particules absorbées par les encombrements");
-	statLbl->SetString(3,"Particules perdues dû aux boucles infinies");
-	statLbl->SetString(4,"Particules perdues dû au maillage incorrect");
-	statLbl->SetString(5,"Particules restantes");
-	statLbl->SetString(6,"Total"); */
+
 	statLbl->SetString(0,"Particles absorbed by the atmosphere");
 	statLbl->SetString(1,"Particles absorbed by the materials");
 	statLbl->SetString(2,"Particles absorbed by the fittings");

@@ -28,6 +28,7 @@ CalculationCore::CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh
 	configurationTool=&_configurationTool;
 	sceneTetraMesh=&_sceneTetraMesh;
 	reportTool=_reportTool;
+	doDirectSoundCalculation = false;
 }
 
 void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE &configurationP)
@@ -58,7 +59,11 @@ void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_S
 
 		if (VisabilityTest(shadowRay, receiver->position)) {
 			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
-			shadowRay.energie = (1 / (4 * M_PI))*solidAngle*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+
+			//0.66 is normalization factor used to acount for not treating receiver as sphere 
+			//- points far from sphere center ar treated with the same weight as ones in the middle,
+			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+			shadowRay.energie = (1 / (4 * M_PI))*solidAngle*0.66*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
 			confEnv.duplicatedParticles.push_back(shadowRay);
 		}else
 		{
@@ -361,42 +366,6 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 						nouvDirection=ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
 					}
 
-					//Calculate and cast shadow rays
-					for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
-					{
-						CONF_PARTICULE shadowRay = configurationP;
-						vec3 newDirection, toReceiver;
-
-						toReceiver = receiver->position - shadowRay.position;
-						newDirection = toReceiver;
-						newDirection.normalize();
-						shadowRay.direction = newDirection*distanceSurLePas;
-
-						if (VisabilityTest(shadowRay, receiver->position)) 
-						{
-							shadowRay.targetReceiver = receiver;
-							shadowRay.isShadowRay = true;
-
-							float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
-							shadowRay.energie *= energy;
-							shadowRay.energie_epsilon = 0.05* shadowRay.energie;
-
-							//fast forward particle to receiver surrounding
-							int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
-						
-							decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
-							shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
-							shadowRay.elapsedTime = 0;
-							shadowRay.pasCourant += timeStepNum;
-							shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
-							shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
-
-							confEnv.duplicatedParticles.push_back(shadowRay);
-							
-						}
-					}
-
-
 					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
 					configurationP.direction=nouvDirection*distanceSurLePas;
 					collisionResolution=true;
@@ -663,7 +632,7 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &Targe
 
 void CalculationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector)
 {
-	if(configurationP.isShadowRay) reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
+	reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel
 	if(configurationP.currentTetra->volumeEncombrement)
 		configurationP.distanceToNextEncombrementEle-=translationVector.length();

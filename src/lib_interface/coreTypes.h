@@ -114,6 +114,16 @@ enum DIFFUSION_LAW
 };
 
 /**
+* Enumeration of computation methods
+*/
+enum CALCULATION_CORES
+{
+	CLASSIC_SPPS,
+	NEXT_EVENT_ESTIMATION,				/*!<  Path tracing with next event estimation  */
+	MLT									/*!<  Kelemen style MLT*/
+};
+
+/**
  * @brief Structure de données correspondant aux informations d'un materiau pour une bande de fréquence
  */
 struct t_Material_BFreq

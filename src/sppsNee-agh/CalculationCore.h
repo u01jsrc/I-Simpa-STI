@@ -33,7 +33,7 @@ public:
 		std::list<CONF_PARTICULE> duplicatedParticles; /*!< Particules à calculer par la suite */
 	};
 
-private:
+protected:
 t_Mesh *sceneMesh;
 t_TetraMesh *sceneTetraMesh;
 ReportManager *reportTool;
@@ -41,7 +41,7 @@ Core_Configuration *configurationTool;
 CONF_CALCULATION& confEnv;
 
 public:
-	
+	bool doDirectSoundCalculation;
 	/**
 	 * @brief Constructeur du moteur de calcul.
 	 * 
@@ -58,11 +58,11 @@ public:
 	 * @param configurationP Configuration de la particule
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
-	bool Run(CONF_PARTICULE configurationP);
+	virtual bool Run(CONF_PARTICULE configurationP);
 	void CalculateDirectSound(CONF_PARTICULE shadowRay, t_Source& sourceInfo, float distancePerTimeStep);
-
-private:
-	void Movement(CONF_PARTICULE &configurationP);
+	virtual ~CalculationCore() {}
+protected:
+	virtual void Movement(CONF_PARTICULE &configurationP);
 	inline decimal GetDistance(CONF_PARTICULE &configurationP);
 	bool CollisionTest(CONF_PARTICULE &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);
 	void SetNextParticleCollision(CONF_PARTICULE &configurationP);
@@ -81,7 +81,7 @@ private:
 	/**
 		 * Translation d'une particule dans un milieu libre de collisions avec la scène
 		 */
-	void FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector);
+	virtual void FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector);
 	/**
 	 * Permet de connaitre la collision de la particule sur la face du tetrahèdre courant
 	 * @return Indice de la face [1-4] (-1 si la particule n'est pas dans un tetrahèdre)

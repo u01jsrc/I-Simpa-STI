@@ -8,9 +8,18 @@ set(SPPS_SOURCE_FILES
     tools/dotdistribution.cpp
     tools/brdfreflection.cpp
     CalculationCore.cpp
+    CalculationCore.h
     sppsNeeAGHInitialisation.cpp
     sppsNeeAGH.cpp
-    sppsNeeAGHTypes.cpp)
+    sppsNeeAGHTypes.cpp
+    calculation_cores/NextEventEstimationCore.cpp
+    calculation_cores/NextEventEstimationCore.h)
+
+source_group(Calculation-Cores FILES 
+	CalculationCore.cpp
+	CalculationCore.h
+	calculation_cores/NextEventEstimationCore.cpp 
+	calculation_cores/NextEventEstimationCore.h )
 
 set(Boost_USE_STATIC_LIBS   ON) 
 find_package(Boost REQUIRED COMPONENTS thread random system)
