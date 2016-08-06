@@ -122,7 +122,8 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 			{
 				TraverserTetra(configurationP, collisionResolution);
 			}
-			else {
+			else 
+			{
 #else
 			faceInfo = &sceneMesh->pfaces[configurationP.nextModelIntersection.idface];
 			///////////////////////////////////
@@ -135,7 +136,6 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				t_Material_BFreq* materialInfo = &(*faceInfo).faceMaterial->matSpectrumProperty[configurationP.frequenceIndex];
 
 
-				bool transmission = false;
 				//Tirage aléatoire pour le test d'absorption
 				if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_CHAMP_DIRECT))
 				{
@@ -145,7 +145,8 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 					configurationP.energie = 0.f;
 					return;
 				}
-				else {
+				else 
+				{
 					if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
 					{
 						//Methode énérgétique, particule en collision avec la paroi
@@ -153,54 +154,26 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 						//Si l'absorption est totale la particule est absorbée si tau=0
 						if (materialInfo->absorption == 1) //Pas de duplication possible de la particule (forcement non réfléchie)
 						{
-							if (!materialInfo->dotransmission || !(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)))
-							{
-								if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
-									configurationP.stateParticule = PARTICULE_STATE_ABS_SURF;
-								configurationP.energie = 0;
-								return;
-							}
-							else {
-								transmission = true;
-								configurationP.energie *= materialInfo->tau;
-							}
+							if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
+								configurationP.stateParticule = PARTICULE_STATE_ABS_SURF;
+							configurationP.energie = 0.;
+							return;
 						}
-						else {
+						else 
+						{
 							if (materialInfo->absorption != 0) //Pas de duplication possible de la particule (forcement réfléchie)
-							{
-								if (materialInfo->dotransmission && materialInfo->tau != 0 && configurationP.energie*materialInfo->tau>configurationP.energie_epsilon && (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)))
-								{
-									//On va dupliquer la particule
-									CONF_PARTICULE configurationPTransmise = configurationP;
-									configurationPTransmise.energie *= materialInfo->tau;
-									bool localcolres;
-									TraverserTetra(configurationPTransmise, localcolres);
-									//configurationPTransmise.currentTetra=configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface];
-									if (configurationPTransmise.energie>configurationPTransmise.energie_epsilon)
-									{
-										confEnv.duplicatedParticles.push_back(configurationPTransmise);
-									}
-								}
 								configurationP.energie *= (1 - materialInfo->absorption);
-							} //else reflexion sans absorption
 						}
 					}
 					else {
 						//Test d'absorption en aléatoire
 						if (GetRandValue() <= materialInfo->absorption)
 						{
-							// Particule non réfléchie
-							if ((*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)) && materialInfo->dotransmission && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface] && GetRandValue()*materialInfo->absorption <= materialInfo->tau)
-							{
-								transmission = true;
-							}
-							else {
-								//Particule absorbée
-								if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
-									configurationP.stateParticule = PARTICULE_STATE_ABS_SURF;
-								configurationP.energie = 0.;
-								return;
-							}
+							//Particule absorbée
+							if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
+								configurationP.stateParticule = PARTICULE_STATE_ABS_SURF;
+							configurationP.energie = 0.;
+							return;
 						}
 					}
 				}
@@ -208,74 +181,69 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				{
 					if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
 						configurationP.stateParticule = PARTICULE_STATE_ABS_SURF;
+					configurationP.energie = 0.;
 					return;
 				}
-				//Si Transmission on traverse la paroi
-				if (transmission)
+
+				// Choix de la méthode de reflexion en fonction de la valeur de diffusion
+				vec3 nouvDirection;
+				vec3 faceNormal;
+				if (!doInvertNormal)
+					faceNormal = -faceInfo->normal;
+				else
+					faceNormal = faceInfo->normal;
+
+				//Calculate and cast shadow rays
+				for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
 				{
-					TraverserTetra(configurationP, collisionResolution);
-				}
-				else {
-					// Choix de la méthode de reflexion en fonction de la valeur de diffusion
-					vec3 nouvDirection;
-					vec3 faceNormal;
-					if (!doInvertNormal)
-						faceNormal = -faceInfo->normal;
-					else
-						faceNormal = faceInfo->normal;
+					CONF_PARTICULE shadowRay = configurationP;
+					vec3 newDirection, toReceiver;
 
-					//Get direction for diffuse or specular part based on material info
-					if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
+					toReceiver = receiver->position - shadowRay.position;
+					newDirection = toReceiver;
+					newDirection.normalize();
+					shadowRay.direction = newDirection*distanceSurLePas;
+
+					if (VisabilityTest(shadowRay, receiver->position))
 					{
-						nouvDirection = ReflectionLaws::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+						shadowRay.targetReceiver = receiver;
+						shadowRay.isShadowRay = true;
+
+						float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
+						shadowRay.energie *= energy;
+
+						//fast forward particle to receiver surrounding
+						int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
+
+						decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
+						shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
+						shadowRay.elapsedTime = 0;
+						shadowRay.pasCourant += timeStepNum+1; //+1 for current time step (?)
+						shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
+						shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
+
+						confEnv.duplicatedParticles.push_back(shadowRay);
+
 					}
-					else {
-						nouvDirection = ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
-					}
-
-					//Calculate and cast shadow rays
-					for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
-					{
-						CONF_PARTICULE shadowRay = configurationP;
-						vec3 newDirection, toReceiver;
-
-						toReceiver = receiver->position - shadowRay.position;
-						newDirection = toReceiver;
-						newDirection.normalize();
-						shadowRay.direction = newDirection*distanceSurLePas;
-
-						if (VisabilityTest(shadowRay, receiver->position))
-						{
-							shadowRay.targetReceiver = receiver;
-							shadowRay.isShadowRay = true;
-
-							float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
-							shadowRay.energie *= energy;
-							shadowRay.energie_epsilon = 0.05* shadowRay.energie;
-
-							//fast forward particle to receiver surrounding
-							int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
-
-							decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
-							shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
-							shadowRay.elapsedTime = 0;
-							shadowRay.pasCourant += timeStepNum;
-							shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
-							shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
-
-							confEnv.duplicatedParticles.push_back(shadowRay);
-
-						}
-					}
-
-
-					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
-					configurationP.direction = nouvDirection*distanceSurLePas;
-					collisionResolution = true;
-					SetNextParticleCollision(configurationP);
 				}
+
+				//Get direction for diffuse or specular part based on material info
+				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
+				{
+					nouvDirection = ReflectionLaws::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+				}
+				else 
+				{
+					nouvDirection = ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+				}
+
+				//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
+				configurationP.direction = nouvDirection*distanceSurLePas;
+				collisionResolution = true;
+				SetNextParticleCollision(configurationP);
 			}
-			}
+		}
+
 
 		if (iteration>1000)
 		{
@@ -285,7 +253,8 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 			configurationP.energie = 0;
 			return;
 		}
-		}
+	}
+
 	if (configurationP.elapsedTime == 0.f)
 	{   //Aucune collision sur le pas de temps courant
 		FreeParticleTranslation(configurationP, configurationP.direction);

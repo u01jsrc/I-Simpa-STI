@@ -57,7 +57,7 @@ void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_S
 		shadowRay.direction.normalize();
 		shadowRay.direction *= distancePerTimeStep;
 
-		if (VisabilityTest(shadowRay, receiver->position)) {
+		if (VisabilityTest(shadowRay, receiver->position) && sourceInfo.type == SOURCE_TYPE_OMNIDIRECTION) {
 			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
 
 			//0.66 is normalization factor used to acount for not treating receiver as sphere 
@@ -65,8 +65,12 @@ void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_S
 			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
 			shadowRay.energie = (1 / (4 * M_PI))*solidAngle*0.66*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
 			confEnv.duplicatedParticles.push_back(shadowRay);
-		}else
-		{
+		}
+		else if (VisabilityTest(prototypeParticle, receiver->position) && sourceInfo.type == SOURCE_TYPE_UNIDIRECTION) {
+			shadowRay.energie = sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}
+		else{
 			std::cout << "Receiver " << receiver->lblRp << " is not visible from source " << sourceInfo.sourceName << std::endl;
 		}
 	}
@@ -83,7 +87,7 @@ bool CalculationCore::Run(CONF_PARTICULE configurationP)
 	while(configurationP.stateParticule==PARTICULE_STATE_ALIVE && configurationP.pasCourant<confEnv.nbPasTemps)
 	{
 		//Test d'absorption atmosphérique
-		if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ABS_ATMO))
+		if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ABS_ATMO) && !configurationP.isShadowRay)
 		{
 			//Test de méthode de calcul
 			if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
@@ -221,7 +225,8 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 			//Calcul du nouveau point de collision
 			SetNextParticleCollision(configurationP);
 			SetNextParticleCollisionWithObstructionElement(configurationP);
-		}else if(distanceCollision<=distanceToTravel) // && configurationP.nextModelIntersection.idface!=-1
+		}
+		else if(distanceCollision<=distanceToTravel) // && configurationP.nextModelIntersection.idface!=-1
 		{
 			//Enregistrement de l'énergie passé à la paroi
 			reportTool->ParticuleCollideWithSceneMesh(configurationP);
@@ -602,12 +607,11 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &Targe
 	float t;
 	float rec_dist = (configurationP.position - TargetPosition).length();
 
-	configurationP.nextModelIntersection.idface = GetTetraFaceCollision(configurationP, configurationP.direction, t);
-	configurationP.nextModelIntersection.collisionPosition = configurationP.position + configurationP.direction*t;
-
-	obst_dist = configurationP.direction.length()*t;
-
 	CONF_PARTICULE testParticle = configurationP;
+
+	testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
+	testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
+	obst_dist = configurationP.direction.length()*t;
 
 	int maxIteration = 5000;
 	int iteration = 0;
@@ -615,15 +619,23 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &Targe
 	while (testParticle.currentTetra->faces[testParticle.nextModelIntersection.idface].face_scene == NULL && iteration++<maxIteration)
 	{
 		testParticle.position = testParticle.nextModelIntersection.collisionPosition;
-		testParticle.currentTetra = testParticle.currentTetra->voisins[testParticle.nextModelIntersection.idface];
 
-		testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
-		testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
-		obst_dist += testParticle.direction.length()*t;
-
-		if (rec_dist < obst_dist)
+		t_Tetra* nextTetra = testParticle.currentTetra->voisins[testParticle.nextModelIntersection.idface];
+		if (!nextTetra)
 		{
-			return true;
+			return false;
+		}
+		else 
+		{
+			testParticle.currentTetra = nextTetra;
+			testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
+			testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
+			obst_dist += testParticle.direction.length()*t;
+
+			if (rec_dist < obst_dist)
+			{
+				return true;
+			}
 		}
 	}
 
