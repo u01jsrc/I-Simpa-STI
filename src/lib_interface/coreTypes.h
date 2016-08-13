@@ -30,6 +30,7 @@
 
 #include "Core/mathlib.h"
 #include "coreString.h"
+#include "input_output/directivity/directivityBalloon.h"
 #include <vector>
 
 #ifndef CORE_TYPES
@@ -101,7 +102,8 @@ enum SOURCE_TYPE
 	SOURCE_TYPE_UNIDIRECTION,
 	SOURCE_TYPE_XY,
 	SOURCE_TYPE_YZ,
-	SOURCE_TYPE_XZ
+	SOURCE_TYPE_XZ,
+	SOURCE_TYPE_DIRECTION
 };
 /**
  * Enumération des lois de diffusion dans un encombrement
@@ -517,11 +519,12 @@ struct t_Source
 	vec3 Position;
 	t_Source_Freq* bandeFreqSource;
 	t_Tetra* currentVolume;
+	t_DirectivityBalloon* directivity;
 	decimal sourceDelay;
 	unsigned int idsource; /*!< Indice de la source dans le tableau BaseCoreConfiguration::srcList [0:n-1]*/
 	CoreString sourceName; /*!< Libellé de la source */
 	~t_Source(){ if(bandeFreqSource) delete[] bandeFreqSource; }
-	t_Source(){ bandeFreqSource=NULL;currentVolume=NULL; }
+	t_Source() { bandeFreqSource = NULL; currentVolume = NULL; directivity = NULL; }
 };
 
 

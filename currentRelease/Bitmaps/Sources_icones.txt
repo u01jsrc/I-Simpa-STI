@@ -78,5 +78,12 @@ http://icones.pro/pack/futurosoft
 Licence : GPL  Licence GPL
 Usage commercial : Oui
 
+Icone "directivité" :
+21 icones de la série Fight club
+Auteur : Mischa McLachlan
+http://icones.pro/pack/fight-club
+Licence : libre
+Usage commercial : Oui
+
 Icone "tree_advanced_settings", 
 Icon made by Freepik from www.flaticon.com 

@@ -9,18 +9,18 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * I-SIMPA is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, write to the Free Software Foundation,
-* Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA or 
+* Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA or
 * see <http://ww.gnu.org/licenses/>
 *
-* For more information, please consult: <http://i-simpa.ifsttar.fr> or 
+* For more information, please consult: <http://i-simpa.ifsttar.fr> or
 * send an email to i-simpa@ifsttar.fr
 *
 * To contact Ifsttar, write to Ifsttar, 14-20 Boulevard Newton
@@ -415,12 +415,21 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	m_mgr.AddPane(treeUserPref.get(), wxAuiPaneInfo().
 				Name("userpref").Caption(_("Interface options")).Hide()
 				);
-	int gl_attrib[20] = { WX_GL_RGBA, WX_GL_MIN_RED, 1, WX_GL_MIN_GREEN, 1,
-	WX_GL_MIN_BLUE, 1, WX_GL_DEPTH_SIZE, 1,
-	WX_GL_LEVEL , 1};
-
+#ifdef __WXMSW__
+    int *gl_attrib = NULL;
+#else
+    int gl_attrib[20] =
+        { WX_GL_RGBA, WX_GL_MIN_RED, 1, WX_GL_MIN_GREEN, 1,
+        WX_GL_MIN_BLUE, 1, WX_GL_DEPTH_SIZE, 1,
+        WX_GL_DOUBLEBUFFER,
+#  if defined(__WXMAC__)  || defined(__WXQT__)
+        GL_NONE };
+#  else
+        None };
+#  endif
+#endif
 	GlFrame = new OpenGlViewer(this, -1, wxPoint(0,25), wxSize(-1,-1),
-												0, _("Main window"), NULL ); //, gl_attrib
+												0, _("Main window"), gl_attrib );
 
 	toolbarGl = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
 
@@ -929,12 +938,12 @@ void MainUiFrame::OnFileLicence(wxCommandEvent& event)
 
 void MainUiFrame::OnFileIsimpaDoc(wxCommandEvent& event)
 {
-	std::string docpath = ApplicationConfiguration::CONST_RESOURCE_FOLDER+wxString("doc")+wxFileName::GetPathSeparator()+wxString("documentation")+wxFileName::GetPathSeparator()+"manuel_I_Simpa.pdf";
+	wxString docpath = ApplicationConfiguration::CONST_RESOURCE_FOLDER+wxString("doc")+wxFileName::GetPathSeparator()+wxString("documentation")+wxFileName::GetPathSeparator()+"manuel_I_Simpa.pdf";
 	wxLaunchDefaultApplication(docpath);
 }
 void MainUiFrame::OnFileSppsDoc(wxCommandEvent& event)
 {
-	std::string docpath = ApplicationConfiguration::CONST_RESOURCE_FOLDER+wxString("doc")+wxFileName::GetPathSeparator()+wxString("documentation")+wxFileName::GetPathSeparator()+"SPPS_manuel.pdf";
+	wxString docpath = ApplicationConfiguration::CONST_RESOURCE_FOLDER+wxString("doc")+wxFileName::GetPathSeparator()+wxString("documentation")+wxFileName::GetPathSeparator()+"SPPS_manuel.pdf";
 	wxLaunchDefaultApplication(docpath);
 }
 
@@ -1177,4 +1186,3 @@ END_EVENT_TABLE()
 
 wxDECLARE_APP(ISimpaApp);
 wxIMPLEMENT_APP(ISimpaApp);
-

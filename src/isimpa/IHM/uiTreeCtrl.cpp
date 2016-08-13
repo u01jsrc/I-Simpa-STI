@@ -377,8 +377,17 @@ void uiTreeCtrl::InitTree()
 			case Element::GRAPH_ADVANCED_PARAMETERS:
 				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_advanced_settings.png", wxBITMAP_TYPE_PNG));
 				break;
+			case Element::GRAPH_DIRECTIVITY:
+				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_directivity.png", wxBITMAP_TYPE_PNG));
+				break;
 			case Element::GRAPH_BASIC_PARAMETERS:
 				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_basic_settings.png", wxBITMAP_TYPE_PNG));
+				break;
+			case Element::GRAPH_USER_DIRECTIVITY_OPEN:
+				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_directivity_open.png", wxBITMAP_TYPE_PNG));
+				break;
+			case Element::GRAPH_USER_DIRECTIVITY_CLOSE:
+				imglist->Add(wxBitmap(ressourceFolder + "/Bitmaps/tree_directivity_close.png", wxBITMAP_TYPE_PNG));
 				break;
 		}
 	}
