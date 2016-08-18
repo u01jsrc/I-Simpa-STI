@@ -31,11 +31,4 @@ target_link_libraries (preprocess lib_interface)
 
 # Adds logic to INSTALL.vcproj to copy preprocess.exe to destination directory
 install (TARGETS preprocess
-        RUNTIME 
-	CONFIGURATIONS Debug
-	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/meshing/tetgen)
-
-install (TARGETS preprocess
-        RUNTIME 
-	CONFIGURATIONS Release
-	DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/meshing/tetgen)
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/meshing/tetgen)

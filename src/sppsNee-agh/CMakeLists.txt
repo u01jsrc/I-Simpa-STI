@@ -2,56 +2,110 @@ include_directories (./ "${PROJECT_SOURCE_DIR}/src/lib_interface")
 
 message(STATUS " Boost path - $ENV{BOOST_INCLUDEDIR}")
 message(STATUS " Boost lib path - $ENV{BOOST_LIBRARYDIR}")
-set(SPPS_SOURCE_FILES
-    data_manager/core_configuration.cpp
-    input_output/reportmanager.cpp
+
+#--------------#
+#    SOURCES
+#--------------#
+
+# Sources files
+set(DATA_MANAGER_SOURCES
+    data_manager/core_configuration.h
+    data_manager/core_configuration.cpp)
+
+set(IO_SOURCES
+    input_output/reportmanager.h
+    input_output/reportmanager.cpp)
+
+set(TOOLS_SOURCES
+    tools/dotreflection.h
+    tools/dotdistribution.h
     tools/dotdistribution.cpp
-    tools/brdfreflection.cpp
-    CalculationCore.cpp
-    CalculationCore.h
+	tools/brdfreflection.cpp
+	tools/brdfreflection.h)
+
+set(SPPS_SOURCES
+    sppsNeeAGHInitialisation.h
     sppsNeeAGHInitialisation.cpp
     sppsNeeAGH.cpp
-    sppsNeeAGHTypes.cpp
-    calculation_cores/NextEventEstimationCore.cpp
-    calculation_cores/NextEventEstimationCore.h)
-
-source_group(Calculation-Cores FILES 
+    sppsNeeAGHTypes.h
+    sppsNeeAGHTypes.cpp)
+	
+set(CALCULATION_CORES 
 	CalculationCore.cpp
 	CalculationCore.h
 	calculation_cores/NextEventEstimationCore.cpp 
 	calculation_cores/NextEventEstimationCore.h )
 
-set(Boost_USE_STATIC_LIBS   ON) 
-find_package(Boost REQUIRED COMPONENTS thread random system)
-link_directories( ${Boost_LIBRARY_DIRS} )  
+# Sources groups (folders)
+source_group("data_manager" FILES ${DATA_MANAGER_SOURCES})
+source_group("input_output" FILES ${IO_SOURCES})
+source_group("tools" FILES ${TOOLS_SOURCES})
+source_group("calculation_cores" FILES ${CALCULATION_CORES})
+source_group("" FILES ${SPPS_SOURCES})
+
+#---------------------------------------#
+#    DEPENDENCY & EXECUTABLE (OR LIB)
+#---------------------------------------#
+
+set(Boost_USE_STATIC_LIBS   ON)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  find_package(Boost REQUIRED COMPONENTS system random filesystem)
+else()
+  find_package (Threads)
+  find_package(Boost REQUIRED COMPONENTS system random filesystem thread)
+endif()
+
+link_directories( ${Boost_LIBRARY_DIRS} )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
+# Check for clock_gettime function
+if (UNIX)
+  include(CheckLibraryExists)
+  check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME )
+  if(NOT HAVE_CLOCK_GETTIME)
+    message(FATAL_ERROR "clock_gettime not found")
+  endif(NOT HAVE_CLOCK_GETTIME)
+endif(UNIX)
+
 # Set Properties->General->Configuration Type to Application(.exe)
-# Creates spps.exe with the listed sources
+# Creates sppsNee-agh.exe with the listed sources
 # Adds sources to the Solution Explorer
-add_executable(sppsNee-agh ${SPPS_SOURCE_FILES})
+add_executable(sppsNee-agh
+    ${DATA_MANAGER_SOURCES}
+    ${IO_SOURCES}
+    ${TOOLS_SOURCES}
+	${CALCULATION_CORES}
+    ${SPPS_SOURCES})
+
+# Creates a folder "executables" and adds target project (spps.vcproj) under it
+set_property(TARGET sppsNee-agh PROPERTY FOLDER "executables")
+
 
 # Properties->Linker->Input->Additional Dependencies
-target_link_libraries (sppsNee-agh lib_interface)
-target_link_libraries(sppsNee-agh ${Boost_LIBRARIES})
+target_link_libraries (sppsNee-agh lib_interface ${Boost_LIBRARIES})
 
-# Creates a folder "executables" and adds target
-# project (sppsNee-agh.vcproj) under it
-set_property(TARGET sppsNee-agh PROPERTY FOLDER "executables")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_definitions(-D_DEBUG)
+  message(STATUS " SPPS debug build disable multi threading")
+else()
+  message(STATUS " SPPS release build enable multi threading")
+  target_link_libraries (sppsNee-agh ${CMAKE_THREAD_LIBS_INIT})
+  if(UNIX)
+    target_link_libraries (sppsNee-agh rt)
+  endif(UNIX)
+endif()
+
+#--------------#
+#    INSTALL
+#--------------#
 
 # Adds logic to INSTALL.vcproj to copy spps.exe to destination directory
 install (TARGETS sppsNee-agh
-	CONFIGURATIONS Debug
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/sppsNee-agh)
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/core/sppsNee-agh)
 
-# on visual studio we want to copy the seperate debug-info file
-if(MSVC)
-	INSTALL(FILES ${PROJECT_BINARY_DIR}/src/sppsNee-agh/Debug/sppsNee-agh.pdb
-	DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/core/sppsNee-agh
-	CONFIGURATIONS Debug
-)
-endif()
+#------------#
+#    TEST
+#------------#
 
-install (TARGETS sppsNee-agh
-	CONFIGURATIONS Release
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/core/sppsNee-agh)

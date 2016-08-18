@@ -38,9 +38,4 @@ target_link_libraries (vmr lib_interface)
 
 # Adds logic to INSTALL.vcproj to copy vmr.exe to destination directory
 install (TARGETS vmr
-	CONFIGURATIONS Debug
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Debug/meshing/vmr)
-
-install (TARGETS vmr
-	CONFIGURATIONS Release
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/Release/meshing/vmr)
+        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/meshing/vmr)
