@@ -197,7 +197,7 @@ class Element
 			ELEMENT_TYPE_CORE_SPPS_AGH,
 			ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED,
 			ELEMENT_TYPE_CORE_SPPSNEE_AGH,
-			ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED
+			ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED,
 			ELEMENT_TYPE_DIRECTIVITIES_USER,
 			ELEMENT_TYPE_FILE
 		};
@@ -363,7 +363,6 @@ class Element
 			IDEVENT_SET_ALL_MAT_TO_PHONG,
 			IDEVENT_NEW_USERDIRECTIV,
 			IDEVENT_LAST_FIXED /* !! This event must be the last, those before are "built-in" and those after are send to python */
-
 		};
 		/**
 		 * @brief Structure de données de base d'un élément
