@@ -1,6 +1,6 @@
-#include "CalculationCore.h"
+#include "CalculationCoreAGH.h"
 #include "tools/collision.h"
-#include "tools/dotreflection.h"
+#include "tools/dotreflectionAGH.h"
 #include "tools/brdfreflection.h"
 #include "tools/dotdistribution.h"
 #include <iostream>
@@ -21,7 +21,7 @@ void printVec(vec3 inf)
 
 
 
-CalculationCore::CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION &_confEnv, Core_Configuration &_configurationTool,ReportManager* _reportTool)
+CalculationCore::CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION &_confEnv, Core_ConfigurationAGH &_configurationTool,ReportManagerAGH* _reportTool)
 :confEnv(_confEnv)
 {
 	sceneMesh=&_sceneMesh;
@@ -31,20 +31,20 @@ CalculationCore::CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh
 	doDirectSoundCalculation = false;
 }
 
-void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE &configurationP)
+void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP)
 {
-	if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ENCOMBREMENT) && configurationP.currentTetra->volumeEncombrement)
+	if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && configurationP.currentTetra->volumeEncombrement)
 	{
 		//Tirage aléatoire de la distance
 		configurationP.distanceToNextEncombrementEle=-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].lambda*log((float)(1-GetRandValue()));
 	}
 }
 
-void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
+void CalculationCore::CalculateDirectSound(CONF_PARTICULE_AGH prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
 {
-	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
-	CONF_PARTICULE shadowRay = prototypeParticle;
+	CONF_PARTICULE_AGH shadowRay = prototypeParticle;
 	shadowRay.position = sourceInfo.Position;
 	shadowRay.isShadowRay = true;
 	shadowRay.outputToParticleFile = false;
@@ -76,7 +76,7 @@ void CalculationCore::CalculateDirectSound(CONF_PARTICULE prototypeParticle, t_S
 	}
 }
 
-bool CalculationCore::Run(CONF_PARTICULE configurationP)
+bool CalculationCore::Run(CONF_PARTICULE_AGH configurationP)
 {
 	decimal densite_proba_absorption_atmospherique=configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
 	SetNextParticleCollision(configurationP);						//1er test de collision
@@ -87,10 +87,10 @@ bool CalculationCore::Run(CONF_PARTICULE configurationP)
 	while(configurationP.stateParticule==PARTICULE_STATE_ALIVE && configurationP.pasCourant<confEnv.nbPasTemps)
 	{
 		//Test d'absorption atmosphérique
-		if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ABS_ATMO) && !configurationP.isShadowRay)
+		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ABS_ATMO) && !configurationP.isShadowRay)
 		{
 			//Test de méthode de calcul
-			if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
+			if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
 			{ //Energetique
 				configurationP.energie*=densite_proba_absorption_atmospherique;
 				if(configurationP.energie<=configurationP.energie_epsilon)
@@ -152,9 +152,9 @@ bool CalculationCore::Run(CONF_PARTICULE configurationP)
 	return true;
 }
 
-void CalculationCore::Movement(CONF_PARTICULE &configurationP)
+void CalculationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 {
-	decimal deltaT=*configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP) ;
+	decimal deltaT=*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP) ;
 	decimal distanceSurLePas=configurationP.direction.length();
 	decimal celeriteLocal=distanceSurLePas/deltaT;
 	decimal faceDirection;
@@ -171,13 +171,13 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 		distanceToTravel=celeriteLocal*(deltaT-configurationP.elapsedTime);
 
 		//Test de collision avec un élément de l'encombrement entre la position de la particule et une face du tetrahèdre courant.
-		if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel>=configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
+		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel>=configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
 		{
 			//Collision avec un élément virtuel de l'encombrement courant
 
 			//Test d'absorption
 
-			if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
+			if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
 			{
 				//Energétique
 				configurationP.energie*=(1-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha);
@@ -211,12 +211,12 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 					ParticleDistribution::GenSphereDistribution(configurationP,configurationP.direction.length());
 					break;
 				case DIFFUSION_LAW_REFLEXION_UNIFORM:
-					newDir=ReflectionLaws::FittingUniformReflection(configurationP.direction);
+					newDir=ReflectionLawsAGH::FittingUniformReflection(configurationP.direction);
 					newDir.normalize();
 					configurationP.direction=newDir*configurationP.direction.length();
 					break;
 				case DIFFUSION_LAW_REFLEXION_LAMBERT:
-					newDir=ReflectionLaws::FittingLambertReflection(configurationP.direction);
+					newDir=ReflectionLawsAGH::FittingLambertReflection(configurationP.direction);
 					newDir.normalize();
 					configurationP.direction=newDir*configurationP.direction.length();
 					break;
@@ -275,7 +275,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 
 				bool transmission=false;
 				//Tirage aléatoire pour le test d'absorption
-				if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_CHAMP_DIRECT))
+				if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_CHAMP_DIRECT))
 				{
 					//Particule absorbée
 					if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
@@ -283,14 +283,14 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 					configurationP.energie=0.f;
 					return;
 				}else{
-					if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
+					if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
 					{
 						//Methode énérgétique, particule en collision avec la paroi
 						//Particule courante = (1-alpha)*epsilon
 						//Si l'absorption est totale la particule est absorbée si tau=0
 						if(materialInfo->absorption==1) //Pas de duplication possible de la particule (forcement non réfléchie)
 						{
-							if(!materialInfo->dotransmission || !(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)))
+							if(!materialInfo->dotransmission || !(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
 							{
 								if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
 									configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
@@ -303,10 +303,10 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 						}else{
 							if(materialInfo->absorption!=0) //Pas de duplication possible de la particule (forcement réfléchie)
 							{
-								if(materialInfo->dotransmission && materialInfo->tau!=0 && configurationP.energie*materialInfo->tau>configurationP.energie_epsilon && (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)))
+								if(materialInfo->dotransmission && materialInfo->tau!=0 && configurationP.energie*materialInfo->tau>configurationP.energie_epsilon && (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
 								{
 									//On va dupliquer la particule
-									CONF_PARTICULE configurationPTransmise=configurationP;
+									CONF_PARTICULE_AGH configurationPTransmise=configurationP;
 									configurationPTransmise.energie*=materialInfo->tau;
 									bool localcolres;
 									TraverserTetra(configurationPTransmise,localcolres);
@@ -331,7 +331,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 						if(GetRandValue()<=materialInfo->absorption)
 						{
 							// Particule non réfléchie
-							if((*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_TRANSMISSION)) && materialInfo->dotransmission && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface] && GetRandValue()*materialInfo->absorption<=materialInfo->tau)
+							if((*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)) && materialInfo->dotransmission && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface] && GetRandValue()*materialInfo->absorption<=materialInfo->tau)
 							{
 								transmission=true;
 							}else{
@@ -366,9 +366,9 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 					//Get direction for diffuse or specular part based on material info
 					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
 					{
-						nouvDirection=ReflectionLaws::SolveDiffusePart(configurationP.direction,*materialInfo, faceNormal,configurationP);
+						nouvDirection=ReflectionLawsAGH::SolveDiffusePart(configurationP.direction,*materialInfo, faceNormal,configurationP);
 					}else{
-						nouvDirection=ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+						nouvDirection=ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
 					}
 
 					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
@@ -399,7 +399,7 @@ void CalculationCore::Movement(CONF_PARTICULE &configurationP)
 }
 
 
-void CalculationCore::TraverserTetra(CONF_PARTICULE &configurationP, bool& collisionResolution)
+void CalculationCore::TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution)
 {
 	// Récuperation de l'information de la face
 	t_cFace* faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
@@ -425,12 +425,12 @@ void CalculationCore::TraverserTetra(CONF_PARTICULE &configurationP, bool& colli
 		collisionResolution=true; //On refait un test de collision avec les tetrahedres
 
 		//Si la particule passe d'un volume d'encombrement à un autre type de volume (faceInfo appartient à l'ancien volume)
-		if(*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ENCOMBREMENT) && faceInfo && oldTetra->volumeEncombrement!=configurationP.currentTetra->volumeEncombrement)
+		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && faceInfo && oldTetra->volumeEncombrement!=configurationP.currentTetra->volumeEncombrement)
 			SetNextParticleCollisionWithObstructionElement(configurationP);
 	}
 }
 
-void CalculationCore::OnChangeCelerite(CONF_PARTICULE &configurationP, t_Tetra* tetra2)
+void CalculationCore::OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2)
 {
 	double c1=configurationP.direction.length();
 	double c2=configurationTool->GetNormVecPart(configurationP.position,tetra2);
@@ -454,7 +454,7 @@ void CalculationCore::OnChangeCelerite(CONF_PARTICULE &configurationP, t_Tetra* 
 }
 
 
-entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE &configurationP, vec3 &translationVector, float &t)
+entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP, vec3 &translationVector, float &t)
 {
 	vec3 dir=translationVector;
 	float* posPart=configurationP.position;
@@ -506,7 +506,7 @@ entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE &configurati
 }
 
 #ifndef UTILISER_MAILLAGE_OPTIMISATION
-void CalculationCore::SetNextParticleCollision(CONF_PARTICULE &configurationP)
+void CalculationCore::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
 {
 	INTERSECTION_INFO collisionInfos;
 	float minDist=9999999999.f;
@@ -528,7 +528,7 @@ void CalculationCore::SetNextParticleCollision(CONF_PARTICULE &configurationP)
 	}
 }
 
-void CalculationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector)
+void CalculationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
 {
 	if(configurationP.currentTetra)
 	{
@@ -559,7 +559,7 @@ void CalculationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP,con
 	configurationP.position+=translationVector;
 }
 
-bool CalculationCore::CollisionTest(CONF_PARTICULE &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance)
+bool CalculationCore::CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance)
 {
 	using namespace std;
 
@@ -592,7 +592,7 @@ bool CalculationCore::CollisionTest(CONF_PARTICULE &configurationP,uentier &face
 }
 
 #else
-void CalculationCore::SetNextParticleCollision(CONF_PARTICULE &configurationP)
+void CalculationCore::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
 {
 	//INTERSECTION_INFO collisionInfos;
 	float t;
@@ -601,13 +601,13 @@ void CalculationCore::SetNextParticleCollision(CONF_PARTICULE &configurationP)
 	configurationP.nextModelIntersection.collisionPosition=configurationP.position+configurationP.direction*t;
 }
 
-bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &TargetPosition)
+bool CalculationCore::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition)
 {
 	float obst_dist;
 	float t;
 	float rec_dist = (configurationP.position - TargetPosition).length();
 
-	CONF_PARTICULE testParticle = configurationP;
+	CONF_PARTICULE_AGH testParticle = configurationP;
 
 	testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
 	testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
@@ -642,7 +642,7 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE &configurationP, vec3 &Targe
 	return false;
 }
 
-void CalculationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP,const vec3 &translationVector)
+void CalculationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
 {
 	reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel

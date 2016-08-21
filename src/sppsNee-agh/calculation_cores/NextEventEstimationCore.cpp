@@ -1,20 +1,20 @@
 #include "NextEventEstimationCore.h"
 #include "tools/collision.h"
-#include "tools/dotreflection.h"
+#include "tools/dotreflectionAGH.h"
 #include "tools/brdfreflection.h"
 #include "tools/dotdistribution.h"
 #include <iostream>
 
-NextEventEstimationCore::NextEventEstimationCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION &_confEnv, Core_Configuration &_configurationTool, ReportManager* _reportTool)
+NextEventEstimationCore::NextEventEstimationCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool)
 	: CalculationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool) 
 {
 	doDirectSoundCalculation = true;
 };
 
 
-void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
+void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 {
-	decimal deltaT = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP);
+	decimal deltaT = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP);
 	decimal distanceSurLePas = configurationP.direction.length();
 	decimal celeriteLocal = distanceSurLePas / deltaT;
 	decimal faceDirection;
@@ -31,13 +31,13 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 		distanceToTravel = celeriteLocal*(deltaT - configurationP.elapsedTime);
 
 		//Test de collision avec un élément de l'encombrement entre la position de la particule et une face du tetrahèdre courant.
-		if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel >= configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
+		if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel >= configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
 		{
 			//Collision avec un élément virtuel de l'encombrement courant
 
 			//Test d'absorption
 
-			if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
+			if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
 			{
 				//Energétique
 				configurationP.energie *= (1 - configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha);
@@ -72,12 +72,12 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				ParticleDistribution::GenSphereDistribution(configurationP, configurationP.direction.length());
 				break;
 			case DIFFUSION_LAW_REFLEXION_UNIFORM:
-				newDir = ReflectionLaws::FittingUniformReflection(configurationP.direction);
+				newDir = ReflectionLawsAGH::FittingUniformReflection(configurationP.direction);
 				newDir.normalize();
 				configurationP.direction = newDir*configurationP.direction.length();
 				break;
 			case DIFFUSION_LAW_REFLEXION_LAMBERT:
-				newDir = ReflectionLaws::FittingLambertReflection(configurationP.direction);
+				newDir = ReflectionLawsAGH::FittingLambertReflection(configurationP.direction);
 				newDir.normalize();
 				configurationP.direction = newDir*configurationP.direction.length();
 				break;
@@ -137,7 +137,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 
 
 				//Tirage aléatoire pour le test d'absorption
-				if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_DO_CALC_CHAMP_DIRECT))
+				if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_CHAMP_DIRECT))
 				{
 					//Particule absorbée
 					if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
@@ -147,7 +147,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				}
 				else 
 				{
-					if (*configurationTool->FastGetConfigValue(Core_Configuration::IPROP_ENERGY_CALCULATION_METHOD))
+					if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
 					{
 						//Methode énérgétique, particule en collision avec la paroi
 						//Particule courante = (1-alpha)*epsilon
@@ -196,7 +196,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				//Calculate and cast shadow rays
 				for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
 				{
-					CONF_PARTICULE shadowRay = configurationP;
+					CONF_PARTICULE_AGH shadowRay = configurationP;
 					vec3 newDirection, toReceiver;
 
 					toReceiver = receiver->position - shadowRay.position;
@@ -213,7 +213,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 						shadowRay.energie *= energy;
 
 						//fast forward particle to receiver surrounding
-						int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
+						int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
 
 						decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
 						shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
@@ -230,11 +230,11 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 				//Get direction for diffuse or specular part based on material info
 				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
 				{
-					nouvDirection = ReflectionLaws::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+					nouvDirection = ReflectionLawsAGH::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP);
 				}
 				else 
 				{
-					nouvDirection = ReflectionLaws::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+					nouvDirection = ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
 				}
 
 				//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
@@ -267,7 +267,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE &configurationP)
 }
 
 
-void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE &configurationP, const vec3 &translationVector)
+void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector)
 {
 	if(configurationP.isShadowRay) reportTool->ShadowRayFreeTranslation(configurationP, configurationP.position + translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel

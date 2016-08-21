@@ -98,7 +98,7 @@ public:
 		}while(u>rejection);
 		return BaseUniformReflection(vecteurVitesse,vecteurVitesse/vecteurVitesse.length(),theta,phi);
 	}
-private:
+protected:
 
 
 	/**

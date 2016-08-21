@@ -1,4 +1,5 @@
 include_directories (./ "${PROJECT_SOURCE_DIR}/src/lib_interface")
+include_directories (./ "${PROJECT_SOURCE_DIR}/src/spps")
 
 message(STATUS " Boost path - $ENV{BOOST_INCLUDEDIR}")
 message(STATUS " Boost lib path - $ENV{BOOST_LIBRARYDIR}")
@@ -9,30 +10,26 @@ message(STATUS " Boost lib path - $ENV{BOOST_LIBRARYDIR}")
 
 # Sources files
 set(DATA_MANAGER_SOURCES
-    data_manager/core_configuration.h
-    data_manager/core_configuration.cpp)
+    data_manager/core_configurationAGH.h
+    data_manager/core_configurationAGH.cpp)
 
 set(IO_SOURCES
-    input_output/reportmanager.h
-    input_output/reportmanager.cpp)
+    input_output/reportmanagerAGH.h
+    input_output/reportmanagerAGH.cpp)
 
 set(TOOLS_SOURCES
-    tools/dotreflection.h
-    tools/dotdistribution.h
-    tools/dotdistribution.cpp
-	tools/brdfreflection.cpp
-	tools/brdfreflection.h)
+    tools/dotreflectionAGH.h
+    tools/brdfreflection.cpp
+    tools/brdfreflection.h)
 
 set(SPPS_SOURCES
-    sppsNeeAGHInitialisation.h
-    sppsNeeAGHInitialisation.cpp
     sppsNeeAGH.cpp
     sppsNeeAGHTypes.h
     sppsNeeAGHTypes.cpp)
 	
 set(CALCULATION_CORES 
-	CalculationCore.cpp
-	CalculationCore.h
+	CalculationCoreAGH.cpp
+	CalculationCoreAGH.h
 	calculation_cores/NextEventEstimationCore.cpp 
 	calculation_cores/NextEventEstimationCore.h )
 
@@ -83,7 +80,7 @@ set_property(TARGET sppsNee-agh PROPERTY FOLDER "executables")
 
 
 # Properties->Linker->Input->Additional Dependencies
-target_link_libraries (sppsNee-agh lib_interface ${Boost_LIBRARIES})
+target_link_libraries (sppsNee-agh spps-lib lib_interface ${Boost_LIBRARIES})
 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

@@ -51,7 +51,7 @@ BRDFs::Initializer::Initializer()
 	calcPixelizedReceivers(19.5, pixelizedCircle40pt);
 }
 
-float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE &shadowRay, vec3 incomingDirection, Core_Configuration *configurationTool)
+float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH &shadowRay, vec3 incomingDirection, Core_ConfigurationAGH *configurationTool)
 {
 	switch (material.reflectionLaw)
 	{
@@ -72,13 +72,13 @@ vec3 BRDFs::SolveSpecularReflection(vec3 &incomingDirection, vec3 &faceNormal)
 	return retVal / retVal.length();
 }
 
-float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
+float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
 	double specularEnergy = 0, lambertEnergy;
 	l_decimal mu1, mu2;
-	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
 	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
 	{
@@ -97,13 +97,13 @@ float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal
 	return  specularEnergy + lambertEnergy;
 }
 
-float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool)
+float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
 	Matrix3 rotMatrix;
 	double energyFactor = 0, solidAngle, dl;	
-	float receiverRadius = *configurationTool->FastGetConfigValue(Core_Configuration::FPROP_RAYON_RECEPTEURP);
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 	std::vector<subSurface> sellectedParametrization;
 
 	//calculate Phong exponent based on experiments (used also in dotreflection - remember to change in both places)

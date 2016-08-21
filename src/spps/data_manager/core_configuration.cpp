@@ -53,16 +53,16 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath, bool verbose_mod
 				SetConfigInformation(IPROP_DO_MULTITHREAD,0);
 				if (verbose_mode) { std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl; }
 			}
-            int saveSurfaceIntersection = 1;
-            if (simuNode->IsPropertyExist("save_surface_intersection")) {
-                saveSurfaceIntersection = simuNode->GetProperty("save_surface_intersection").ToInt();
-            }
-            SetConfigInformation(I_PROP_SAVE_SURFACE_INTERSECTION, saveSurfaceIntersection);
-            int saveReceiversIntersection = 1;
-            if (simuNode->IsPropertyExist("save_receivers_intersection")) {
-                saveReceiversIntersection = simuNode->GetProperty("save_receivers_intersection").ToInt();
-            }
-            SetConfigInformation(I_PROP_SAVE_RECEIVER_INTERSECTION, saveReceiversIntersection);
+			int saveSurfaceIntersection = 1;
+			if (simuNode->IsPropertyExist("save_surface_intersection")) {
+				saveSurfaceIntersection = simuNode->GetProperty("save_surface_intersection").ToInt();
+			}
+			SetConfigInformation(I_PROP_SAVE_SURFACE_INTERSECTION, saveSurfaceIntersection);
+			int saveReceiversIntersection = 1;
+			if (simuNode->IsPropertyExist("save_receivers_intersection")) {
+				saveReceiversIntersection = simuNode->GetProperty("save_receivers_intersection").ToInt();
+			}
+			SetConfigInformation(I_PROP_SAVE_RECEIVER_INTERSECTION, saveReceiversIntersection);
 
 			SetConfigInformation(I_PROP_RANDOM_SEED,seed);
 			SetConfigInformation(IPROP_DO_CALC_CHAMP_DIRECT,simuNode->GetProperty("direct_calc").ToInt());

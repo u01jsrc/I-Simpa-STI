@@ -65,7 +65,8 @@ enum PARTICULE_STATE
 	PARTICULE_STATE_ABS_ATMO,			/*!< Supprimé car absorbé par l'atmosphère */
 	PARTICULE_STATE_ABS_SURF,			/*!< Supprimé car absorbé par une surface */
 	PARTICULE_STATE_LOOP,				/*!< Supprimé car impossible de résoudre un pas de temps (boucle infinie) */
-	PARTICULE_STATE_ABS_ENCOMBREMENT	/*!< Supprimé car absorbé par une surface */
+	PARTICULE_STATE_ABS_ENCOMBREMENT,	/*!< Supprimé car absorbé par une surface */
+	PARTICULE_STATE_SHADOW_RAY_REACHED_DST	/*!< Supprimé car absorbé par une surface */
 };
 /**
  * @brief Informations propres à une particule

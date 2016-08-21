@@ -1,5 +1,5 @@
 #include "coreTypes.h"
-#include "data_manager/core_configuration.h"
+#include "data_manager/core_configurationAGH.h"
 #include "sppsNeeAGHTypes.h"
 
 
@@ -37,7 +37,7 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE &shadowRay, vec3 incomingDirection, Core_Configuration *configurationTool);
+	static float SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH &shadowRay, vec3 incomingDirection, Core_ConfigurationAGH *configurationTool);
 
 	/**
 	* Calculates receiver cross-section devided into square elements
@@ -64,7 +64,7 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool);
+	static float SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool);
 
 	/**
 	* Solves reflecion energy using Phong BRDF
@@ -76,6 +76,6 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE& shadowRay, vec3 incomingDirection, Core_Configuration* configurationTool);
+	static float SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool);
 	static void evaluatePhongAtPoint(float n, float diffusion, float solidAngle, float weight, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, vec3 subFaceNormal, double& result);
 };

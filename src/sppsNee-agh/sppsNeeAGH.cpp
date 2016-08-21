@@ -18,9 +18,9 @@
 #endif
 
 #include <coreinitialisation.h>
-#include "CalculationCore.h"
+#include "CalculationCoreAGH.h"
 #include "tools/dotdistribution.h"
-#include "sppsNeeAGHInitialisation.h"
+#include "sppsInitialisation.h"
 #include "calculation_cores/NextEventEstimationCore.h"
 #include <memory>
 
@@ -41,8 +41,8 @@
 struct t_ToolBox
 {
 	CalculationCore* calculationTool;
-	ReportManager* outputTool;
-	Core_Configuration* configurationTool;
+	ReportManagerAGH* outputTool;
+	Core_ConfigurationAGH* configurationTool;
 	t_Mesh* sceneMesh;
 	t_TetraMesh* tetraMesh;
 	progressionInfo* mainProgressionOutput;
@@ -55,7 +55,7 @@ struct t_ToolBox
  * @param sourceInfo Informations sur la source à utiliser pour l'émission
  * @param confPartFrame Informations de bases pour toutes les particules
  */
-void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applicationTools, t_Source& sourceInfo, CONF_PARTICULE& confPartFrame)
+void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applicationTools, t_Source& sourceInfo, CONF_PARTICULE_AGH& confPartFrame)
 {
 	if(!sourceInfo.currentVolume)
 	{
@@ -65,16 +65,16 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 		std::cerr<<"Unable to find the source position!";
 		return;
 	}
-	uentier quandparticules=*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_PARTICLE_CALCULATION);
+	uentier quandparticules=*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_PARTICLE_CALCULATION);
 	decimal rapportPartOutput=1;
 	//Calcul du rapport particules à enregistrer sur le nombre de particules à calculer
 	if(quandparticules>0)
-		rapportPartOutput=(decimal)(*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_PARTICLE_OUTPUT))/(decimal)quandparticules;
+		rapportPartOutput=(decimal)(*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_PARTICLE_OUTPUT))/(decimal)quandparticules;
 	if(!(rapportPartOutput>=0 && rapportPartOutput<=1))
 		rapportPartOutput=0;
 	confPartFrame.energie=sourceInfo.bandeFreqSource[confPartFrame.frequenceIndex].w_j/quandparticules;
 	//Calcul de l'energie epsilon pour les particules
-	confPartFrame.energie_epsilon=confPartFrame.energie*pow(10.,-(l_decimal)(*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_EPSILON_TRANSMISSION)));
+	confPartFrame.energie_epsilon=confPartFrame.energie*pow(10.,-(l_decimal)(*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_EPSILON_TRANSMISSION)));
 	confPartFrame.currentTetra=sourceInfo.currentVolume;
 	confPartFrame.sourceid=sourceInfo.idsource;
 	decimal nomVecVitesse=applicationTools.configurationTool->GetNormVecPart(sourceInfo.Position,confPartFrame.currentTetra);
@@ -85,9 +85,9 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 		confPartFrame.direction=sourceInfo.Direction*nomVecVitesse;
 	progressOperation thisSrcOperation(parentOperation,quandparticules);
 	//Prise en compte du délai de la source
-	confPartFrame.pasCourant=(uentier_court)ceil(sourceInfo.sourceDelay/(*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP)));
+	confPartFrame.pasCourant=(uentier_court)ceil(sourceInfo.sourceDelay/(*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP)));
 	confPartFrame.stateParticule=PARTICULE_STATE_ALIVE;
-	if((*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_TIMESTEP))>confPartFrame.pasCourant)
+	if((*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP))>confPartFrame.pasCourant)
 	{
 		int lastmill=-1;
 
@@ -103,7 +103,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 				std::cout<<"Solve "<<lastmill<<"xxx # particles."<<std::endl;
 			}
 			*/
-			CONF_PARTICULE confPart=confPartFrame;
+			CONF_PARTICULE_AGH confPart=confPartFrame;
 			if(sourceInfo.type==SOURCE_TYPE_OMNIDIRECTION)
 				ParticleDistribution::GenSphereDistribution(confPart,nomVecVitesse);
 			else if(sourceInfo.type==SOURCE_TYPE_XY)
@@ -159,15 +159,15 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
  * @param freqInfo Informations sur la fréquence à utiliser pour l'émission
  * @param confPartFrame Informations de bases pour toutes les particules
  */
-void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager::t_ParamReport reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE confPartFrame)
+void runFrequenceCalculation(  progressOperation* parentOperation, ReportManagerAGH::t_ParamReportAGH reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE_AGH confPartFrame)
 {
 	using namespace std;
 	//Reserve l'espace mémoire pour cette bande de fréquence
-	InitRecepteurSBfreq(applicationTools.configurationTool->recepteur_s_List,threadData->freqInfos->freqIndex,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_QUANT_TIMESTEP));
+	InitRecepteurSBfreq(applicationTools.configurationTool->recepteur_s_List,threadData->freqInfos->freqIndex,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP));
 	//Initialisation du gestionnaire de sortie de données
 	reportParameter.freqIndex=threadData->freqInfos->freqIndex;
 	reportParameter.freqValue=threadData->freqInfos->freqValue;
-	if((applicationTools.configurationTool->recepteur_s_List.size()>0 || applicationTools.configurationTool->recepteur_scut_List.size()>0 ) && *applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
+	if((applicationTools.configurationTool->recepteur_s_List.size()>0 || applicationTools.configurationTool->recepteur_scut_List.size()>0 ) && *applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
 	{
 		//Création du dossier pour le récepteur surfacique à cette fréquence
 		reportParameter._recepteur_surf_Path+=stringClass::FromInt(reportParameter.freqValue)+stringClass(" Hz\\");
@@ -175,16 +175,16 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 		//Création du dossier de fréquence
 		st_mkdir(reportParameter._recepteur_surf_Path.c_str());
 		//Ajout du nom du fichier à la fin
-		reportParameter._recepteur_surf_Path+=*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_PATH);
-		reportParameter._recepteur_surf_cut_Path+=*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
+		reportParameter._recepteur_surf_Path+=*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FILE_PATH);
+		reportParameter._recepteur_surf_cut_Path+=*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
 	}
 
-	ReportManager outputTool(reportParameter);
+	ReportManagerAGH outputTool(reportParameter);
 	applicationTools.outputTool=&outputTool;
 
 	//sellect calculation code based on sellection
 	CalculationCore* calculationTool = nullptr;
-	switch (*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::I_PROP_CALCULATION_CORE_SELLECTION))
+	switch (*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_CALCULATION_CORE_SELLECTION))
 	{
 	case CALCULATION_CORES::CLASSIC_SPPS:
 		calculationTool = new CalculationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
@@ -215,17 +215,17 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 			boost::mutex::scoped_lock lock(mutex);
 	#endif
 		//Post traitement des récepteurs de surface
-		ReportManager::SetPostProcessSurfaceReceiver(*applicationTools.configurationTool,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
-		ReportManager::SetPostProcessCutSurfaceReceiver(*applicationTools.configurationTool,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+		ReportManagerAGH::SetPostProcessSurfaceReceiver(*applicationTools.configurationTool,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
+		ReportManagerAGH::SetPostProcessCutSurfaceReceiver(*applicationTools.configurationTool,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 		//Sauvegarde des récepteurs surfacique pour cette bande de fréquence
-		if(applicationTools.configurationTool->recepteur_s_List.size()>0 &&  *applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
+		if(applicationTools.configurationTool->recepteur_s_List.size()>0 &&  *applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
 #ifdef UTILISER_MAILLAGE_OPTIMISATION
-			ReportManager::SauveRecepteursSurfaciques(reportParameter._recepteur_surf_Path,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.tetraMesh,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+			ReportManagerAGH::SauveRecepteursSurfaciques(reportParameter._recepteur_surf_Path,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.tetraMesh,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 #else
-			ReportManager::SauveRecepteursSurfaciques(reportParameter._recepteur_surf_Path,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.sceneMesh,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+			ReportManagerAGH::SauveRecepteursSurfaciques(reportParameter._recepteur_surf_Path,threadData->freqInfos->freqIndex,applicationTools.configurationTool->recepteur_s_List,*applicationTools.sceneMesh,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 #endif
-		if(applicationTools.configurationTool->recepteur_scut_List.size()>0 &&  *applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
-			ReportManager::SauveRecepteursSurfaciquesCoupe(reportParameter._recepteur_surf_cut_Path,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP),true,false,threadData->freqInfos->freqIndex);
+		if(applicationTools.configurationTool->recepteur_scut_List.size()>0 &&  *applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_OUTPUT_RECEPTEURS_SURF_BY_FREQ))
+			ReportManagerAGH::SauveRecepteursSurfaciquesCoupe(reportParameter._recepteur_surf_cut_Path,applicationTools.configurationTool->recepteur_scut_List,*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP),true,false,threadData->freqInfos->freqIndex);
 		outputTool.SaveAndCloseParticleFile();				//Finalisation du fichier de particule
 		threadData->GabeColData=outputTool.GetColStats();	//Recupere les données des etats de particules
 		threadData->GabeSumEnergyFreq=outputTool.GetSumEnergy();//Recupere les données du niveau sonore global
@@ -275,17 +275,17 @@ int MainProcess(int argc, char* argv[])
 	//**************************************************
 	// 1: Lire le fichier XML
 	cout<<"XML configuration file is currently loading..."<<endl;
-	Core_Configuration configManager(pathFichier);
+	Core_ConfigurationAGH configManager(pathFichier);
 	applicationToolBox.configurationTool=&configManager;
 	cout<<"XML configuration file has been loaded."<<endl;
 
 	//**************************************************
 	// 2: Initialisation des variables
-	CoreString workingDir=*configManager.FastGetConfigValue(Core_Configuration::SPROP_CORE_WORKING_DIRECTORY);
-	CoreString sceneMeshPath=*configManager.FastGetConfigValue(Core_Configuration::SPROP_MODEL_FILE_PATH);
+	CoreString workingDir=*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_CORE_WORKING_DIRECTORY);
+	CoreString sceneMeshPath=*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_MODEL_FILE_PATH);
 	sceneMeshPath=workingDir+sceneMeshPath;
 	// Chargement du Random SEED
-	unsigned long seedValue = *configManager.FastGetConfigValue(Core_Configuration::I_PROP_RANDOM_SEED);
+	unsigned long seedValue = *configManager.FastGetConfigValue(Core_ConfigurationAGH::I_PROP_RANDOM_SEED);
 	if(seedValue!=0) {
 		SetRandSeed(seedValue);
 	}
@@ -297,20 +297,20 @@ int MainProcess(int argc, char* argv[])
 
 	//**************************************************
 	// 4: Chargement du maillage
-	if(!initTetraMesh(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_TETRAHEDRALIZATION_FILE_PATH),sceneMesh,configManager.freqList.size(),sceneTetraMesh,configManager))
+	if(!initTetraMesh(workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_TETRAHEDRALIZATION_FILE_PATH),sceneMesh,configManager.freqList.size(),sceneTetraMesh,configManager))
 		return 1;
 
 	ExpandRecepteurPTetraLocalisation(&sceneTetraMesh,&configManager.recepteur_p_List,configManager); //Etend la zone d'influance des récepteurs ponctuels en fonction de leurs rayons
 	TranslateSourceAtTetrahedronVertex(configManager.srcList,&sceneTetraMesh);
 	//**************************************************
 	// 5: Instancier paramètre gestionnaire de sortie de données
-	ReportManager::t_ParamReport reportParameter;
-	reportParameter._particleFileName=*configManager.FastGetConfigValue(Core_Configuration::SPROP_PARTICULE_FILE_PATH);
-	reportParameter._particlePath=workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_PARTICULE_FOLDER_PATH);
-	reportParameter._recepteur_surf_Path=workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH);
-	reportParameter.nbParticles=*configManager.FastGetConfigValue(Core_Configuration::IPROP_QUANT_PARTICLE_OUTPUT)*configManager.srcList.size();
-	reportParameter.nbTimeStep=*configManager.FastGetConfigValue(Core_Configuration::IPROP_QUANT_TIMESTEP); //(int)((*configManager.FastGetConfigValue(Core_Configuration::FPROP_SIMULATION_TIME))/(*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP)));
-	reportParameter.timeStep=*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP);
+	ReportManagerAGH::t_ParamReportAGH reportParameter;
+	reportParameter._particleFileName=*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_PARTICULE_FILE_PATH);
+	reportParameter._particlePath=workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_PARTICULE_FOLDER_PATH);
+	reportParameter._recepteur_surf_Path=workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH);
+	reportParameter.nbParticles=*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_PARTICLE_OUTPUT)*configManager.srcList.size();
+	reportParameter.nbTimeStep=*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP); //(int)((*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_SIMULATION_TIME))/(*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP)));
+	reportParameter.timeStep=*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP);
 	reportParameter.tetraModel=&sceneTetraMesh;
 	reportParameter.configManager=&configManager;
 	reportParameter.sceneModel=&sceneMesh;
@@ -333,13 +333,13 @@ int MainProcess(int argc, char* argv[])
 
 	CalculationCore::CONF_CALCULATION confCalc;
 	confCalc.nbPasTemps=reportParameter.nbTimeStep;
-	confCalc.pasTemps=(*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+	confCalc.pasTemps=(*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 	applicationToolBox.calculationTool=NULL;
 	applicationToolBox.confCalc=confCalc;
 
-	CONF_PARTICULE particuleFrame;
+	CONF_PARTICULE_AGH particuleFrame;
 
-	progressionInfo progOutputManager(*configManager.FastGetConfigValue(Core_Configuration::IPROP_QUANT_BFREQ_TO_CALCULATE)); //gestionnaire d'affichage de progression
+	progressionInfo progOutputManager(*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_BFREQ_TO_CALCULATE)); //gestionnaire d'affichage de progression
 	applicationToolBox.mainProgressionOutput=&progOutputManager;
 
 	std::vector<t_sppsThreadParam> threadsData(configManager.freqList.size());
@@ -352,7 +352,7 @@ int MainProcess(int argc, char* argv[])
 			threadsData.at(idfreq).freqInfos=configManager.freqList[idfreq];
 
 			#if __USE_MULTITHREAD__
-			if(*configManager.FastGetConfigValue(Core_Configuration::IPROP_DO_MULTITHREAD))
+			if(*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_MULTITHREAD))
 				threads.add_thread(new boost::thread(boost::bind(&runFrequenceCalculation,progOutputManager.GetMainOperation(),reportParameter,applicationToolBox,&threadsData.at(idfreq),particuleFrame)));
 			else
 			#endif
@@ -361,7 +361,7 @@ int MainProcess(int argc, char* argv[])
 	}
 	#if __USE_MULTITHREAD__
 		uentier workingThreads=threads.size();
-		if(*configManager.FastGetConfigValue(Core_Configuration::IPROP_DO_MULTITHREAD))
+		if(*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_MULTITHREAD))
 			threads.join_all();
 	#endif
 
@@ -371,32 +371,32 @@ int MainProcess(int argc, char* argv[])
 	// 8: Une fois tout les threads de calculs fermés on compile les fichiers de resultats
 	reportCompilation(configManager,workingDir);
 
-	ReportManager::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
+	ReportManagerAGH::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
 
 	cout<<"Saving Ponctual Receiver Advanced Parameters..."<<endl;
-	ReportManager::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_Configuration::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH),threadsData,reportParameter);
+	ReportManagerAGH::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH),threadsData,reportParameter);
 	cout<<"End of save of Ponctual Receiver Advanced Parameters."<<endl;
 
 	cout<<"Saving Ponctual Receiver Intensity..."<<endl;
-	ReportManager::SaveRecpIntensity("Punctual receiver intensity.gabe",threadsData,reportParameter);
+	ReportManagerAGH::SaveRecpIntensity("Punctual receiver intensity.gabe",threadsData,reportParameter);
 	cout<<"End of save of Ponctual Receiver intensity."<<endl;
 
 	cout<<"Saving sound level for each Ponctual Receiver per source..."<<endl;
-	ReportManager::SaveSoundLevelBySource("Sound level per source.recp",threadsData,reportParameter);
+	ReportManagerAGH::SaveSoundLevelBySource("Sound level per source.recp",threadsData,reportParameter);
 	cout<<"End of save sound level for each Ponctual Receiver per source."<<endl;
-	stringClass globalRecSurfPath=workingDir+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH)+"Global\\";
+	stringClass globalRecSurfPath=workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH)+"Global\\";
 	//Création du dossier Global
 	st_mkdir(globalRecSurfPath.c_str());
-	stringClass globalSurfCutPath=globalRecSurfPath+*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
-	globalRecSurfPath+=*configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FILE_PATH);
+	stringClass globalSurfCutPath=globalRecSurfPath+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FILE_CUT_PATH);
+	globalRecSurfPath+=*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FILE_PATH);
 	cout<<"Saving Global Surface Receiver Data..."<<endl;
 	#ifndef _PROFILE_
 		#ifdef UTILISER_MAILLAGE_OPTIMISATION
-			ReportManager::SauveGlobalRecepteursSurfaciques(globalRecSurfPath,configManager.recepteur_s_List,sceneTetraMesh,*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+			ReportManagerAGH::SauveGlobalRecepteursSurfaciques(globalRecSurfPath,configManager.recepteur_s_List,sceneTetraMesh,*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 		#else
-			ReportManager::SauveGlobalRecepteursSurfaciques(globalRecSurfPath,configManager.recepteur_s_List,sceneMesh,*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+			ReportManagerAGH::SauveGlobalRecepteursSurfaciques(globalRecSurfPath,configManager.recepteur_s_List,sceneMesh,*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 		#endif
-		ReportManager::SauveRecepteursSurfaciquesCoupe(globalSurfCutPath,configManager.recepteur_scut_List,*configManager.FastGetConfigValue(Core_Configuration::FPROP_TIME_STEP));
+		ReportManagerAGH::SauveRecepteursSurfaciquesCoupe(globalSurfCutPath,configManager.recepteur_scut_List,*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 	#endif
 	cout<<"End of save Global Surface Receiver Data."<<endl;
 	//**************************************************

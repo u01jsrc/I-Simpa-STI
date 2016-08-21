@@ -1,11 +1,12 @@
-#include "core_configuration.h"
+#include "core_configurationAGH.h"
 #include <iostream>
 
 
-Core_Configuration::Core_Configuration( CoreString xmlFilePath )
+Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath )
+	:Core_Configuration(xmlFilePath)
 {
 	CXml fichierXml(xmlFilePath);
-	LoadCfgFile( fichierXml );
+	//LoadCfgFile( fichierXml );
 
 	#ifdef _PROFILE_
 		SetConfigInformation(SPROP_CORE_WORKING_DIRECTORY,"tmp\\");
@@ -85,59 +86,39 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 	}
 }
 
-decimal Core_Configuration::GetNormVecPart( const vec3& position, t_Tetra* currentTetra )
-{
-	if(currentTetra->z!=-1)
-	{
-		float zSol=position.z-currentTetra->g.z+currentTetra->z;
-		//retourne (c0+alog*logf(1+zSol/z0)+blin*zSol)*deltaT
-		return (*FastGetConfigValue(Base_Core_Configuration::FPROP_CELERITE)					//c0
-				+(*FastGetConfigValue(Base_Core_Configuration::FPROP_ALOG))		//+ alog
-				*log(1+(zSol/(*FastGetConfigValue(Base_Core_Configuration::FPROP_Z0))))			//* log(1+(zSol/z0))
-				+(*FastGetConfigValue(Base_Core_Configuration::FPROP_BLIN)*zSol)	//
-				)*(*FastGetConfigValue(FPROP_TIME_STEP));									// *deltaT
-	}else{
-		return (*FastGetConfigValue(Base_Core_Configuration::FPROP_CELERITE))*(*FastGetConfigValue(FPROP_TIME_STEP));
-	}
-}
 
-Core_Configuration::~Core_Configuration( )
+Core_ConfigurationAGH::~Core_ConfigurationAGH( )
 {
 }
 
-
-void Core_Configuration::SetConfigInformation(FPROP propertyIndex,decimal valeur)
+void Core_ConfigurationAGH::SetConfigInformation(NEW_IPROP propertyIndex, entier valeur)
+{
+	Base_Core_Configuration::SetConfigInformation((BASE_IPROP)propertyIndex, valeur);
+}
+void Core_ConfigurationAGH::SetConfigInformation(FPROP propertyIndex,decimal valeur)
 {
 	Base_Core_Configuration::SetConfigInformation((BASE_FPROP)propertyIndex,valeur);
 }
-void Core_Configuration::SetConfigInformation(SPROP propertyIndex,CoreString valeur)
+void Core_ConfigurationAGH::SetConfigInformation(SPROP propertyIndex,CoreString valeur)
 {
 	Base_Core_Configuration::SetConfigInformation((BASE_SPROP)propertyIndex,valeur);
 }
-void Core_Configuration::SetConfigInformation(IPROP propertyIndex,entier valeur)
+void Core_ConfigurationAGH::SetConfigInformation(IPROP propertyIndex,entier valeur)
 {
 	Base_Core_Configuration::SetConfigInformation((BASE_IPROP)propertyIndex,valeur);
 }
 
 
-void Core_Configuration::SetConfigInformation(BASE_FPROP propertyIndex,decimal valeur)
+void Core_ConfigurationAGH::SetConfigInformation(BASE_FPROP propertyIndex,decimal valeur)
 {
 	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
 }
-void Core_Configuration::SetConfigInformation(BASE_SPROP propertyIndex,CoreString valeur)
+void Core_ConfigurationAGH::SetConfigInformation(BASE_SPROP propertyIndex,CoreString valeur)
 {
 	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
 }
-void Core_Configuration::SetConfigInformation(BASE_IPROP propertyIndex,entier valeur)
+void Core_ConfigurationAGH::SetConfigInformation(BASE_IPROP propertyIndex,entier valeur)
 {
 	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
 }
 
-t_Material* Core_Configuration::GetMaterialByOutsideIndex( uentier outsideIndex )
-{
-	uentier sizeOfMaterials=materialList.size();
-	for(uentier i=0;i<sizeOfMaterials;i++)
-		if((*materialList[i]).outsideMaterialIndice==outsideIndex)
-			return materialList[i];
-	return NULL;
-}

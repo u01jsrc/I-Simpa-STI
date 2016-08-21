@@ -70,8 +70,17 @@ add_executable(spps
     ${TOOLS_SOURCES}
     ${SPPS_SOURCES})
 
+add_library(spps-lib
+    ${DATA_MANAGER_SOURCES}
+    ${IO_SOURCES}
+    ${TOOLS_SOURCES}
+    ${SPPS_SOURCES})
+
 # Creates a folder "executables" and adds target project (spps.vcproj) under it
 set_property(TARGET spps PROPERTY FOLDER "executables")
+
+# Creates a folder "libraries" and adds target project (spps-lib.vcproj) under it
+set_property(TARGET spps-lib PROPERTY FOLDER "libraries")
 
 
 # Properties->Linker->Input->Additional Dependencies
