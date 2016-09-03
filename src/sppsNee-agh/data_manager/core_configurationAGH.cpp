@@ -6,7 +6,7 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath )
 	:Core_Configuration(xmlFilePath)
 {
 	CXml fichierXml(xmlFilePath);
-	//LoadCfgFile( fichierXml );
+	LoadCfgFile( fichierXml );
 
 	#ifdef _PROFILE_
 		SetConfigInformation(SPROP_CORE_WORKING_DIRECTORY,"tmp\\");
@@ -17,9 +17,6 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath )
 	CXmlNode* root=fichierXml.GetRoot();
 	if(root)
 	{
-
-		
-
 		CXmlNode* simuNode=root->GetChild("simulation");
 		if(simuNode)
 		{
@@ -91,10 +88,6 @@ Core_ConfigurationAGH::~Core_ConfigurationAGH( )
 {
 }
 
-void Core_ConfigurationAGH::SetConfigInformation(NEW_IPROP propertyIndex, entier valeur)
-{
-	Base_Core_Configuration::SetConfigInformation((BASE_IPROP)propertyIndex, valeur);
-}
 void Core_ConfigurationAGH::SetConfigInformation(FPROP propertyIndex,decimal valeur)
 {
 	Base_Core_Configuration::SetConfigInformation((BASE_FPROP)propertyIndex,valeur);

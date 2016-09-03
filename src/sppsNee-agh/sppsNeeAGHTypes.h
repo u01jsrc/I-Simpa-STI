@@ -35,5 +35,19 @@ struct CONF_PARTICULE_AGH : public CONF_PARTICULE
 	CONF_PARTICULE_AGH() { targetReceiver = NULL; isShadowRay = false; sourceid = 0; currentTetra = NULL; distanceToNextEncombrementEle = 0.f; stateParticule = PARTICULE_STATE_ALIVE; elapsedTime = 0.; reflectionOrder = 0; }
 };
 
+struct CONF_PARTICULE_MLT : public CONF_PARTICULE_AGH
+{
+	std::vector<double> matAbsorbtions;				/*!< Defines if the particle is main ray or shadow ray	*/
+	std::vector<double> travelProbability;				
+	std::vector<double> refDir1;
+	std::vector<double> refDir2;
+
+	double totalDistance = 0;
+	double totalProbability = 1;
+
+	CONF_PARTICULE_MLT() {targetReceiver = NULL; isShadowRay = false; sourceid = 0; currentTetra = NULL; distanceToNextEncombrementEle = 0.f; stateParticule = PARTICULE_STATE_ALIVE; elapsedTime = 0.; reflectionOrder = 0; }
+	CONF_PARTICULE_MLT(CONF_PARTICULE_AGH particleAGH) {targetReceiver = particleAGH.targetReceiver; isShadowRay = particleAGH.isShadowRay; sourceid = particleAGH.sourceid; currentTetra = particleAGH.currentTetra; distanceToNextEncombrementEle = particleAGH.distanceToNextEncombrementEle; stateParticule = particleAGH.stateParticule; elapsedTime = particleAGH.elapsedTime; reflectionOrder = particleAGH.reflectionOrder; }
+};
+
 
 #endif

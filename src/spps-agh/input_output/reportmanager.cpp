@@ -21,7 +21,7 @@ l_decimal to_deciBel(const l_decimal& wjVal,const l_decimal&  Rho)
 	   @return Faux if the ray doesn't intersect the sphere.
 	   @see http://local.wasp.uwa.edu.au/~pbourke/geometry/sphereline/
 	*/
-	int RaySphere(const vec3& p1,const vec3& p2,const vec3& sc,double r,double *mu1,double *mu2)
+	/*int RaySphere(const vec3& p1,const vec3& p2,const vec3& sc,double r,double *mu1,double *mu2)
 	{
 	   double a,b,c;
 	   double bb4ac;
@@ -47,7 +47,7 @@ l_decimal to_deciBel(const l_decimal& wjVal,const l_decimal&  Rho)
 	   *mu2 = (-b - sqrt(bb4ac)) / (2 * a);
 
 	   return true;
-	}
+	}*/
 
 using namespace std;
 

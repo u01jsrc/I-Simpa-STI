@@ -19,12 +19,6 @@
 class Core_ConfigurationAGH : public Core_Configuration
 {
 public:
-
-	enum NEW_IPROP
-	{
-		I_PROP_CALCULATION_CORE_SELLECTION = 50,			/*!< Sellect calculation core*/
-	};
-
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML
 	 * @param xmlFilePath Chemin du fichier XML
@@ -37,8 +31,6 @@ public:
 	/////////////////////////////////////////////////////////
 	//	Trés rapide
 	/////////////////////////////////////////////////////////
-	inline entier* FastGetConfigValue(NEW_IPROP propertyIndex) { return (tabIntProp + propertyIndex); }
-
 	inline decimal* FastGetConfigValue(FPROP propertyIndex){return (tabFloatProp+propertyIndex); }
 	inline CoreString* FastGetConfigValue(SPROP propertyIndex){return (tabStringProp+propertyIndex); }
 	inline entier* FastGetConfigValue(IPROP propertyIndex){return (tabIntProp+propertyIndex); }
@@ -48,8 +40,6 @@ public:
 	inline entier* FastGetConfigValue(BASE_IPROP propertyIndex){return (tabIntProp+propertyIndex); }
 
 private:
-	void SetConfigInformation(NEW_IPROP propertyIndex, entier valeur);
-	
 	void SetConfigInformation(FPROP propertyIndex,decimal valeur);
 	void SetConfigInformation(SPROP propertyIndex,CoreString valeur);
 	void SetConfigInformation(IPROP propertyIndex,entier valeur);

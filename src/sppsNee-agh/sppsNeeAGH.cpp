@@ -22,6 +22,7 @@
 #include "tools/dotdistribution.h"
 #include "sppsInitialisation.h"
 #include "calculation_cores/NextEventEstimationCore.h"
+#include "calculation_cores/MLTCore.h"
 #include <memory>
 
 #if __USE_MULTITHREAD__
@@ -186,11 +187,14 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 	CalculationCore* calculationTool = nullptr;
 	switch (*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_CALCULATION_CORE_SELLECTION))
 	{
-	case CALCULATION_CORES::CLASSIC_SPPS:
+	case CLASSIC_SPPS:
 		calculationTool = new CalculationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
 		break;
-	case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
+	case NEXT_EVENT_ESTIMATION:
 		calculationTool = new NextEventEstimationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
+		break;
+	case MLT:
+		calculationTool = new MLTCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
 		break;
 	default:
 		calculationTool = new NextEventEstimationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);

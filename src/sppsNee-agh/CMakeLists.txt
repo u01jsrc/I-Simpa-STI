@@ -31,7 +31,9 @@ set(CALCULATION_CORES
 	CalculationCoreAGH.cpp
 	CalculationCoreAGH.h
 	calculation_cores/NextEventEstimationCore.cpp 
-	calculation_cores/NextEventEstimationCore.h )
+	calculation_cores/NextEventEstimationCore.h 
+	calculation_cores/MLTCore.cpp 
+	calculation_cores/MLTCore.h)
 
 # Sources groups (folders)
 source_group("data_manager" FILES ${DATA_MANAGER_SOURCES})
