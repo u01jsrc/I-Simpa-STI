@@ -1,6 +1,7 @@
 #include "reportmanagerAGH.h"
 #include "tools/collision.h"
 
+
 using namespace std;
 
 inline bool ContainsRP(t_Recepteur_P* recepteurTest, std::vector<t_Recepteur_P*>* rpList)
@@ -13,15 +14,15 @@ inline bool ContainsRP(t_Recepteur_P* recepteurTest, std::vector<t_Recepteur_P*>
 	return false;
 }
 
-ReportManagerAGH::ReportManagerAGH(t_ParamReportAGH& _paramReport)
+ReportManagerAGH::ReportManagerAGH(t_ParamReport& _paramReport)
 :ReportManager(_paramReport)
 {
 }
 
 ReportManagerAGH::~ReportManagerAGH()
 {
-	this->SaveAndCloseParticleFile();
-	delete[] tabEnergyByTimeStep;
+	//this->SaveAndCloseParticleFile();
+	//+delete[] tabEnergyByTimeStep;
 }
 
 void ReportManagerAGH::ShadowRayFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition)
@@ -111,7 +112,7 @@ formatGABE::GABE_Object* ReportManagerAGH::GetColStats()
 	return statValues;
 }
 
-void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReportAGH& params)
+void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
 {
 	/////////////////////////////////////
 	// 1: Sauvegarde des statistiques des états finaux des particules

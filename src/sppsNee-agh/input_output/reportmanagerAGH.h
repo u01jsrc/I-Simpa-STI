@@ -1,6 +1,6 @@
 ﻿#include <input_output/reportmanager.h>
 #include <sppsNeeAGHTypes.h>
-#include <data_manager/core_configurationAGH.h>
+#include <data_manager/Core_ConfigurationAGH.h>
 
 /**
  * @file reportmanager.h
@@ -21,17 +21,13 @@ class ReportManagerAGH : public ReportManager
 
 public:
 
-	struct t_ParamReportAGH : public t_ParamReport {
-		Core_ConfigurationAGH* configManager;
-	};
-
 	/**
 	 * Constructeur de la classe
 	 *
 	 * @param _particlePath Chemin où enregistrer le fichier de particules
 	 *
 	 */
-	ReportManagerAGH(t_ParamReportAGH& _paramReport);
+	ReportManagerAGH(t_ParamReport& _paramReport);
 	~ReportManagerAGH();
 	/**
 	 * A appeler avant la translation d'une particule
@@ -56,7 +52,7 @@ public:
 	/**
 	 * Sauvegarde le tableau de statistique des états de particules et les données de niveaux sonores globaux
 	 */
-	static void SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReportAGH& params);
+	static void SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params);
 };
 
 #endif

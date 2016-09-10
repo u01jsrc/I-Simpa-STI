@@ -4,6 +4,7 @@
 #include "tools/brdfreflection.h"
 #include "tools/dotdistribution.h"
 #include <iostream>
+
 #ifndef INTSIGN
 	#define INTSIGN(x) ((x < 0) ? -1 : 1 );
 #endif

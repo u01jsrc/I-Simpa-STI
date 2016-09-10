@@ -10,8 +10,8 @@ message(STATUS " Boost lib path - $ENV{BOOST_LIBRARYDIR}")
 
 # Sources files
 set(DATA_MANAGER_SOURCES
-    data_manager/core_configurationAGH.h
-    data_manager/core_configurationAGH.cpp)
+    data_manager/Core_ConfigurationAGH.h
+    data_manager/Core_ConfigurationAGH.cpp)
 
 set(IO_SOURCES
     input_output/reportmanagerAGH.h

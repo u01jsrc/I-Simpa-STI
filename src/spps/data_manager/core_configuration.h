@@ -86,7 +86,7 @@ public:
 	t_Material* GetMaterialByOutsideIndex( uentier outsideIndex );
 
 	decimal GetNormVecPart(  const vec3& position, t_Tetra* currentTetra );
-private:
+protected:
 	
 	void SetConfigInformation(FPROP propertyIndex,decimal valeur);
 	void SetConfigInformation(SPROP propertyIndex,CoreString valeur);

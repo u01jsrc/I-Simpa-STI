@@ -3,11 +3,15 @@
 #ifdef _DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
+	#include <crtdbg.h>
 	#ifdef _WIN32
-		#include <crtdbg.h>
+		//#include <crtdbg.h>
 	#endif
 	#include <input_output/gabe/gabe.h>
 	#define __USE_MULTITHREAD__ 0
+
+	//#include <vld.h>
+
 #else
 	#define __USE_MULTITHREAD__ 1
 #endif
@@ -160,7 +164,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
  * @param freqInfo Informations sur la fréquence à utiliser pour l'émission
  * @param confPartFrame Informations de bases pour toutes les particules
  */
-void runFrequenceCalculation(  progressOperation* parentOperation, ReportManagerAGH::t_ParamReportAGH reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE_AGH confPartFrame)
+void runFrequenceCalculation(  progressOperation* parentOperation, ReportManagerAGH::t_ParamReport reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE_AGH confPartFrame)
 {
 	using namespace std;
 	//Reserve l'espace mémoire pour cette bande de fréquence
@@ -308,7 +312,7 @@ int MainProcess(int argc, char* argv[])
 	TranslateSourceAtTetrahedronVertex(configManager.srcList,&sceneTetraMesh);
 	//**************************************************
 	// 5: Instancier paramètre gestionnaire de sortie de données
-	ReportManagerAGH::t_ParamReportAGH reportParameter;
+	ReportManagerAGH::t_ParamReport reportParameter;
 	reportParameter._particleFileName=*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_PARTICULE_FILE_PATH);
 	reportParameter._particlePath=workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_PARTICULE_FOLDER_PATH);
 	reportParameter._recepteur_surf_Path=workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH);
@@ -414,6 +418,7 @@ int MainProcess(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+
 	MainProcess(argc,argv);
 
 	#ifdef _WIN32

@@ -1,5 +1,5 @@
 #include "coreTypes.h"
-#include "data_manager/core_configurationAGH.h"
+#include "data_manager/Core_ConfigurationAGH.h"
 #include "sppsNeeAGHTypes.h"
 
 

@@ -1,7 +1,7 @@
 ﻿#include "sppsNeeAGHTypes.h"	//les types de données sont déclaré ici
 						// Il est déconseillé d'utiliser d'autre types que ceux déclaré dans ce fichier dans le programme
 #include "input_output/reportmanagerAGH.h"
-#include "data_manager/core_configurationAGH.h"
+#include "data_manager/Core_ConfigurationAGH.h"
 #include <list>
 #ifndef __CALC_CORE_AGH__
 #define __CALC_CORE_AGH__

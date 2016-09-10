@@ -143,6 +143,7 @@ public:
 			return PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, materialInfo, rnd1, rnd2, probability);
 			break;
 		default:
+			probability = (1 - materialInfo.diffusion);
 			return SpecularReflection(vectorDirection, faceNormal);
 		};
 	}
