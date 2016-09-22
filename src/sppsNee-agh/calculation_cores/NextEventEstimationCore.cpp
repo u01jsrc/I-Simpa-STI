@@ -230,11 +230,11 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 				//Get direction for diffuse or specular part based on material info
 				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
 				{
-					nouvDirection = ReflectionLawsAGH::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+					nouvDirection = ReflectionLawsAGH::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal);
 				}
 				else 
 				{
-					nouvDirection = ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal, configurationP);
+					nouvDirection = ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal);
 				}
 
 				//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)

@@ -83,7 +83,7 @@ protected:
 	}
 
 	void InitRandomSeed(Element* confCore) {
-		confCore->AppendPropertyEntier("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
+		confCore->AppendPropertyInteger("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
 	}
 
 	/**

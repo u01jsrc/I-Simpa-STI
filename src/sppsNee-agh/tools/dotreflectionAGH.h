@@ -18,7 +18,7 @@ public:
 	 * @param AB Vecteur perpendiculaire à la normal de la face
 	 * @return Vecteur réflexion normalisé
 	 */
-	static vec3 SolveDiffusePart(vec3 &vectorDirection,t_Material_BFreq &materialInfo,vec3& faceNormal, CONF_PARTICULE_AGH& particuleInfo)
+	static vec3 SolveDiffusePart(vec3 &vectorDirection,t_Material_BFreq &materialInfo,vec3& faceNormal)
 	{
 		switch(materialInfo.reflectionLaw)
 		{
@@ -26,34 +26,34 @@ public:
 				return SpecularReflection(vectorDirection,faceNormal);
 				break;
 			case REFLECTION_LAW_LAMBERT:
-				return BaseWnReflection(vectorDirection,faceNormal,1,particuleInfo);
+				return BaseWnReflection(vectorDirection,faceNormal,1);
 				break;
 			case REFLECTION_LAW_UNIFORM:
-				return BaseWnReflection(vectorDirection,faceNormal,0,particuleInfo);
+				return BaseWnReflection(vectorDirection,faceNormal,0);
 				break;
 			case REFLECTION_LAW_W2:
-				return BaseWnReflection(vectorDirection,faceNormal,2,particuleInfo);
+				return BaseWnReflection(vectorDirection,faceNormal,2);
 				break;
 			case REFLECTION_LAW_W3:
-				return BaseWnReflection(vectorDirection,faceNormal,3,particuleInfo);
+				return BaseWnReflection(vectorDirection,faceNormal,3);
 				break;
 			case REFLECTION_LAW_W4:
-				return BaseWnReflection(vectorDirection,faceNormal,4,particuleInfo);
+				return BaseWnReflection(vectorDirection,faceNormal,4);
 				break;
 			case REFLECTION_LAW_PHONG:
-				return BaseWnReflection(vectorDirection, faceNormal, 1, particuleInfo);
+				return BaseWnReflection(vectorDirection, faceNormal, 1);
 				break;
 			default:
 				return SpecularReflection(vectorDirection,faceNormal);
 		};
 	}
 
-	static vec3 SolveSpecularPart(vec3 &vectorDirection, t_Material_BFreq &materialInfo, vec3& faceNormal, CONF_PARTICULE_AGH& particuleInfo)
+	static vec3 SolveSpecularPart(vec3 &vectorDirection, t_Material_BFreq &materialInfo, vec3& faceNormal)
 	{
 		switch (materialInfo.reflectionLaw)
 		{
 		case REFLECTION_LAW_PHONG:
-			return PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, materialInfo);
+			return PhongSpecularPart(vectorDirection, faceNormal, materialInfo);
 			break;
 		default:
 			return SpecularReflection(vectorDirection, faceNormal);
@@ -63,7 +63,7 @@ public:
 
 private:
 
-	static vec3 PhongSpecularPart(vec3 &vectorDirection, vec3 &faceNormal, CONF_PARTICULE_AGH& particuleInfo, t_Material_BFreq &material)
+	static vec3 PhongSpecularPart(vec3 &vectorDirection, vec3 &faceNormal, t_Material_BFreq &material)
 	{
 		float n = powf(10, powf(-0.82662*material.diffusion, 3) + 1.5228);
 		vec3 specularDir = SpecularReflection(vectorDirection, faceNormal);
@@ -71,7 +71,7 @@ private:
 		Matrix3 rotationMatrix;
 		rotationMatrix.calculateRotationMatrix(faceNormal, specularDir);
 
-		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n, particuleInfo);
+		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n);
 		target = rotationMatrix*target;
 
 		double test = target.dot(faceNormal);
@@ -80,7 +80,7 @@ private:
 		if(target.dot(faceNormal) >= M_PI/2)
 		{
 			//if it is get new random direction
-			target = PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, material);
+			target = PhongSpecularPart(vectorDirection, faceNormal, material);
 		}
 
 		return target/target.length();
@@ -113,22 +113,22 @@ public:
 			return SpecularReflection(vectorDirection, faceNormal);
 			break;
 		case REFLECTION_LAW_LAMBERT:
-			return BaseWnReflection(vectorDirection, faceNormal, 1, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 1, rnd1, rnd2, probability);
 			break;
 		case REFLECTION_LAW_UNIFORM:
-			return BaseWnReflection(vectorDirection, faceNormal, 0, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 0, rnd1, rnd2, probability);
 			break;
 		case REFLECTION_LAW_W2:
-			return BaseWnReflection(vectorDirection, faceNormal, 2, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 2, rnd1, rnd2, probability);
 			break;
 		case REFLECTION_LAW_W3:
-			return BaseWnReflection(vectorDirection, faceNormal, 3, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 3, rnd1, rnd2, probability);
 			break;
 		case REFLECTION_LAW_W4:
-			return BaseWnReflection(vectorDirection, faceNormal, 4, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 4, rnd1, rnd2, probability);
 			break;
 		case REFLECTION_LAW_PHONG:
-			return BaseWnReflection(vectorDirection, faceNormal, 1, particuleInfo, rnd1, rnd2, probability);
+			return BaseWnReflection(vectorDirection, faceNormal, 1, rnd1, rnd2, probability);
 			break;
 		default:
 			return SpecularReflection(vectorDirection, faceNormal);
@@ -159,7 +159,7 @@ private:
 		Matrix3 rotationMatrix;
 		rotationMatrix.calculateRotationMatrix(faceNormal, specularDir);
 
-		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n, particuleInfo, rnd1, rnd2, probability);
+		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n, rnd1, rnd2, probability);
 		target = rotationMatrix*target;
 
 		double test = target.dot(faceNormal);
@@ -175,7 +175,7 @@ private:
 	}
 
 
-	static vec3 BaseWnReflection(vec3 &vecteurVitesse, vec3 &faceNormal, decimal expo, CONF_PARTICULE& particuleInfo, double &rnd1, double &rnd2, double &probability)
+	static vec3 BaseWnReflection(vec3 &vecteurVitesse, vec3 &faceNormal, decimal expo, double &rnd1, double &rnd2, double &probability)
 	{
 		decimal theta = rnd1 * M_2PI;
 		decimal phi = acos(pow((float)1 - rnd2, (float)(1. / (expo + 1.))));//pow((float)acos(1-GetRandValue()),(float)(1./(expo+1.)));

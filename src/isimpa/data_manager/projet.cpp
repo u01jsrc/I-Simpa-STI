@@ -704,7 +704,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 		for (int i = 0; i < egroupeSurf.size(); i++)
 		{
 			E_Scene_Groupesurfaces_Groupe* group = dynamic_cast<E_Scene_Groupesurfaces_Groupe*>(egroupeSurf[i]);
-			int idx = group->GetEntierConfig("idmat");
+			int idx = group->GetIntegerConfig("idmat");
 
 			E_Materiau* mat = ApplicationConfiguration::GetMateriau(idx);
 			mat->GetAllElementByType(Element::ELEMENT_TYPE_ROW_MATERIAU, lstMatRow);

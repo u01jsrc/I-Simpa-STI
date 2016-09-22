@@ -102,7 +102,7 @@ endif()
 
 # Adds logic to INSTALL.vcproj to copy spps.exe to destination directory
 install (TARGETS sppsNee-agh
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/core/sppsNee-agh)
+        RUNTIME DESTINATION core/sppsNee-agh)
 
 #------------#
 #    TEST

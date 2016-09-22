@@ -101,10 +101,10 @@ protected:
 	}
 
 	void InitRandomSeed(Element* confCore) {
-		confCore->AppendPropertyEntier("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
+		confCore->AppendPropertyInteger("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
 	}
 	void InitDiffusion_order(Element* confCore) {
-		confCore->AppendPropertyEntier("diffusion_order", wxTRANSLATE("Diffusion order"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyInteger("diffusion_order", wxTRANSLATE("Diffusion order"), 0, true, false, true, 0, 0);
 	}
 	void InitDiffusion_when_reached(Element* confCore) {
 		confCore->AppendPropertyBool("specular_when_order_reached", wxTRANSLATE("Specular when order reached"), false, true);

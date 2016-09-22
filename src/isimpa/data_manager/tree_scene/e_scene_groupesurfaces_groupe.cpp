@@ -236,7 +236,7 @@ void E_Scene_Groupesurfaces_Groupe::InitProp()
 
 			if(!this->IsPropertyExist("angle_group"))
 			{
-				this->AppendPropertyEntier("angle_group","Angle group",1,true,false,true,0,1);
+				this->AppendPropertyInteger("angle_group","Angle group",1,true,false,true,0,1);
 				_("Angle group");
 				this->SetReadOnlyConfig("angle_group");
 			}
@@ -259,9 +259,10 @@ void E_Scene_Groupesurfaces_Groupe::PushFace(std::vector<std::vector<Application
 	}
 	//Il faut renseigner l'element de la face en fonction du type de groupe
 	if(!isPointerGroup)
+	{
 		vectorToFeed[faceIndex.group][faceIndex.face].idMaterial=this->GetIntegerConfig("idmat");
 		vectorToFeed[faceIndex.group][faceIndex.face].Rec_angle=this->GetBoolConfig("Rec_angle");
-		vectorToFeed[faceIndex.group][faceIndex.face].angle_group=this->GetEntierConfig("angle_group");
+		vectorToFeed[faceIndex.group][faceIndex.face].angle_group=this->GetIntegerConfig("angle_group");
 	}
 	else
 	{
@@ -715,7 +716,7 @@ void E_Scene_Groupesurfaces_Groupe::Modified(Element* eModif)
 
 		if(elInfo.typeElement==ELEMENT_TYPE_INTEGER && elInfo.libelleElement=="angle_group")
 		{	
-			E_Data_Entier* ElementEntier=dynamic_cast<E_Data_Entier*>(eModif);
+			E_Data_Integer* ElementEntier=dynamic_cast<E_Data_Integer*>(eModif);
 			if(ElementEntier)
 			{
 				this->UpdateEntierConfig("angle_group",ElementEntier->GetValue());
