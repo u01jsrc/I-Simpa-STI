@@ -19,11 +19,18 @@ INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(CMAKE_SWIG_FLAGS "")
-SET(CMAKE_SWIG_OUTDIR ${PROJECT_BINARY_DIR}/bin/libsimpa)
 
 SET_SOURCE_FILES_PROPERTIES(libsimpa.i PROPERTIES CPLUSPLUS ON)
+
+set(Boost_USE_STATIC_LIBS   OFF)
+find_package(Boost COMPONENTS system filesystem regex REQUIRED)
+link_directories( ${Boost_LIBRARY_DIRS} ) 
+
 SWIG_ADD_MODULE(libsimpa python libsimpa.i)
-SWIG_LINK_LIBRARIES(libsimpa ${PYTHON_LIBRARIES} lib_interface)
+SWIG_LINK_LIBRARIES(libsimpa lib_interface ${PYTHON_LIBRARIES})
+
+# Creates a folder "libraries" and adds target project (lib_interface.vcproj) under it
+set_property(TARGET ${SWIG_MODULE_libsimpa_REAL_NAME} PROPERTY FOLDER "libraries")
 
 if(WIN32) # Check if we are on Windows
  if(MSVC) # Check if we are using the Visual Studio compiler
@@ -38,14 +45,18 @@ endif()
 #    INSTALL
 #--------------#
 
+set(ISIMPA_RESSOURCES ${PROJECT_SOURCE_DIR}/currentRelease)
+
 # Adds logic to INSTALL.vcproj to copy _libsimpa.pyd to the destination directory
 install (TARGETS ${SWIG_MODULE_libsimpa_REAL_NAME}
-      ARCHIVE DESTINATION ${CMAKE_SWIG_OUTDIR}
-      LIBRARY DESTINATION ${CMAKE_SWIG_OUTDIR}
-      RUNTIME DESTINATION ${CMAKE_SWIG_OUTDIR}
-      COMPONENT library
+      LIBRARY DESTINATION libsimpa/
 )
 
+install (FILES
+        ${ISIMPA_RESSOURCES}/libsimpa/vec3.py
+        ${ISIMPA_RESSOURCES}/libsimpa/__init__.py
+		${CMAKE_CURRENT_BINARY_DIR}/libsimpa.py
+        DESTINATION libsimpa/)
 #------------#
 #    TEST
 #------------#
@@ -53,11 +64,14 @@ install (TARGETS ${SWIG_MODULE_libsimpa_REAL_NAME}
 enable_testing()
 # If you add tests, do not forget to add the name to set_property(TEST ..
 
+
+MESSAGE(STATUS "Run test in ${CMAKE_CURRENT_BINARY_DIR}")
+
 add_test(NAME test_modelio
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/model_io.py ${PROJECT_BINARY_DIR}/Testing/Temporary/
-  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/bin/libsimpa)
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
   
   
 set_property(TEST test_modelio
- PROPERTY ENVIRONMENT "PYTHONPATH=${PROJECT_BINARY_DIR}/bin/libsimpa"
+ PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}"
 )

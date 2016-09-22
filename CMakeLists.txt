@@ -1,8 +1,22 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.6.0)
 
 # Maps to a solution file (isimpa.sln). The solution will
 # have all targets (exe, lib, dll) as projects (.vcproj)
-project (isimpa)
+project (isimpa VERSION 1.3.2)
+
+
+macro(COPY_LIB LIBPATH DESTINATION)
+    get_filename_component(UT_SHARED_FILE ${LIBPATH} NAME)
+    configure_file(${LIBPATH}
+            ${DESTINATION}/${UT_SHARED_FILE} COPYONLY)
+endmacro(COPY_LIB)
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/bin" CACHE PATH "default install path" FORCE )
+	message (STATUS "Default install path is set: " ${CMAKE_INSTALL_PREFIX})
+else()
+    message (STATUS "Install path already defined: " ${CMAKE_INSTALL_PREFIX})
+endif()
 
 # Turn on the ability to create folders to organize projects (.vcproj)
 # It creates "CMakePredefinedTargets" folder by default and adds CMake

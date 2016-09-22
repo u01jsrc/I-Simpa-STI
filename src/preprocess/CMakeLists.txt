@@ -14,8 +14,11 @@ set(PREPROCESS_SOURCE_FILES
 #    DEPENDENCY & EXECUTABLE (OR LIB)
 #---------------------------------------#
 
-# Set Properties->General->Configuration Type to Application(.exe)
-# Creates spps.exe with the listed sources
+find_package(Boost COMPONENTS system filesystem regex REQUIRED)
+link_directories( ${Boost_LIBRARY_DIRS} ) 
+
+# Set Properties->General->Configuration Type to Application
+# Creates spps with the listed sources
 # Adds sources to the Solution Explorer
 add_executable(preprocess ${PREPROCESS_SOURCE_FILES})
 
@@ -29,6 +32,6 @@ target_link_libraries (preprocess lib_interface)
 #    INSTALL
 #--------------#
 
-# Adds logic to INSTALL.vcproj to copy preprocess.exe to destination directory
+# Adds logic to INSTALL.vcproj to copy preprocess to destination directory
 install (TARGETS preprocess
-        RUNTIME DESTINATION ${PROJECT_BINARY_DIR}/bin/meshing/tetgen)
+        RUNTIME DESTINATION meshing/tetgen)
