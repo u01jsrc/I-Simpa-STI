@@ -89,10 +89,10 @@ void MakeSchroederArray(const std::vector<std::vector<wxFloat32> >& srcArray,std
  */
 enum SUM_OPERATION
 {
-	SUM_OPERATION_X,
-	SUM_OPERATION_Y,
-	SUM_OPERATION_XY,
-	SUM_OPERATION_X2
+	SUM_OPERATION_X, // sum time
+	SUM_OPERATION_Y, // sum power
+	SUM_OPERATION_XY,// sum power * time
+	SUM_OPERATION_X2 // sum time²
 };
 
 wxFloat32 GetSumLimit(wxInt32 idBandeFreq,wxFloat32 fromTime,wxFloat32 toTime,const std::vector<wxFloat32>& timeTable,const std::vector<std::vector<wxFloat32> >& tab_wj, SUM_OPERATION operation=SUM_OPERATION_Y,wxInt32* counter=NULL)
@@ -143,6 +143,20 @@ struct LinearRegressionResult
 	wxFloat32 a;
 	wxFloat32 b;
 };
+
+wxFloat32 GetTimeDecay(wxFloat32 fromdB, const std::vector<wxFloat32>& timeTable, const std::vector<wxFloat32>& row_db) {
+	wxFloat32 timeDeb = timeTable[0];
+	wxFloat32 lastdB = row_db[0];
+	for (int idStep = 0; idStep<row_db.size(); idStep++)
+	{
+		if (abs(row_db[idStep] - lastdB) >= fromdB) {
+			break;
+		} else {
+			timeDeb = timeTable[idStep];
+		}
+	}
+	return timeDeb;
+}
 /**
  * A partir des bornes de décroissance en dB retourne les bornes correspondantes en ms
  */
@@ -216,10 +230,10 @@ formatGABE::GABE_Data_Float* Compute_TR_Param(wxFloat32 fromdbL,wxFloat32 todbL,
 	if(fromdbL==0)
 	{
 		newParameter->SetLabel(_("EDT (s)"));
-		newParameter->headerData.numOfDigits=3;
+		newParameter->headerData.numOfDigits=COMMA_PRECISION_TIME_S;
 	}else{
 		newParameter->SetLabel(wxString::Format(_("RT-%g (s)"),todbL-5));
-		newParameter->headerData.numOfDigits=3;
+		newParameter->headerData.numOfDigits=COMMA_PRECISION_TIME_S;
 	}
 	return newParameter;
 }
@@ -240,7 +254,7 @@ formatGABE::GABE_Data_Float* dB_Sum_Param(const std::vector<wxFloat32>& timeTabl
 	}
 
 	newParameter->SetLabel(_("Sound level (dB)"));
-	newParameter->headerData.numOfDigits=3;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_DB;
 	return newParameter;
 
 }
@@ -303,7 +317,7 @@ formatGABE::GABE_Data_Float* dBa_Sum_Param(const std::vector<wxFloat32>& timeTab
 	}
 
 	newParameter->SetLabel(_("Sound level (dBA)"));
-	newParameter->headerData.numOfDigits=3;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_DB;
 	return newParameter;
 
 }
@@ -320,12 +334,19 @@ formatGABE::GABE_Data_Float* Compute_ST_Param(wxFloat32 t1,wxFloat32 t2,wxFloat3
 {
 	formatGABE::GABE_Data_Float* newParameter=new formatGABE::GABE_Data_Float(tab_wj.size()+1);
 
+
 	//Pour chaque bande de fréquence
 	wxFloat32 sum=0.f;
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
+		double wt1 = wt0 + t1;
+		double wt2 = wt0 + t2;
+		double wt3 = wt0 + t3;
+
 		//Calcul de 0|te(p²(t))/te|+inf(p²(t))
-		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,t2,t3,timeTable,tab_wj)/GetSumLimit(idFreq,0.,t1,timeTable,tab_wj);
+		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq, wt2, wt3,timeTable,tab_wj)/GetSumLimit(idFreq, wt0, wt1,timeTable,tab_wj);
 
 		//Conversion en dB
 		wxFloat32 db_CurrentFreq=to_deciBel(wj_CurrentFreq);
@@ -336,7 +357,7 @@ formatGABE::GABE_Data_Float* Compute_ST_Param(wxFloat32 t1,wxFloat32 t2,wxFloat3
 	}
 	newParameter->Set(newParameter->GetSize()-1,sum/(tab_wj.size()-1));
 	newParameter->SetLabel(_("ST (dB)"));
-	newParameter->headerData.numOfDigits=4;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_DB;
 	return newParameter;
 }
 /**
@@ -353,8 +374,12 @@ formatGABE::GABE_Data_Float* Compute_C_Param(wxFloat32 te,const std::vector<wxFl
 	//Pour chaque bande de fréquence
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
+		double wte = wt0 + te;
+
 		//Calcul de 0|te(p²(t))/te|+inf(p²(t))
-		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,0.f,te,timeTable,tab_wj)/GetSumLimit(idFreq,te,-1.f,timeTable,tab_wj);
+		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,wt0,wte,timeTable,tab_wj)/GetSumLimit(idFreq,wte,-1.f,timeTable,tab_wj);
 
 		//Conversion en dB
 		wxFloat32 db_CurrentFreq=to_deciBel(wj_CurrentFreq);
@@ -366,7 +391,7 @@ formatGABE::GABE_Data_Float* Compute_C_Param(wxFloat32 te,const std::vector<wxFl
 
 	newParameter->Set(newParameter->GetSize()-1,sum/(tab_wj.size()-1));
 	newParameter->SetLabel(wxString::Format(_("C-%g (dB)"),te));
-	newParameter->headerData.numOfDigits=4;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_DB;
 	return newParameter;
 }
 /**
@@ -382,8 +407,12 @@ formatGABE::GABE_Data_Float* Compute_D_Param(wxFloat32 te,const std::vector<wxFl
 	//Pour chaque bande de fréquence
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
+		double wte = wt0 + te;
+
 		//Calcul de 0|te(p²(t))/te|+inf(p²(t))
-		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,0.f,te,timeTable,tab_wj)/GetSumLimit(idFreq,0,-1.f,timeTable,tab_wj))*100.f;
+		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,wt0,wte,timeTable,tab_wj)/GetSumLimit(idFreq,wt0,-1.f,timeTable,tab_wj))*100.f;
 
 		if(idFreq!=tab_wj.size()-1)
 			sum+=wj_CurrentFreq;
@@ -392,7 +421,7 @@ formatGABE::GABE_Data_Float* Compute_D_Param(wxFloat32 te,const std::vector<wxFl
 
 	newParameter->Set(newParameter->GetSize()-1,sum/(tab_wj.size()-1));
 	newParameter->SetLabel(wxString::Format(_("D-%g (%%)"),te));
-	newParameter->headerData.numOfDigits=3;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_PERCENT;
 	return newParameter;
 }
 
@@ -408,9 +437,11 @@ formatGABE::GABE_Data_Float* Compute_TS_Param(const std::vector<wxFloat32>& time
 	//Pour chaque bande de fréquence
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
-		//Calcul de 0|t(p²(t))/0|+inf(p²(t))
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
 
-		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,0.f,-1.f,timeTable,tab_wj,SUM_OPERATION_XY)/GetSumLimit(idFreq,0,-1.f,timeTable,tab_wj,SUM_OPERATION_Y);
+		//Calcul de 0|t(p²(t))/0|+inf(p²(t))
+		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,wt0,-1.f,timeTable,tab_wj,SUM_OPERATION_XY)/GetSumLimit(idFreq,wt0,-1.f,timeTable,tab_wj,SUM_OPERATION_Y);
 
 		if(idFreq!=tab_wj.size()-1)
 			sum+=wj_CurrentFreq;
@@ -419,7 +450,7 @@ formatGABE::GABE_Data_Float* Compute_TS_Param(const std::vector<wxFloat32>& time
 
 	newParameter->Set(newParameter->GetSize()-1,sum/(tab_wj.size()-1));
 	newParameter->SetLabel(_("Ts (ms)"));
-	newParameter->headerData.numOfDigits=4;
+	newParameter->headerData.numOfDigits= COMMA_PRECISION_TIME_MS;
 	return newParameter;
 }
 
@@ -433,8 +464,13 @@ formatGABE::GABE_Data_Float* Compute_LEF_Param(const wxFloat32& t1,const wxFloat
 	//Pour chaque bande de fréquence
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
+		double wt1 = wt0 + t1;
+		double wt2 = wt0 + t2;
+
 		//Calcul
-		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,t1,t2,timeTable,tab_wjTheta,SUM_OPERATION_Y)/GetSumLimit(idFreq,0,t2,timeTable,tab_wj,SUM_OPERATION_Y)*100.f;
+		wxFloat32 wj_CurrentFreq=GetSumLimit(idFreq,wt1,wt2,timeTable,tab_wjTheta,SUM_OPERATION_Y)/GetSumLimit(idFreq,wt0,wt2,timeTable,tab_wj,SUM_OPERATION_Y)*100.f;
 		
 		if(idFreq!=tab_wj.size()-1)
 			sum+=wj_CurrentFreq;
@@ -499,8 +535,12 @@ formatGABE::GABE_Data_Float* Compute_LG_Param(const wxFloat32& t1,const wxFloat3
 	wxFloat32 sum=0.f;
 	for(int idFreq=0;idFreq<tab_wjthetasqr.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wjthetasqr[idFreq]);
+		double wt1 = wt0 + t1;
+		double wt2 = wt0 + t2;
 		//Calcul
-		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,t1,t2,timeTable,tab_wjthetasqr,SUM_OPERATION_Y))/(tab_wjsrc[idFreq]/(4*M_PI*100));
+		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,wt1,wt2,timeTable,tab_wjthetasqr,SUM_OPERATION_Y))/(tab_wjsrc[idFreq]/(4*M_PI*100));
 		
 		if(idFreq!=tab_wjthetasqr.size()-1)
 			sum+=wj_CurrentFreq;
@@ -529,8 +569,12 @@ formatGABE::GABE_Data_Float* Compute_G_Param(const wxFloat32& t1,const wxFloat32
 	wxFloat32 sum=0.f;
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
+		// Wave time
+		double wt0 = GetTimeDecay(EPSILON, timeTable, tab_wj[idFreq]);
+		double wt1 = wt0 + t1;
+		double wt2 = wt0 + t2;
 		//Calcul
-		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,t1,t2,timeTable,tab_wj,SUM_OPERATION_Y))/(tab_wjsrc[idFreq]/(4*M_PI*100));
+		wxFloat32 wj_CurrentFreq=(GetSumLimit(idFreq,wt1,wt2,timeTable,tab_wj,SUM_OPERATION_Y))/(tab_wjsrc[idFreq]/(4*M_PI*100));
 		newParameter->Set(idFreq,to_deciBel(wj_CurrentFreq));
 		if(idFreq!=tab_wj.size()-1)
 			sum+=to_deciBel(wj_CurrentFreq);
@@ -914,13 +958,21 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 				tabWriter.SetCol(idparameter+1,tabParameters[idparameter]);
 
 
-			tabWriter.Save(fileFolder+wxString(_("Acoustic parameters"))+wxString(".gabe"));
+			tabWriter.Save(fileFolder+wxString(wxTRANSLATE("Acoustic parameters"))+wxString(".gabe"));
 
 			//////////////////////////////////////////
 			// Enregistrement des données des courbes de shroeder
 			//Pour chaque pas de temps on créé un enregistrement
-
-			GABE_Data_ShortString* cpRowLbls= new GABE_Data_ShortString(*rowLbls);
+			
+			GABE_Data_ShortString* cpRowLbls = new GABE_Data_ShortString(nbBandeFreq + 1);
+			//Transfert des données du fichier vers les tableaux
+			for (int idbFreq = 1; idbFreq <= nbBandeFreq; idbFreq++)
+			{
+				GABE_Data_Float* dataFloat;
+				tabReader.GetCol(idbFreq, &dataFloat);
+				cpRowLbls->SetString(idbFreq - 1, dataFloat->GetLabel());
+			}
+			cpRowLbls->SetString(nbBandeFreq, _("Global"));
 			GABE tabSchroederWriter(nbTimeStep+1);
 			tabSchroederWriter.LockData(); //lecture seule pour l'utilisateur
 			tabSchroederWriter.SetCol(0,cpRowLbls);
@@ -928,14 +980,14 @@ void ProjectManager::OnMenuDoAcousticParametersComputation(uiTreeCtrl* fromCtrl,
 			{
 				GABE_Data_Float* colTimeStep=new GABE_Data_Float(nbBandeFreq+1);
 				colTimeStep->SetLabel(dataLbl->GetStringEquiv(idstep));
-				colTimeStep->headerData.numOfDigits=4;
+				colTimeStep->headerData.numOfDigits= COMMA_PRECISION_DB;
 				for(int idFreq=0;idFreq<tab_schroeder.size();idFreq++)
 				{
 					colTimeStep->Set(idFreq,tab_schroeder[idFreq][idstep]);
 				}
 				tabSchroederWriter.SetCol(idstep+1,colTimeStep);
 			}
-			tabSchroederWriter.Save(fileFolder+wxString(_("Schroeder curves"))+wxString(".gabe"));			
+			tabSchroederWriter.Save(fileFolder+wxString(wxTRANSLATE("Schroeder curves"))+wxString(".gabe"));
 
 
 			reportFolder->RefreshFolderContents();
@@ -1386,7 +1438,7 @@ void ProjectManager::OnMenuDoAdvancedAcousticParametersComputation(Element* sele
 		tabWriter.LockData(); //lecture seule pour l'utilisateur
 		for(int idparameter=0;idparameter<tabToExport.size();idparameter++)
 			tabWriter.SetCol(idparameter,tabToExport[idparameter]);
-		tabWriter.Save(fileFolder+wxString(_("Advanced acoustic parameters"))+wxString(".gabe"));
+		tabWriter.Save(fileFolder+wxString(wxTRANSLATE("Advanced acoustic parameters"))+wxString(".gabe"));
 		gabeFolder->RefreshFolderContents();
 		gabeFolder->FillWxTree(treeResult);
 		}

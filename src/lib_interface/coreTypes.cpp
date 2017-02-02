@@ -202,12 +202,23 @@ bool t_TetraMesh::LoadFile(const char * fileName, t_Mesh &sceneMesh,uentier nbFr
 			tetraedres[idTetra].index=idTetra;
 			tetraedres[idTetra].idVolume=tabtetra[idTetra].idVolume;
 			//Copy vertex
-            tetraedres[idTetra].sommets.set(tabtetra[idTetra].sommets[0], tabtetra[idTetra].sommets[1],
-                                                    tabtetra[idTetra].sommets[2], tabtetra[idTetra].sommets[3]);
+            tetraedres[idTetra].sommets.set(tabtetra[idTetra].vertices[0], tabtetra[idTetra].vertices[1],
+                                                    tabtetra[idTetra].vertices[2], tabtetra[idTetra].vertices[3]);
 			assert(tetraedres[idTetra].sommets.a < nodesSize &&
                            tetraedres[idTetra].sommets.b < nodesSize &&
                            tetraedres[idTetra].sommets.c < nodesSize &&
                            tetraedres[idTetra].sommets.d < nodesSize);
+            for(int idvertLeft = 0; idvertLeft < 4; idvertLeft++) {
+                for (int idvertRight = 0; idvertRight < 4; idvertRight++) {
+                    if(idvertLeft != idvertRight) {
+                        if(tabtetra[idTetra].vertices[idvertLeft] == tabtetra[idTetra].vertices[idvertRight]) {
+                            fprintf(stderr, _("Error in input mesh, a tetrahedra have at least the same two vertices idTetra:%i vertices:%li %li %li %li"),
+                                idTetra, tetraedres[idTetra].sommets.a, tetraedres[idTetra].sommets.b, tetraedres[idTetra].sommets.c, tetraedres[idTetra].sommets.d);
+                            exit(1);
+                        }
+                    }
+                }
+            }
 			tetraedres[idTetra].g=GetGTetra(nodes[tetraedres[idTetra].sommets.a],nodes[tetraedres[idTetra].sommets.b],nodes[tetraedres[idTetra].sommets.c],nodes[tetraedres[idTetra].sommets.d]);
 			for(int idFace=0;idFace<4;idFace++)
 			{
@@ -215,11 +226,11 @@ bool t_TetraMesh::LoadFile(const char * fileName, t_Mesh &sceneMesh,uentier nbFr
 				{
 					tetraedres[idTetra].faces[idFace].face_scene=&sceneMesh.pfaces[tabtetra[idTetra].tetrafaces[idFace].marker];
 				}
-                tetraedres[idTetra].faces[idFace].indiceSommets.set(tabtetra[idTetra].tetrafaces[idFace].sommets[0],
-                                                                    tabtetra[idTetra].tetrafaces[idFace].sommets[1],
-                                                                    tabtetra[idTetra].tetrafaces[idFace].sommets[2]);
-				if(tabtetra[idTetra].tetrafaces[idFace].neighboor>=0)
-					tetraedres[idTetra].voisins[idFace]=&tetraedres[tabtetra[idTetra].tetrafaces[idFace].neighboor];
+                tetraedres[idTetra].faces[idFace].indiceSommets.set(tabtetra[idTetra].tetrafaces[idFace].vertices[0],
+                                                                    tabtetra[idTetra].tetrafaces[idFace].vertices[1],
+                                                                    tabtetra[idTetra].tetrafaces[idFace].vertices[2]);
+				if(tabtetra[idTetra].tetrafaces[idFace].neighbor>=0)
+					tetraedres[idTetra].voisins[idFace]=&tetraedres[tabtetra[idTetra].tetrafaces[idFace].neighbor];
 				ivec3 cFaceSommets=tetraedres[idTetra].faces[idFace].indiceSommets;
 				tetraedres[idTetra].faces[idFace].normal=FaceNormal(nodes[cFaceSommets.a],nodes[cFaceSommets.b],nodes[cFaceSommets.c]);
 			}

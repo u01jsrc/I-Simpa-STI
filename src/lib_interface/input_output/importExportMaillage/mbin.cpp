@@ -31,6 +31,7 @@
 #include "mbin.h"
 #include <fstream>
 #include "Core/mathlib.h"
+#include "coreTypes.h"
 
 namespace formatMBIN
 {
@@ -65,7 +66,7 @@ trimeshmodel CMBIN::LoadMesh(const char *strFileName)
 	return modelret;
 }
 
-void CMBIN::SaveMesh(const char *strFileName,trimeshmodel& trimesh)
+bool CMBIN::SaveMesh(const char *strFileName,trimeshmodel& trimesh)
 {
 	unsigned int sizeTetra=trimesh.tetrahedres.size();
 	unsigned int sizeNodes=trimesh.nodes.size();
@@ -77,10 +78,12 @@ void CMBIN::SaveMesh(const char *strFileName,trimeshmodel& trimesh)
 	for( unsigned int idtetra=0;idtetra<sizeTetra;idtetra++)
 		tabTetra[idtetra]=trimesh.tetrahedres[idtetra];
 
-	ExportBIN(strFileName,&tabTetra,&tabNodes,sizeTetra,sizeNodes);
+	bool result = ExportBIN(strFileName,&tabTetra,&tabNodes,sizeTetra,sizeNodes);
 
 	delete[] tabTetra;
 	delete[] tabNodes;
+
+    return result;
 }
 
 bool CMBIN::ExportBIN(const char *strFileName,bintetrahedre **tabTetra,t_binNode **tabNodes,unsigned int sizeTetra,unsigned int sizeNodes)
@@ -102,8 +105,23 @@ bool CMBIN::ExportBIN(const char *strFileName,bintetrahedre **tabTetra,t_binNode
 	//*************************
 	//Ecriture des noeuds
 	binFile.write((char*)*tabNodes,sizeof(t_binNode)*sizeNodes);
-	//*************************
-	//Ecriture des tetrah�dres
+    // Check tetrahedra
+    for(int idTetra = 0; idTetra < sizeTetra; idTetra++) {
+        const bintetrahedre& tetra = (*tabTetra)[idTetra];
+        for (int idvertLeft = 0; idvertLeft < 4; idvertLeft++) {
+            for (int idvertRight = 0; idvertRight < 4; idvertRight++) {
+                if (idvertLeft != idvertRight) {
+                    if (tetra.vertices[idvertLeft] == tetra.vertices[idvertRight]) {
+                        fprintf(stderr, _("Error in input mesh, a tetrahedra have at least the same two vertices idTetra:%i vertices:%li %li %li %li"),
+                            idTetra, tetra.vertices[0], tetra.vertices[1], tetra.vertices[2], tetra.vertices[3]);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    //*************************
+	//Write tetrahedra
 	binFile.write((char*)*tabTetra,sizeof(bintetrahedre)*sizeTetra);
 
 	binFile.close();
@@ -159,7 +177,7 @@ bool  CMBIN::ImportBIN(const char *strFileName,bintetrahedre **tabTetra,t_binNod
 	std::size_t sizeTetra=trimesh.tetrahedres.size();
 	for( std::size_t idtetra=0;idtetra<sizeTetra;idtetra++)
 	{
-		ivec4 isommets((const long *)(trimesh.tetrahedres[idtetra].sommets));
+		ivec4 isommets((const long *)(trimesh.tetrahedres[idtetra].vertices));
 		vec3 sommets[4];
 		for(short i=0;i<4;i++)
 			sommets[i]=trimesh.nodes[isommets[i]].node;

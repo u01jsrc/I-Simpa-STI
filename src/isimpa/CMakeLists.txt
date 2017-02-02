@@ -1,16 +1,7 @@
 include_directories (./ "${PROJECT_SOURCE_DIR}/src/lib_interface")
+set(CMAKE_INSTALL_MFC_LIBRARIES ON) 
+include( InstallRequiredSystemLibraries )
 
-
-# convert path of a .lib file into a .dll file
-# findboost does not store .dll locations
-macro(LIB_TO_DLL LIBPATH DLL_PATH)
-    get_filename_component(DLL_FILENAME ${LIBPATH}  NAME_WE)
-    get_filename_component(DLL_DIR ${LIBPATH} DIRECTORY)
-	set(${DLL_PATH} "${DLL_DIR}/${DLL_FILENAME}.dll")	
-	if(NOT EXISTS "${DLL_DIR}/${DLL_FILENAME}.dll")	
-      MESSAGE(ERROR " Dll file does not exists ${DLL_DIR}/${DLL_FILENAME}.dll")
-	endif()
-endmacro(LIB_TO_DLL)
 
 #--------------#
 #    SOURCES
@@ -248,6 +239,8 @@ set(DATA_MANAGER_TREERAPPORT_SOURCES
     data_manager/tree_rapport/e_report_gabe_gap.h
     data_manager/tree_rapport/e_report_gabe_recp.cpp
     data_manager/tree_rapport/e_report_gabe_recp.h
+    data_manager/tree_rapport/e_report_gabe_recps.cpp
+    data_manager/tree_rapport/e_report_gabe_recps.h
     data_manager/tree_rapport/e_report_partvisualisation.h
     data_manager/tree_rapport/e_report_recepteurssvisualisation.h
     data_manager/tree_rapport/e_report_rpi.h
@@ -372,7 +365,7 @@ source_group( "" FILES ${ISIMPA_SOURCES} )
 
 # Build auto-generated source files
 # Find package for generation
-FIND_PACKAGE(PythonInterp REQUIRED)
+FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
 # Ask make to call python in order to use element.h to produce enum_def.cpp
 ADD_CUSTOM_COMMAND(
@@ -389,7 +382,7 @@ configure_file(data_manager/appconfig_version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}
 
 set(Boost_USE_STATIC_LIBS   OFF)
 find_package(Boost REQUIRED COMPONENTS system python filesystem regex)
-link_directories( ${Boost_LIBRARY_DIRS} ) 
+link_directories( ${Boost_LIBRARY_DIRS} )
 
 # Set Properties->General->Configuration Type to Application
 # Creates isimpa with the listed sources
@@ -421,14 +414,31 @@ add_executable(isimpa
 # project (isimpa.vcproj) under it
 set_property(TARGET isimpa PROPERTY FOLDER "executables")
 
+# to convert .po files into .mo files
+FIND_PACKAGE(Gettext)
+IF(GETTEXT_FOUND )
+  MESSAGE(STATUS "Found Gettext")
+  # Main isimpa locale
+  add_subdirectory (lang/fr)
+  # Plugins locale
+  add_subdirectory(../../currentRelease/UserScript/job_tool/locale/fr ${CMAKE_BINARY_DIR}/src/job_tool)
+  add_subdirectory(../../currentRelease/UserScript/recp_tool/locale/fr ${CMAKE_BINARY_DIR}/src/recp_tool)
+  add_subdirectory(../../currentRelease/UserScript/source_tools/locale/fr ${CMAKE_BINARY_DIR}/src/source_tools)
+  add_subdirectory(../../currentRelease/UserScript/moveto_vertex/locale/fr ${CMAKE_BINARY_DIR}/src/moveto_vertex)
+  add_subdirectory(../../currentRelease/UserScript/preceiv_sourceTracker/locale/fr ${CMAKE_BINARY_DIR}/src/preceiv_sourceTracker)
+  add_subdirectory(../../currentRelease/UserScript/SppsReportSample/locale/fr ${CMAKE_BINARY_DIR}/src/SppsReportSample)
+  # Building isimpa require building pofiles
+  add_dependencies(isimpa pofiles)
+ENDIF()
+
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     SET(wxWidgets_USE_DEBUG ON)
-    SET(wxWidgets_USE_STATIC ON)
+    SET(wxWidgets_USE_STATIC OFF)
     MESSAGE(STATUS "Using debug version of wxWidgets")
 ELSE()
     SET(wxWidgets_USE_DEBUG OFF)
-    SET(wxWidgets_USE_STATIC ON)
-    MESSAGE(STATUS "Using static wxWidgets library")
+    SET(wxWidgets_USE_STATIC OFF)
+    MESSAGE(STATUS "Using dynamic wxWidgets library  lib:${wxWidgets_LIB_DIR} include:${wxWidgets_ROOT_DIR}")
 ENDIF()
 
 find_package(wxWidgets COMPONENTS core base xml gl aui adv REQUIRED)
@@ -476,9 +486,9 @@ set(ISIMPA_RESSOURCES ${PROJECT_SOURCE_DIR}/currentRelease)
 
 install (FILES
 ${ISIMPA_RESSOURCES}/appconst.xml
-${ISIMPA_RESSOURCES}/isimpa.ico
 ${ISIMPA_RESSOURCES}/Licence.pdf
 ${ISIMPA_RESSOURCES}/Licence.rtf
+isimpa.ico
 #${Boost_FILESYSTEM_LIBRARY_RELEASE_REAL}
 #${Boost_SYSTEM_LIBRARY_RELEASE_REAL}
 #${Boost_PYTHON_LIBRARY_RELEASE_REAL}
@@ -487,7 +497,6 @@ ${ISIMPA_RESSOURCES}/Licence.rtf
 install(DIRECTORY
 ${ISIMPA_RESSOURCES}/Bitmaps
 ${ISIMPA_RESSOURCES}/doc
-${ISIMPA_RESSOURCES}/locale
 ${ISIMPA_RESSOURCES}/SystemScript
 ${ISIMPA_RESSOURCES}/UserScript
 ${ISIMPA_RESSOURCES}/Directivities
@@ -498,6 +507,7 @@ if(WIN32) # Check if we are on Windows
 	SET(CMAKE_FIND_LIBRARY_PREFIXES "")
 	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
 
+
 	find_library(
 		PYTHON_DLL
 		NAMES Python27.dll
@@ -506,16 +516,37 @@ if(WIN32) # Check if we are on Windows
 	MESSAGE(STATUS "Python dll ${PYTHON_DLL}")
     get_filename_component(PYTHON_ROOT_FOLDER ${PYTHON_EXECUTABLE} PATH)
 	set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
+
 	install(DIRECTORY
 	${PYTHON_ROOT_FOLDER}/Lib
-	DESTINATION .)
-	
+	${PYTHON_ROOT_FOLDER}/DLLs
+	DESTINATION .
+    PATTERN "Lib/site-packages" EXCLUDE
+    PATTERN "*.pdb" EXCLUDE)
+
+    if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+        install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Runtime )
+    endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+
 	# Resolve symbolic link
 	LIB_TO_DLL(${Boost_FILESYSTEM_LIBRARY_RELEASE} Boost_FILESYSTEM_LIBRARY_RELEASE_REAL)
 	LIB_TO_DLL(${Boost_SYSTEM_LIBRARY_RELEASE} Boost_SYSTEM_LIBRARY_RELEASE_REAL)
 	LIB_TO_DLL(${Boost_PYTHON_LIBRARY_RELEASE} Boost_PYTHON_LIBRARY_RELEASE_REAL)
 	LIB_TO_DLL(${Boost_REGEX_LIBRARY_RELEASE} Boost_REGEX_LIBRARY_RELEASE_REAL)
-
+	
+	# Copy wxWidgets Dll's
+	# extract folder path    
+    file(GLOB wxwidgets_dlls "${wxWidgets_LIB_DIR}/*.dll")
+    list(APPEND WXWidgets_DLL_Slash "")
+    foreach(WXWidgets_DLL ${wxwidgets_dlls})
+        string(REPLACE "\\" "/" WXWidgets_DLL ${WXWidgets_DLL})
+        list(APPEND WXWidgets_DLL_Slash ${WXWidgets_DLL})
+    endforeach(WXWidgets_DLL)    
+    install(FILES
+            ${WXWidgets_DLL_Slash}
+            DESTINATION .)
+    
+	
 	install (FILES
             ${PYTHON_DLL}
             ${Boost_FILESYSTEM_LIBRARY_RELEASE_REAL}
@@ -527,11 +558,7 @@ endif()
 
 # Package creation instructions, NSIS under windows
 
-SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
 SET(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
-
-INCLUDE(InstallRequiredSystemLibraries)
-
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "I-SIMPA")
 SET(CPACK_PACKAGE_VENDOR "Ifsttar")
@@ -546,7 +573,7 @@ IF(WIN32 AND NOT UNIX)
   # sure there is at least one set of four (4) backlasshes.    # Create the desktop link
   set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "  CreateShortCut '$DESKTOP\\\\I_SIMPA.lnk' '$INSTDIR\\\\isimpa.exe' ")
   set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete '$DESKTOP\\\\I_SIMPA.lnk'")
-  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\CurrentRelease\\\\isimpa.ico")
+  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\src\\\\isimpa\\\\isimpa.ico")
   SET(CPACK_NSIS_INSTALLED_ICON_NAME "isimpa.exe")
   SET(CPACK_NSIS_DISPLAY_NAME "I-SIMPA")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\i-simpa-wiki.readthedocs.io")

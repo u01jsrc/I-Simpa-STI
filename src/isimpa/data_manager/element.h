@@ -199,7 +199,8 @@ class Element
 			ELEMENT_TYPE_CORE_SPPSNEE_AGH,
 			ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED,
 			ELEMENT_TYPE_DIRECTIVITIES_USER,
-			ELEMENT_TYPE_FILE
+			ELEMENT_TYPE_FILE,
+			ELEMENT_TYPE_REPORT_GABE_RECPS /*!< Receiver sound level by source */
 		};
 		/**
 		 * Indice des états des images
@@ -900,6 +901,7 @@ class Element
 		 * @return Vrai si ce champ est parmis les propriétés de cet élément
 		 */
 		bool IsPropertyExist(wxString propertyName,Element** found=NULL);
+
 		/** @} */
 		/** @} */
 
@@ -961,6 +963,7 @@ class Element
 		 * Supprime un élément fils ayant cet identifiant. La suppression s'arrête au niveau fils seulement.
 		 */
 		virtual bool DeleteElementByXmlId(const wxInt32& xmlIdElement,bool setModification=true);
+
 		/**
 		 * Réinitialise l'identifiant de cet élément. A partir de cet élément il ne sera pas possible de retrouver son équivalent dans uiTreeCtrl
 		 */

@@ -62,12 +62,10 @@ public:
 		_("Atmospheric absorption calculation");
 	}
 	E_Core_Tc( Element* parent, wxXmlNode* noeudCourant)
-		:E_Core_Core(parent,"Classical theory of reverberation",ELEMENT_TYPE_CORE_TC,noeudCourant)
+		:E_Core_Core(parent, wxTRANSLATE("Classical theory of reverberation (TCR)"),ELEMENT_TYPE_CORE_TC,noeudCourant)
 	{
-
 		SetIcon(GRAPH_STATE_EXPANDED,GRAPH_STANDARTCORE_OPEN);
 		SetIcon(GRAPH_STATE_NORMAL,GRAPH_STANDARTCORE_CLOSE);
-		_("Classical theory of reverberation");
 		Element* coreConf=this->GetElementByType(Element::ELEMENT_TYPE_CORE_CORE_CONFIG);
 		if(!coreConf) //Maj version < 05/11/2008
 		{
@@ -78,12 +76,15 @@ public:
         if (GetStringConfig("exeName").EndsWith(".exe")) {
             UpdateStringConfig("exeName", "classicalTheory");
         }
+		if (GetStringConfig("corePath").StartsWith("theorie_classique")) {
+			UpdateStringConfig("corePath", wxString("classical_theory") + wxFileName::GetPathSeparator());
+		}
 	}
 
 	E_Core_Tc( Element* parent)
-		:E_Core_Core(parent,"Classical theory of reverberation",ELEMENT_TYPE_CORE_TC)
+		:E_Core_Core(parent, wxTRANSLATE("Classical theory of reverberation"),ELEMENT_TYPE_CORE_TC)
 	{
-		_("Classical theory of reverberation");
+		this->elementInfo.expanded = true;
 		SetIcon(GRAPH_STATE_EXPANDED,GRAPH_STANDARTCORE_OPEN);
 		SetIcon(GRAPH_STATE_NORMAL,GRAPH_STANDARTCORE_CLOSE);
 
@@ -91,15 +92,9 @@ public:
 		AddConfTc();
 		Element* newElement=new E_Core_Core_Bfreqselection(this);
 		this->AppendFils(newElement)->Hide();
-		this->AppendPropertyText("direct_recepteurSOutputName","",wxString("Direct field")+wxFileName::GetPathSeparator(),true,true)->Hide();
-		this->AppendPropertyText("sabine_recepteurSOutputName","",wxString("Total field (Sabine)")+wxFileName::GetPathSeparator(),true,true)->Hide();
-		this->AppendPropertyText("eyring_recepteurSOutputName","",wxString("Total field (Eyring)")+wxFileName::GetPathSeparator(),true,true)->Hide();
-		_("Direct field");
-		_("Total field (Sabine)");
-		_("Total field (Eyring)");
-		//_("Main calculation");
-
-
+		this->AppendPropertyText("direct_recepteurSOutputName","",wxTRANSLATE("Direct field")+ wxString(wxFileName::GetPathSeparator()),true,true)->Hide();
+		this->AppendPropertyText("sabine_recepteurSOutputName","", wxTRANSLATE("Total field (Sabine)")+ wxString(wxFileName::GetPathSeparator()),true,true)->Hide();
+		this->AppendPropertyText("eyring_recepteurSOutputName","", wxTRANSLATE("Total field (Eyring)")+ wxString(wxFileName::GetPathSeparator()),true,true)->Hide();
 
 		this->AppendPropertyText("modelName","","mesh.cbin",true,true)->Hide();
 		this->AppendPropertyText("exeName","","classicalTheory")->Hide();

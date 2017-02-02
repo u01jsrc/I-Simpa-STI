@@ -161,7 +161,6 @@ void OpenGLApp::ResetAll(void)
 
 	m_PosLight       = vec4(0.0f, 0.0f, 4.0f, 1.0f);
 	m_DirectionLight = vec3(0.0f, 0.0f, -1.0f);
-	m_ShineLight =	128.0f;
 	m_SpotAngle =  45.0f;
 	
 }
@@ -299,7 +298,7 @@ t_faceIndex OpenGLApp::SelectVertex(unsigned int x, unsigned int y) //retourne l
 	#ifdef OPTIMIZE_TEST
 	float diff=duration;
 	float diff2=duration2;
-	wxLogInfo("Test Collision en %.3f s (Collision vecteur en %.3f s)",diff,diff2);
+	wxLogMessage("Test Collision en %.3f s (Collision vecteur en %.3f s)",diff,diff2);
 	timeEndPeriod(1);
 	#endif
 	return faceSelectionne;
@@ -339,7 +338,6 @@ void OpenGLApp::InitGl()
 	glLightfv(GL_LIGHT0, GL_AMBIENT, m_AmbientLight);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, m_DiffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, m_SpecularLight);
-	glLightfv(GL_LIGHT0, GL_SHININESS, &m_ShineLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, m_PosLight);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, m_DirectionLight);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, m_SpotAngle);
@@ -389,7 +387,7 @@ int OpenGLApp::GetImage(wxImage& aimage, const int awidth, const int aheight,voi
 		switch(idError)
 		{
 			case OffScreenRendering::OffScreen::OUTSCREENERROR_Could_not_create_the_pbuffer:
-				wxLogInfo(_("Resolution is too high, your graphic card is enable to manage this size. Please choose a lower export resolution"));
+				wxLogMessage(_("Resolution is too high, your graphic card is enable to manage this size. Please choose a lower export resolution"));
 				break;
 			case OffScreenRendering::OffScreen::OUTSCREENERROR_Could_not_make_the_pbuffer_context_current:
 				break;
@@ -408,7 +406,7 @@ int OpenGLApp::GetImage(wxImage& aimage, const int awidth, const int aheight,voi
 			default:
 				wxLogError(_("Unknown OpenGL error, try to set a lower resolution or use another exportation method."));
 		}
-		wxLogInfo(_("Error code : %i"),(int)idError);
+		wxLogMessage(_("Error code : %i"),(int)idError);
 		isOk=false;
 	}
 	catch( ... ) 
@@ -605,7 +603,7 @@ void OpenGLApp::InitLst(int index)
 }
 void OpenGLApp::DeleteLst(int index)
 {
-	if(m_list_isinit[index]==true)
+	if(m_list_isinit[index])
 		glDeleteLists(m_list[index],1);
 }
 void OpenGLApp::LoadAnimatorLst(ptAnimatorManager& managerToCompile)
@@ -619,7 +617,7 @@ void OpenGLApp::LoadAnimatorLst(ptAnimatorManager& managerToCompile)
 		progDialog.Update(0);
 		for(int tStep=0;tStep<nbStep;tStep++)
 		{
-			int prog=((float)tStep/nbStep)*100;
+			int prog=int(((float)tStep/nbStep)*100);
 			if(prog>0 && prog<100)
 			{
 				progDialog.Update(prog,wxString::Format(_("Loading time step %i/%i"),tStep+1,nbStep));

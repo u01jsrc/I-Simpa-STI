@@ -266,12 +266,18 @@ void E_Scene_Groupesurfaces_Groupe::PushFace(std::vector<std::vector<Application
 	}
 	else
 	{
+        // gather parent element of the surface group
 		if(this->pere)
 		{
+            // If it is a scene surface receiver
 			t_elementInfo parentInfos(this->pere->GetElementInfos());
-			if(parentInfos.typeElement==ELEMENT_TYPE_SCENE_RECEPTEURSS_RECEPTEUR)
-				vectorToFeed[faceIndex.group][faceIndex.face].idRecepteurSurfacique=parentInfos.xmlIdElement;
-			else if(parentInfos.typeElement==ELEMENT_TYPE_SCENE_ENCOMBREMENTS_ENCOMBREMENT || parentInfos.typeElement==ELEMENT_TYPE_SCENE_VOLUMES_VOLUME)
+			if(parentInfos.typeElement==ELEMENT_TYPE_SCENE_RECEPTEURSS_RECEPTEUR) {
+                Element* propertyEl = this->pere->GetElementByType(ELEMENT_TYPE_SCENE_RECEPTEURSS_RECEPTEUR_PROPRIETES);
+                // If the scene surface receiver is enabled
+                if(propertyEl && propertyEl->GetBoolConfig("enabled")) {
+                    vectorToFeed[faceIndex.group][faceIndex.face].idRecepteurSurfacique = parentInfos.xmlIdElement;
+                }
+            } else if(parentInfos.typeElement==ELEMENT_TYPE_SCENE_ENCOMBREMENTS_ENCOMBREMENT || parentInfos.typeElement==ELEMENT_TYPE_SCENE_VOLUMES_VOLUME)
 				vectorToFeed[faceIndex.group][faceIndex.face].idEncombrement=parentInfos.xmlIdElement;
 		}
 	}
@@ -404,7 +410,7 @@ void E_Scene_Groupesurfaces_Groupe::EndDrag(wxTreeEvent& treeEvent,wxTreeCtrl* t
 				if(!isPointerGroup) //On ne supprime pas de l'element source si nous sommes un pointeur
 					ansGroup->DeleteElementByTreeId(infosDragEl.idElement);
 			}else{
-				wxLogInfo(_("The drag and drop of vertex is allowed only from surface groups"));
+				wxLogMessage(_("The drag and drop of vertex is allowed only from surface groups"));
 			}
 		}else if(infosDragEl.typeElement==Element::ELEMENT_TYPE_SCENE_GROUPESURFACES_GROUPE && infosDragEl.idElement!=this->elementInfo.idElement)
 		{
@@ -431,7 +437,7 @@ void E_Scene_Groupesurfaces_Groupe::EndDrag(wxTreeEvent& treeEvent,wxTreeCtrl* t
 					draggingGroup->ClearGroup();
 				}
 			}else{
-				wxLogInfo(_("The drag and drop of a group is allowed only from main surface groups"));
+				wxLogMessage(_("The drag and drop of a group is allowed only from main surface groups"));
 			}
 
 		}

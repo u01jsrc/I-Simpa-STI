@@ -35,6 +35,7 @@
 #include "e_report_recepteurssvisualisation.h"
 #include "e_report_gabe.h"
 #include "e_report_gabe_recp.h"
+#include "e_report_gabe_recps.h"
 #include "e_report_gabe_gap.h"
 #include "e_report_unknown_file.h"
 #include "e_report_rpi.h"
@@ -83,38 +84,24 @@ void GetAllFolderItems(wxString rootFolder,wxArrayString& folderDir)
 
 bool FuncDeleteFolder( wxString folderToDelete )
 {
-	if(wxFileExists(folderToDelete)) //Si le chemin correspond à un fichier existant
+    wxFileName pathToDelete(folderToDelete);
+	if(!pathToDelete.IsDir()) //Si le chemin correspond à un fichier existant
 	{
-		wxRemoveFile(folderToDelete);
-		return true;
-	}
-	wxArrayString tabFichiers;
-	GetAllFolderItems(folderToDelete,tabFichiers);
-	long nbfichier=tabFichiers.Count();
-	if(nbfichier>0)
-	{
-		//Suppression des fichiers
-		for(long i=0;i<nbfichier;i++)
-		{
-			wxString fichierdel = tabFichiers[i];
-			if(wxFileExists(fichierdel))
-			{
-				wxRemoveFile(fichierdel);
-			}
-		}
-		//Suppression des repertoires
-		for(long i=nbfichier-1;i>=0;i--)
-		{
-			wxString fichierdel = tabFichiers[i];
-			if(wxDirExists(fichierdel))
-			{
-				wxRmdir(fichierdel);
-			}
-		}
-	}
-	tabFichiers.clear();
-	wxRmdir(folderToDelete);
-	return true;
+		if(!wxRemoveFile(folderToDelete)) {
+            wxLogError(_("Cannot remove file/directory"));
+            return false;
+        } else {
+		    return true;
+        }
+	} else {
+        //Delete folder
+        if(!pathToDelete.Rmdir(wxPATH_RMDIR_RECURSIVE)) {
+            wxLogError(_("Cannot remove file/directory"));
+            return false;            
+        } else {
+            return true;
+        }
+    }
 }
 
 
@@ -216,6 +203,8 @@ E_Report_File::E_Report_File(Element* parent,wxString Nom,wxString Path,ELEMENT_
 				}else if(typeEle==ELEMENT_TYPE_REPORT_UNKNOWN)
 				{
 					this->AppendFils(new E_Report_Unknown(this,currentChild));
+				} else if(typeEle==ELEMENT_TYPE_REPORT_GABE_RECPS) {
+					this->AppendFils(new E_Report_Gabe_Recps(this, currentChild));
 				}
 			}
 			currentChild = currentChild->GetNext();
@@ -246,6 +235,7 @@ void E_Report_File::DeleteFolder()
 	wxString FullPath;
 	this->BuildFullPath(FullPath);
 	FuncDeleteFolder(FullPath);
+    RefreshFolderContents();
 }
 
 void E_Report_File::RefreshFolderContents()
@@ -313,7 +303,12 @@ void E_Report_File::RefreshFolderContents()
 					{
 						E_Report_Gabe_Recp* newGabeFile=new E_Report_Gabe_Recp(this,fileName,childFile.GetFullName());
 						this->AppendFils(newGabeFile);
-					}else if(fileExt=="csbin")
+					}else if (fileExt == "recps")
+					{
+						E_Report_Gabe_Recps* newGabeFile = new E_Report_Gabe_Recps(this, fileName, childFile.GetFullName());
+						this->AppendFils(newGabeFile);
+					}
+					else if(fileExt=="csbin")
 					{
 						E_Report_RecepteurSurfaciqueVisualisation* newRssFolder=new E_Report_RecepteurSurfaciqueVisualisation(this,fileName,childFile.GetFullName());
 						this->AppendFils(newRssFolder);

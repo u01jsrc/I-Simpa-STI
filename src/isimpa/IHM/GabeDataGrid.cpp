@@ -46,9 +46,10 @@
 #include "customRenderer/gridcellgabefloatrenderer.hpp"
 #include "last_cpp_include.hpp"
 
+WX_DEFINE_OBJARRAY(ArrayOfDouble)
 WX_DEFINE_OBJARRAY(wxGridDoubleArray)
 
-IMPLEMENT_DYNAMIC_CLASS( wxGridMixedTable, wxGridStringTable )
+wxIMPLEMENT_DYNAMIC_CLASS( wxGridMixedTable, wxGridStringTable )
 
 wxGridMixedTable::wxGridMixedTable()
 	:wxGridStringTable()
@@ -190,7 +191,7 @@ bool wxGridMixedTable::InsertCols( size_t pos , size_t numCols  )
     {
         for ( col = pos; col < pos + numCols; col++ )
         {
-            m_datadouble[row].Insert( 0, col );
+            m_datadouble[row].Insert( 0., col );
         }
     }
 	return wxGridStringTable::InsertCols(pos,numCols);
@@ -334,7 +335,7 @@ void GabeDataGrid::SendRefreshFolderEvent()
 	if(ptDataWindow && ptDataWindow->GetParent())
 		wxPostEvent(ptDataWindow->GetParent(), eventUpdate);
 	else
-		wxLogInfo(_("Please, refresh root folder of the data tree")); //en attendant de pouvoir propager correctement l'évenement de réactualisation de l'arbre report
+		wxLogMessage(_("Please, refresh root folder of the data tree")); //en attendant de pouvoir propager correctement l'évenement de réactualisation de l'arbre report
 
 }
 bool GabeDataGrid::AskUserWhereToSaveData(wxString& out_filePath)
@@ -770,7 +771,7 @@ void GabeDataGrid::LoadData(std::vector<wxString>& lblCols,std::vector<wxString>
 	//Affectation des libellés des colonnes
 	for(int idcol=0;idcol<nbcolel;idcol++)
 	{
-		if((colsAttr==NULL || colsAttr->size()<idcol) && cells.size()==cellsValue.size())
+		if((colsAttr==NULL || colsAttr->size()<idcol) && (cellsValue.size() == nbrowel*nbcolel && cells.empty()))
 		{
 			wxGridCellAttr* attrCol=GetOrCreateCellAttr(idcol,0);
 			attrCol->SetEditor(new wxGridCellFloatEditor());
@@ -780,7 +781,7 @@ void GabeDataGrid::LoadData(std::vector<wxString>& lblCols,std::vector<wxString>
 			if(colsAttr)
 			{
 				if(colsAttr->size()>idcol && colsAttr->at(idcol))
-					1;//SetColAttr(idcol,colsAttr->at(idcol));
+					SetColAttr(idcol,colsAttr->at(idcol));
 			}
 		}
 		this->SetColLabelValue(idcol,lblCols[idcol]);
@@ -794,7 +795,7 @@ void GabeDataGrid::LoadData(std::vector<wxString>& lblCols,std::vector<wxString>
 	
 	//Affectation des valeurs des cellules
 
-	if(cells.size()>cellsValue.size())
+	if(cells.size()>=cellsValue.size())
 	{
 		if(cells.size()==nbrowel*nbcolel)
 		{

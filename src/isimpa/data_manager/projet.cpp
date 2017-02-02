@@ -375,7 +375,7 @@ void ProjectManager::CopyGlToFile()
 		{
 			wxString filename(wxString(saveFileDialog.GetPath()));
 			glImage.SaveFile(filename);
-			wxLogInfo(_("Image saved successfully"));
+			wxLogMessage(_("Image saved successfully"));
 
 		}
 	}
@@ -405,7 +405,7 @@ void ProjectManager::CopyGlToFileWithDim()
 			{
 				wxString filename(wxString(saveFileDialog.GetPath()));
 				glImage.SaveFile(filename);
-				wxLogInfo(_("Image saved successfully"));
+				wxLogMessage(_("Image saved successfully"));
 
 			}
 		}
@@ -616,7 +616,6 @@ void ProjectManager::ElementEvent(wxCommandEvent& eventElement,eventCtrl fromCtr
 			case Element::IDEVENT_NEW_USERDIRECTIV:
 				this->OnMenuNewUserDirectiv(elementSelected);
 				break;
-				break;
 			default:
 				wxLogDebug("Event not generated %i ",idEvenementElement);
 			};
@@ -682,13 +681,13 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///	Verification des paramètres de calcul
 	///////////////////////////////////////////
 
-	if (ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources == 0)
+	if(ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources==0)
 	{
 		wxLogError(_("Calculation requires, at least, one active sound source"));
 		return;
 	}
 
-	if (this->sceneMesh.GetNumFaces() == 0)
+	if(this->sceneMesh.GetNumFaces()==0)
 	{
 		wxLogError(_("Your model doesn't have any face. Please create or import a model."));
 		return;
@@ -724,33 +723,33 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	}
 
 	//On active l'onglet des messages
-	wxWindow* consoleWindow = mainFrame->FindWindowByName("console");
-	if (consoleWindow)
+	wxWindow* consoleWindow=mainFrame->FindWindowByName("console");
+	if(consoleWindow)
 	{
-		wxAuiNotebook* consoleNoteBook = wxStaticCast(consoleWindow, wxAuiNotebook);
+		wxAuiNotebook* consoleNoteBook=wxStaticCast(consoleWindow,wxAuiNotebook);
 		consoleNoteBook->SetSelection(0);
 	}
 
-	Element* elWithFreq = coreCalculation->GetElementByType(Element::ELEMENT_TYPE_CORE_CORE_BFREQSELECTION);
-	if (elWithFreq)
+	Element* elWithFreq=coreCalculation->GetElementByType(Element::ELEMENT_TYPE_CORE_CORE_BFREQSELECTION);
+	if(elWithFreq)
 	{
 		//On cherche un élément booléen à vrai
 		std::vector<Element*> lstFreq;
-		elWithFreq->GetAllElementByType(Element::ELEMENT_TYPE_BOOL_BFREQ, lstFreq);
-		bool zeroFreq = true;
-		for (int idfreq = 0; idfreq < lstFreq.size(); idfreq++)
+		elWithFreq->GetAllElementByType(Element::ELEMENT_TYPE_BOOL_BFREQ,lstFreq);
+		bool zeroFreq=true;
+		for(int idfreq=0;idfreq<lstFreq.size();idfreq++)
 		{
-			E_Data_Bool_Bfreq* elFreq = dynamic_cast<E_Data_Bool_Bfreq*>(lstFreq[idfreq]);
-			if (elFreq)
+			E_Data_Bool_Bfreq* elFreq=dynamic_cast<E_Data_Bool_Bfreq*>(lstFreq[idfreq]);
+			if(elFreq)
 			{
-				if (elFreq->GetValue())
+				if(elFreq->GetValue())
 				{
-					zeroFreq = false;
+					zeroFreq=false;
 					break;
 				}
 			}
 		}
-		if (zeroFreq)
+		if(zeroFreq)
 		{
 			wxLogError(_("Calculation requires do define a valid frequency band"));
 			return;
@@ -761,29 +760,29 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	///	Initialisation des paramètres
 	///////////////////////////////////////////
-	wxDateTime timeDebOperation = wxDateTime::UNow();
-	wxString modelFileName = coreCalculation->GetStringConfig("modelName");
-	wxString corePath = coreCalculation->GetStringConfig("corePath");
-	wxString reportFolderName = dossierCourant + ApplicationConfiguration::CONST_REPORT_FOLDER_PATH;
-	wxString xmlCoreFileName = "config.xml";
-	wxString exeName = coreCalculation->GetStringConfig("exeName");
-	wxString tetraFileName = coreCalculation->GetStringConfig("tetrameshFileName");
-	wxString rootCorePath = this->PathCores + corePath;
+	wxDateTime timeDebOperation=wxDateTime::UNow();
+	wxString modelFileName=coreCalculation->GetStringConfig("modelName");
+	wxString corePath=coreCalculation->GetStringConfig("corePath");
+	wxString reportFolderName=dossierCourant+ApplicationConfiguration::CONST_REPORT_FOLDER_PATH;
+	wxString xmlCoreFileName="config.xml";
+	wxString exeName=coreCalculation->GetStringConfig("exeName");
+	wxString tetraFileName=coreCalculation->GetStringConfig("tetrameshFileName");
+	wxString rootCorePath=this->PathCores+corePath;
 
 	///////////////////////////////////////////
 	//Ajout du dossier daté de résultat
 	///////////////////////////////////////////
-	wxDateTime maintenant = wxDateTime::UNow();
-	wxString folderDated = maintenant.Format("%Y-%m-%d_%Hh%Mm%Ss");
-	if (!wxDirExists(reportFolderName))
+	wxDateTime maintenant=wxDateTime::UNow();
+	wxString folderDated=maintenant.Format("%Y-%m-%d_%Hh%Mm%Ss");
+	if(!wxDirExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	reportFolderName += coreCalculation->GetTreeLabel();
-	if (!wxDirExists(reportFolderName))
+	reportFolderName+=coreCalculation->GetTreeLabel();
+	if(!wxDirExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	reportFolderName += wxFileName::GetPathSeparator() + folderDated + wxFileName::GetPathSeparator();
-	if (!wxFileExists(reportFolderName))
+	reportFolderName+=wxFileName::GetPathSeparator()+folderDated+wxFileName::GetPathSeparator();
+	if(!wxFileExists(reportFolderName))
 		wxMkdir(reportFolderName);
-	wxString workingDir = reportFolderName;//this->PathCores+corePath+tempFolder;
+	wxString workingDir=reportFolderName;//this->PathCores+corePath+tempFolder;
 	ApplicationConfiguration::GLOBAL_VAR.workingFolderPath = workingDir;
 	///////////////////////////////////////////
 	///	Verifications de l'existance du coeur de calcul
@@ -799,7 +798,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
         ext = "exe";
     }
     #endif
-	if (!wxFileExists(this->PathCores + corePath + exeName))
+	if(!wxFileExists(this->PathCores+corePath+exeName))
 	{
 		wxLogError(_("Calculation program file not found."));
 		return;
@@ -807,7 +806,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	//  Maillage de la scène
 	///////////////////////////////////////////
-	if (!this->RunCoreMaillage(coreCalculation))
+	if(!this->RunCoreMaillage(coreCalculation))
 	{
 		wxLogError(_("Calculation requires a scene meshing"));
 		return;
@@ -818,23 +817,23 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	///////////////////////////////////////////
 	///	On exporte les fichiers utilisés par le code de calcul
 	///////////////////////////////////////////
-	if (!wxDirExists(workingDir))
+	if(!wxDirExists(workingDir))
 		wxMkdir(workingDir);
-	this->sceneMesh.Save(workingDir + modelFileName);
-	if (!tetraFileName.empty())
-		this->sceneMesh.SaveMaillage(workingDir + tetraFileName, true);
+	this->sceneMesh.Save((workingDir+modelFileName).ToStdString());
+	if(!tetraFileName.empty())
+		this->sceneMesh.SaveMaillage((workingDir+tetraFileName).ToStdString(),true);
 	wxXmlDocument xmlCoreDocument;
-	wxXmlNode* rootConfig = new wxXmlNode(wxXML_ELEMENT_NODE, "configuration");
+	wxXmlNode* rootConfig = new wxXmlNode(wxXML_ELEMENT_NODE,"configuration");
 
-	LastComputationFolder = workingDir;
-	rootConfig->AddAttribute("workingdirectory", workingDir);
+	LastComputationFolder=workingDir;
+	rootConfig->AddAttribute("workingdirectory",workingDir);
 
 
 	xmlCoreDocument.SetRoot(rootConfig);
 	rootScene->SaveXMLCoreDoc(rootConfig);
 	coreCalculation->SaveXMLCoreDoc(rootConfig);
 	xmlCoreDocument.SetFileEncoding("iso-8859-1"); //tant que libinterface ne gère par l'utf-8 on utilise ca
-	xmlCoreDocument.Save(workingDir + xmlCoreFileName);
+	xmlCoreDocument.Save(workingDir+xmlCoreFileName);
 
 	///////////////////////////////////////////
 	///	Pour ne pas perdre les modifications en cas de crash, on sauvegarde le projet (sans écraser le fichier de projet)
@@ -848,35 +847,34 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	//Declaration du processus
 	wxString cmd;
 	//On attend que l'execution soit terminée
-	bool hasOutput = true;
-	wxProgressDialog progDialog(_("Calculation execution"), _("Calculation in progress..."), 10000, mainFrame, wxPD_CAN_ABORT | wxPD_REMAINING_TIME | wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL);
+	bool hasOutput=true;
+	wxProgressDialog progDialog(_("Calculation execution"),_("Calculation in progress..."),10000,mainFrame,wxPD_CAN_ABORT | wxPD_REMAINING_TIME |wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
 
-	wxString labelOutput = exeName + " :";
+	wxString labelOutput=exeName+" :";
 
-	wxDateTime timeDebCalculation = wxDateTime::UNow();
+	wxDateTime timeDebCalculation=wxDateTime::UNow();
 
-	if (ext == "py" || ext == "pyc")
+	if(ext=="py" || ext=="pyc")
 		cmd="python -u \""+rootCorePath+exeName+"\" \""+workingDir+xmlCoreFileName+"\"";
 	else
-		cmd = rootCorePath + exeName + " \"" + workingDir + xmlCoreFileName + "\"";
+		cmd=rootCorePath+exeName+" \""+workingDir+xmlCoreFileName+"\"";
 
-	bool result = uiRunExe(mainFrame, cmd, labelOutput, &progDialog);
+	bool result=uiRunExe(mainFrame,cmd,labelOutput,&progDialog);
+	wxLongLong durationCalculation=wxDateTime::UNow().GetValue()-timeDebCalculation.GetValue();
 
-	wxLongLong durationCalculation = wxDateTime::UNow().GetValue() - timeDebCalculation.GetValue();
-
-	wxLogInfo(_("Calculation time: %i ms"), durationCalculation.GetValue());
+	wxLogMessage(_("Calculation time: %lld ms"),durationCalculation.GetValue());
 
 	///////////////////////////////////////////
 	// Copie du fichier de projet XML dans le dossier de rapport de calcul
 	///////////////////////////////////////////
-	wxLogInfo(_("Copy of calculation parameters"));
-	this->UpdateXmlFile(reportFolderName + wxFileName::GetPathSeparator());
+	wxLogMessage(_("Copy of calculation parameters"));
+	this->UpdateXmlFile(reportFolderName+wxFileName::GetPathSeparator());
 
 
 	///////////////////////////////////////////
 	///	On ajoute un enregistrement des résultats de calcul dans les éléments
 	///////////////////////////////////////////
-	wxLogInfo(_("Refreshing onglet 'Report'"));
+	wxLogMessage(_("Refreshing onglet 'Report'"));
 
     bool resetHistoryBackup = false;
     // Refresh of report folder is not a user action and should not trigger tree backup
@@ -892,8 +890,8 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
     }
 
 	wxLongLong durationOperation=wxDateTime::UNow().GetValue()-timeDebOperation.GetValue();
-	wxLogInfo(_("Total time calculation: %i ms"),durationOperation.GetValue());
-	
+	wxLogMessage(_("Total time calculation: %lld ms"),durationOperation.GetValue());
+
 
 }
 
@@ -1001,7 +999,7 @@ void ProjectManager::ImportMaterial(wxString fromFile)
 		{
 			ImportMaterialCatt(fromFile);
 		}else{
-			wxLogInfo(_("Unknown file format"));
+			wxLogMessage(_("Unknown file format"));
 		}
 	}else{
 		wxLogError(_("File does not exist"));
@@ -1011,7 +1009,7 @@ void ProjectManager::ImportMaterial(wxString fromFile)
 void ProjectManager::ImportMaterialCatt(wxString fromFile)
 {
 	wxFileName nomDeFichier(fromFile);
-	wxLogInfo(_("Import from CATT-Acoustic file"));
+	wxLogMessage(_("Import from CATT-Acoustic file"));
 
 	//Ajout du groupe dans l'arbre du projet
 	Element* searchResult=rootScene->GetElementByType(Element::ELEMENT_TYPE_SCENE_BDD_MATERIAUX_USER);
@@ -1204,7 +1202,7 @@ void ProjectManager::ImportMaterialCatt(wxString fromFile)
 					importedMaterial->UpdateDiffusionValue(16000,diffValue);
 					importedMaterial->UpdateDiffusionValue(20000,diffValue);
 				}
-				wxLogInfo(_("Importation of material %s"),absName);
+				wxLogMessage(_("Importation of material %s"),absName);
 				mainFrame->Update();
 				ligne=lecteur.GetLine();
 			}else{
@@ -1231,7 +1229,7 @@ void ProjectManager::ImportMaterialCatt(wxString fromFile)
 
 void ProjectManager::ImportMaterialOdeon(wxString fromFile)
 {
-	wxLogInfo(_("Import from Odeon file"));
+	wxLogMessage(_("Import from Odeon file"));
 	wxFileName nomDeFichier(fromFile);
 
 	//Ajout du groupe dans l'arbre du projet
@@ -1266,7 +1264,7 @@ void ProjectManager::ImportMaterialOdeon(wxString fromFile)
 				tabAbs.push_back(lineParser.GetNextFloat());
 			if(tabAbs.size()==8)
 			{
-				wxLogInfo(_("Importation of material %s"),absName);
+				wxLogMessage(_("Importation of material %s"),absName);
 				//Ajout du matériau dans le groupe
 				E_Scene_Bdd_Materiaux_User_Materiau* importedMaterial=nvGroup->AppendUserMateriau(absName);
 				//*************************************************
@@ -1737,7 +1735,7 @@ void ProjectManager::OnMenuGetProperties(uiTreeCtrl* fromCtrl,Element* eRoot,Ele
 void ProjectManager::OnMenuFlipFaces()
 {
 	sceneMesh.FlipSelectedFaces();
-	this->sceneMesh.Save(ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME);
+	this->sceneMesh.Save((ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME).ToStdString());
 	GlFrame->Refresh();
 }
 
@@ -1845,7 +1843,7 @@ void ProjectManager::OnAskSelectPosition()
 	eventUpdate.SetInt(ApplicationConfiguration::MAIN_EVENT_SWITCH_TO_CAMERA_TOOL);
 	wxPostEvent(mainFrame, eventUpdate);
 	GlFrame->modeSelectionPoint=true;
-	wxLogInfo(_("Please click on the 3D view to update the coordinates")+wxString(" :"));
+	wxLogMessage(_("Please click on the 3D view to update the coordinates")+wxString(" :"));
 }
 
 
@@ -1946,7 +1944,7 @@ void ProjectManager::LoadCurrentProject(bool reloadXmlFile)
 		{
 			if(wxFileExists(urlScene))
 			{
-				sceneMesh.Load(urlScene);
+				sceneMesh.Load(urlScene.ToStdString());
 			}else{
 				wxLogError(_("Scene does not exist!"));
 			}
@@ -2202,26 +2200,26 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 	wxString tmpFileName=zipfilename+".tmp";
 	using namespace std;
 	auto_ptr<wxFFileInputStream> in(new wxFFileInputStream(zipfilename));
-	wxTempFileOutputStream out(tmpFileName);
+    wxTempFileOutputStream out(tmpFileName);
 
-	wxZipInputStream inzip(*in);
+    wxZipInputStream inzip(*in);
 	wxProgressDialog progInfo(_("Saving project"),_("Updating project backup"),100,mainFrame,wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
 
-	wxZipOutputStream outzip(out);
+    wxZipOutputStream outzip(out);
 
-	wxZipEntryPtr entry;
+    wxZipEntryPtr entry;
 
-	// transfer any meta-data for the archive as a whole (the zip comment
-	// in the case of zip)
-	outzip.CopyArchiveMetaData(inzip);
+    // transfer any meta-data for the archive as a whole (the zip comment
+    // in the case of zip)
+    outzip.CopyArchiveMetaData(inzip);
 
-	// call CopyEntry for each entry except those matching the pattern
+    // call CopyEntry for each entry except those matching the pattern
 	//////////////////////////////////////////////////////////////////
 	// Mise à jour des fichiers déjà présent dans l'archive
 	//////////////////////////////////////////////////////////////////
 	int nbUpdated=0;
 	int nbToUpdate=inzip.GetTotalEntries();
-	while (entry.reset(inzip.GetNextEntry()), entry.get() != NULL)
+    while (entry.reset(inzip.GetNextEntry()), entry.get() != NULL)
 	{
 		nbUpdated++;
 		//Si le fichier existe toujours
@@ -2257,8 +2255,7 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 			{
 				if(!inputFile.IsDir())
 				{
-
-					progInfo.Update((int)((nbUpdated/(float)nbToUpdate)*100),wxString::Format(_("Copy of the file\n%s"),GetFittedString(progInfo,inputFile.GetFullPath())));
+					progInfo.Update((int)((nbUpdated / (float)nbToUpdate) * 100), wxString::Format(_("Copy of the file\n%s"), GetFittedString(progInfo, inputFile.GetFullPath())));
 				}
 				//progInfo.Fit();
 				//progInfo.Update();
@@ -2269,7 +2266,7 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 				//Le fichier a été modifié on compacte ce nouveau fichier dans l'archive
 				if(inputFile.IsFileReadable())
 				{
-					progInfo.Update((int)((nbUpdated/(float)nbToUpdate)*100),_(wxString::Format("Compression of file\n%s",GetFittedString(progInfo,showPath.GetFullPath()))));
+					progInfo.Update((int)((nbUpdated/(float)nbToUpdate)*100), wxString::Format(_("Compression of file\n%s"),GetFittedString(progInfo,showPath.GetFullPath())));
 					wxFileStream fstr(elementName);
 					outzip.PutNextEntry(entryName,realFileDate);
 					outzip<<fstr;
@@ -2278,8 +2275,8 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 		}
 	}
 
-	// Ferme le flux afin de pouvoir continuer à transferer des données
-	in.reset();
+    // Ferme le flux afin de pouvoir continuer à transferer des données
+    in.reset();
 
 
 	//////////////////////////////////////////////////////////////////
@@ -2297,7 +2294,7 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 			if(wxFileExists(tabFichiers[i]))
 			{
 				wxFileName nouvFich(tabFichiers[i]);
-				progInfo.Update((int)((i/(float)nbfichier)*100),_(wxString::Format("Compression of file\n%s",nouvFich.GetFullName())));
+				progInfo.Update((int)((i / (float)nbfichier) * 100), wxString::Format(_("Compression of file\n%s"), nouvFich.GetFullName()));
 				wxDateTime fileTime=nouvFich.GetModificationTime();
 				outzip.PutNextEntry(entryName,fileTime);
 				wxFFileInputStream fstr(tabFichiers[i]);
@@ -2311,8 +2308,8 @@ bool ProjectManager::UpdateZip(wxString folderfrom,wxString zipfilename)
 
 
 
-	// Verifie le bon déroulement de l'enregistrement du fichier
-	bool success = inzip.Eof() && outzip.Close() && out.Commit();
+    // Verifie le bon déroulement de l'enregistrement du fichier
+    bool success = inzip.Eof() && outzip.Close() && out.Commit();
 
 	if(success)
 	{
@@ -2353,7 +2350,7 @@ bool ProjectManager::ZipFolder(const wxString&folderfrom,const wxString&zipfilen
 	this->GetAllFolderItems(folderfrom,tabFichiers);
 	wxFFileOutputStream out(zipfilename);
 
-	wxZipOutputStream zip(out);
+    wxZipOutputStream zip(out);
 
 	long nbfichier=tabFichiers.Count();
 	if(nbfichier>0)
@@ -2367,9 +2364,7 @@ bool ProjectManager::ZipFolder(const wxString&folderfrom,const wxString&zipfilen
 			if(wxFileExists(tabFichiers[i]))
 			{
 				wxFileName nouvFich(tabFichiers[i]);
-				progInfo.Update((int)((i/(float)nbfichier)*100),wxString::Format(_("Compression of file\n%s"),GetFittedString(progInfo,nouvFich.GetFullPath())));
-				//progInfo.Fit();
-				//progInfo.Update();
+				progInfo.Update((int)((i / (float)nbfichier) * 100), wxString::Format(_("Compression of file\n%s"), GetFittedString(progInfo, nouvFich.GetFullPath())));
 				zip.PutNextEntry(entryName,nouvFich.GetModificationTime());
 				wxFFileInputStream fstr(tabFichiers[i]);
 				zip<<fstr;
@@ -2512,16 +2507,16 @@ bool ProjectManager::UnZipFolder(const wxString&zipfilename,const wxString&folde
 {
 	wxProgressDialog progInfo(_("Project decompression"),_("Project files decompression in progress ..."),100,mainFrame,wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
 	wxString fto(folderTo);
-	wxZipEntryPtr entry;
-	wxFFileInputStream in(zipfilename);
-	wxZipInputStream zip(in);
+    wxZipEntryPtr entry;
+    wxFFileInputStream in(zipfilename);
+    wxZipInputStream zip(in);
 
 	int nbfichier=zip.GetTotalEntries();
 	int i=0;
-	while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
-	{
-		// access meta-data
-		wxString name = entry->GetName();
+    while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
+    {
+        // access meta-data
+        wxString name = entry->GetName();
 		wxFileName fichToCreate(name);
 		fichToCreate.RemoveDir(0);
 		fichToCreate.SetPath(fto+fichToCreate.GetPath());
@@ -2548,7 +2543,7 @@ bool ProjectManager::UnZipFolder(const wxString&zipfilename,const wxString&folde
 				fichToCreate.SetTimes(NULL,&entryTime,&entryTime);
 			}
 		}
-	}
+    }
 	return true;
 }
 
@@ -2575,7 +2570,7 @@ bool ProjectManager::Open(const wxString&filename)
 			elementCible->UpdateStringConfig("urlsave",filename);
 		}
 		//logControl->Clear();
-		wxLogInfo(_("Loading project: %s"), fProjet.GetFullName());
+		wxLogMessage(_("Loading project: %s"), fProjet.GetFullName());
 		return true;
 	}else{
 		return false;
@@ -2652,7 +2647,7 @@ bool ProjectManager::SaveTo( const wxString& filename , bool updateConfig)
 		SetMainFrameName(pathSauvegarde.GetName(),false);
 	}
 	bool res=ZipFolder(this->dossierCourant,filename);
-	wxLogInfo(_("Save finished"));
+	wxLogMessage(_("Save finished"));
 	return res;
 }
 
@@ -2705,7 +2700,7 @@ void ProjectManager::DoShapeComputation(const bool userEvent,const bool resetFac
 	this->sceneMesh.ComputeFacesBorders(resetFaceOrientation);
 
 	if(userEvent)
-		this->sceneMesh.Save(ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME);
+		this->sceneMesh.Save((ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME).ToStdString());
 
 	this->GlFrame->Refresh();
 }
@@ -2763,7 +2758,7 @@ void ProjectManager::OnModeOriginalPaint(wxCommandEvent& event)
 	renderOriginalMaterial=true;
 	ApplicationConfiguration::GLOBAL_VAR.drawMaterialColors=false;
 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelMaterialFaces,false);
-	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelFaces,true);
+ 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelFaces,true);
 	this->GlFrame->RefreshElementDraw();
 }
 void ProjectManager::OnModeMaterialPaint(wxCommandEvent& event)
@@ -2815,7 +2810,7 @@ void ProjectManager::OnCameraTool(wxCommandEvent& event)
 void ProjectManager::OnSwitchSelectionMode(wxCommandEvent& event)
 {
 	this->GlFrame->SetCurrentTool(OpenGlViewer::TOOL_MODE_SELECTION);
-	wxLogInfo(_("Select face: Left Click on the 3D view 3D to select a face; Double left Click+Ctrl to select a face entirely"));
+	wxLogMessage(_("Select face: Left Click on the 3D view 3D to select a face; Double left Click+Ctrl to select a face entirely"));
 }
 
 
@@ -2918,7 +2913,7 @@ void ProjectManager::OnSelectVertex PARAM_BOUND_ON_SELECT_FACES
 
 void ProjectManager::OnExportModel(wxString& FileName)
 {
-	sceneMesh.Save(FileName);
+	sceneMesh.Save(FileName.ToStdString());
 }
 
 
@@ -2955,7 +2950,7 @@ bool ProjectManager::LoadScene(const t_param_load_model& paramLoading)
 	t_retrieves_groups oldFacesDistribution;
 	if(paramLoading.keepexistingfacegroup)
 		BuildFaceGroupAssociation(oldFacesDistribution);
-	bool loadSuccess=sceneMesh.Load(paramLoading.pathModel);
+	bool loadSuccess=sceneMesh.Load(paramLoading.pathModel.ToStdString());
 	if(loadSuccess)
 	{
 		this->RepairCurrentMesh(paramLoading);
@@ -2974,7 +2969,7 @@ bool ProjectManager::LoadScene(const t_param_load_model& paramLoading)
 			this->LoadFacesFromModel(&progInfo);
 		//On sauvegarde la nouvelle scène3D
 		progInfo.Update(50,_("Saving 3D scene"));
-		this->sceneMesh.Save(this->dossierCourant+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME);
+		this->sceneMesh.Save((this->dossierCourant+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME).ToStdString());
 		//Chargement de la surface du modèle
 		ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.surfScene=this->sceneMesh.GetAireScene();
 		ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.volScene=0;
@@ -3027,7 +3022,7 @@ void ProjectManager::BuildModel3d(vec3 debCuboide,vec3 finCuboide)
 	{
 		this->AddLogMessage(_("Build of a 3D scene.\n"));
 		//On sauvegarde la nouvelle scène3D
-		this->sceneMesh.Save(this->dossierCourant+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME);
+		this->sceneMesh.Save((this->dossierCourant+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME).ToStdString());
 		this->ChangeModel3d(this->dossierCourant+ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME);
 	}
 }
@@ -3257,9 +3252,9 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 			{
 				if(paramRepair.domeshsurface)
 				{
-					sceneMesh._SavePOLY(meshName,false,false,true,NULL,true);
+					sceneMesh._SavePOLY(meshName.ToStdString(),false,false,true,NULL,true);
 				}else{
-					sceneMesh._SavePOLY(meshName);
+					sceneMesh._SavePOLY(meshName.ToStdString());
 				}
 			}
 			RunRemeshProcess(meshName);
@@ -3268,7 +3263,7 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 		if(paramRepair.domeshsurface)
 		{
 			if(!wxFileExists(meshName))
-				sceneMesh._SavePOLY(meshName,false,false,true,NULL,true);
+				sceneMesh._SavePOLY(meshName.ToStdString(),false,false,true,NULL,true);
 			//Save by materials
 			
 			//Maillage de la bordure
@@ -3278,7 +3273,7 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 		if(paramRepair.docorrection && !paramRepair.domeshsurface)
 		{
 			//3eme étape, charger le fichier .POLY modifié en gardant les groupes existants et les identifiant de matériaux(couleur d'origine par face) (consistant grâce aux marqueurs par face des fichiers POLY)
-			sceneMesh.LoadPolyWithoutLostCurrentModelGroupAndMaterials(meshName);
+			sceneMesh.LoadPolyWithoutLostCurrentModelGroupAndMaterials(meshName.ToStdString());
 		}
 		//Charger les nouvelles faces du modèle
 		if(meshModified)

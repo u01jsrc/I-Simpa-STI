@@ -1,6 +1,7 @@
 # Libsimpa
 message(STATUS " SWIG_EXECUTABLE     - $ENV{SWIG_EXECUTABLE}")
-
+set(CMAKE_INSTALL_MFC_LIBRARIES ON) 
+include( InstallRequiredSystemLibraries )
 #---------------------------------------#
 #    DEPENDENCY & EXECUTABLE (OR LIB)
 #---------------------------------------#
@@ -10,9 +11,9 @@ FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${SWIG_USE_FILE})
 
 # Find package for building
-FIND_PACKAGE(PythonLibs)
+FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
 # Find package for testing
-FIND_PACKAGE(PythonInterp REQUIRED)
+FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
 
@@ -52,10 +53,15 @@ install (TARGETS ${SWIG_MODULE_libsimpa_REAL_NAME}
       LIBRARY DESTINATION libsimpa/
 )
 
+if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+    install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION libsimpa COMPONENT System )
+endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+
 install (FILES
         ${ISIMPA_RESSOURCES}/libsimpa/vec3.py
         ${ISIMPA_RESSOURCES}/libsimpa/__init__.py
 		${CMAKE_CURRENT_BINARY_DIR}/libsimpa.py
+		${CMAKE_CURRENT_SOURCE_DIR}/tests/model_io.py
         DESTINATION libsimpa/)
 #------------#
 #    TEST
@@ -68,8 +74,7 @@ enable_testing()
 MESSAGE(STATUS "Run test in ${CMAKE_CURRENT_BINARY_DIR}")
 
 add_test(NAME test_modelio
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/model_io.py ${PROJECT_BINARY_DIR}/Testing/Temporary/
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_INSTALL_PREFIX}/libsimpa/model_io.py ${PROJECT_BINARY_DIR}/Testing/Temporary/)
   
   
 set_property(TEST test_modelio

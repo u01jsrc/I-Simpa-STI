@@ -1,8 +1,9 @@
-# -*- coding: cp1252 -*-
+# -*- coding: UTF-8 -*-
 import uictrl as ui
 import operator
 import uilocale
-ScriptFolder=ui.application.getapplicationpath()["userscript"]+"job_tool\\"
+import os
+ScriptFolder=ui.application.getapplicationpath()["userscript"]+"job_tool"+os.sep
 _=uilocale.InstallUiModule(ScriptFolder,ui.application.getlocale())
 
 def _(msg):
@@ -11,10 +12,11 @@ def GetCurrentProjectPath():
     projconfel=ui.element(ui.element(ui.application.getrootscene()).getelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_PROJET_CONFIGURATION))
     return projconfel.getstringconfig("urlsave")
 job_types={}
+
 class job(object):
     """
-        Cette classe reprÈsente un travail
-        Elle peut Ítre importÈ et exportÈ sous forme de chaine de caractËre
+        Cette classe repr√©sente un travail
+        Elle peut √™tre import√©e et export√©e sous forme de cha√Ænes de caract√®res
     """
     def __init__(self,params):
         self.jobname=params[0]
@@ -30,12 +32,13 @@ class job(object):
         pass
     def from_str(self,params):
         """
-        Initialisation ‡ partir d'un tableau de chaines params
+        Initialisation √† partir d'un tableau de cha√Ænes params
         """
         pass
+
 class job_run(job):
     """
-    Execution d'un code de calcul
+    Ex√©cution d'un code de calcul
     """
     def _jobinit_(self,idel):
         self.typecore=ui.element(idel).getinfos()["name"]
@@ -47,10 +50,11 @@ class job_run(job):
         ui.application.sendevent(core,ui.idevent.IDEVENT_RUN_CALCULATION)
     def from_str(self,params):
         """
-        Initialisation ‡ partir d'un tableau de chaines params
+        Initialisation √† partir d'un tableau de cha√Ænes params
         """
         self.typecore=params[1]
 job_types["RUN"]=job_run
+
 class job_openproject(job):
     """
     Ouverture d'un projet
@@ -64,7 +68,7 @@ class job_openproject(job):
             ui.application.loadproject(self.path)
     def from_str(self,params):
         """
-        Initialisation ‡ partir d'un tableau de chaines params
+        Initialisation √† partir d'un tableau de cha√Ænes params
         """
         fullpath=""
         for piece in params[1:]:
@@ -85,19 +89,14 @@ class job_saveproject(job):
         ui.application.saveproject()
     def from_str(self,params):
         """
-        Initialisation ‡ partir d'un tableau de chaines params
+        Initialisation √† partir d'un tableau de cha√Ænes params
         """
         pass
 job_types["SAVE_PROJECT"]=job_saveproject
 
-
-
-
-
-
 class JobManager(object):
     """
-        Cette classe permet la gestion des travaux renseignÈs par l'utilisateur
+        Cette classe permet la gestion des travaux renseign√©s par l'utilisateur
     """
     def appendjob(self,jobname,identifier):
         if operator.isSequenceType(identifier):
@@ -119,41 +118,34 @@ class JobManager(object):
         self.AddOpenProjectIfChanges()
         self.appendjob("RUN",idel)
         self.appendjob("SAVE_PROJECT",idel)
-    def AddRun10(self,idel):
-		self.AddOpenProjectIfChanges()
-		for i in range(10):
-			self.appendjob("RUN",idel)
-		self.appendjob("SAVE_PROJECT",idel)
     def ClearJobLst(self,idel):
         self.joblst=[]
+        self.lastprojectpath=""
     def ImportJobLst(self,idel):
         pass
     def ExportJobLst(self,idel):
         pass
     def PrintJobLst(self,idel):
-        print _(u"%i tasks :" % (len(self.joblst)))
+        print _(u"%i tasks:" % (len(self.joblst)))
         for job in self.joblst:
             print job.to_str()
-    
+
 class manager:
     def __init__(self):
         self.jmanager=JobManager()
         self.addcalculation_id=ui.application.register_event(self.jmanager.AddRun)
-        self.addcalculation10_id=ui.application.register_event(self.jmanager.AddRun10)
         self.clear_jobs_id=ui.application.register_event(self.jmanager.ClearJobLst)
         self.execute_jobs_id=ui.application.register_event(self.jmanager.ExecJobs)
         self.print_jobs_id=ui.application.register_event(self.jmanager.PrintJobLst)
-		
     def getmenu(self,typeel,idel,menu):
         submenu=[]
-        submenu.append((_(u"AddRun"),self.addcalculation_id))
-        submenu.append((_(u"AddRunx10"),self.addcalculation10_id))
+        submenu.append((_(u"Add calculation in the job list"),self.addcalculation_id))
         submenu.append(())
-        submenu.append((_(u"ClearJobLst"),[(_(u"Confirmation"),self.clear_jobs_id)]))
-        submenu.append((_(u"ExecJobs"),self.execute_jobs_id))
-        submenu.append((_(u"PrintJobLst"),self.print_jobs_id))    
+        submenu.append((_(u"Clear job list"),[(_(u"Confirmation"),self.clear_jobs_id)]))
+        submenu.append((_(u"Run job list"),self.execute_jobs_id))
+        submenu.append((_(u"Show job list"),self.print_jobs_id))
         menu.insert(2,())
-        menu.insert(2,(_(u"JobLst"),submenu))
+        menu.insert(2,(_(u"Job list"),submenu))
         return True
 menu_manager=manager()
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPS,menu_manager )

@@ -133,11 +133,11 @@ int MainProcess(int argc, char* argv[])
 
 
 		CoreString fileGlobalName=*configManager.FastGetConfigValue(Core_Configuration::SPROP_CORE_WORKING_DIRECTORY);
-		fileGlobalName+=_("main_calculation");
+		fileGlobalName+=_("Main results");
 		CoreString rpsFolder=*configManager.FastGetConfigValue(Core_Configuration::SPROP_CORE_WORKING_DIRECTORY);
 		if(calcCore.recepteurPList.size()>0)
 		{
-			rpsFolder+=_("Punctual receivers\\");
+            rpsFolder += _("Punctual receivers") + std::string("/");
 			st_mkdir(rpsFolder);
 			ReportManager::SauveTCRecepteursPonctuels(rpsFolder,reportFreqLbl,colsLbl,&calcCore.recepteurPList);
 		}
@@ -145,7 +145,7 @@ int MainProcess(int argc, char* argv[])
 	}else{
 		//Sauvegarde des données pour les autres code de calculs
 		CoreString exportcoredir=*configManager.FastGetConfigValue(Core_Configuration::SPROP_CORE_WORKING_DIRECTORY);
-		exportcoredir+=*configManager.FastGetConfigValue(Core_Configuration::SPROP_OTHER_CORE_OUTPUT_PATH)+"\\";
+		exportcoredir+=*configManager.FastGetConfigValue(Core_Configuration::SPROP_OTHER_CORE_OUTPUT_PATH)+std::string("/");
 		st_mkdir(exportcoredir);
 		//Export du fichier des récepteurs ponctuels
 		ReportManager::SauveFusionTCRecepteursPonctuels(exportcoredir,calcCore.recepteurPList);
