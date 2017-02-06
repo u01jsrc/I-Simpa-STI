@@ -46,13 +46,13 @@ source_group("" FILES ${SPPS_SOURCES})
 #    DEPENDENCY & EXECUTABLE (OR LIB)
 #---------------------------------------#
 
-set(Boost_USE_STATIC_LIBS   ON)
+set(Boost_USE_STATIC_LIBS   OFF)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   find_package(Boost REQUIRED COMPONENTS system random filesystem)
 else()
   find_package (Threads)
-  find_package(Boost REQUIRED COMPONENTS system random filesystem thread)
+  find_package(Boost REQUIRED COMPONENTS system random filesystem thread chrono date_time)
 endif()
 
 link_directories( ${Boost_LIBRARY_DIRS} )
@@ -104,6 +104,30 @@ endif()
 install (TARGETS sppsNee-agh
         RUNTIME DESTINATION core/sppsNee-agh)
 
+		
+if(WIN32)
+	# Resolve symbolic link
+	LIB_TO_DLL(${Boost_FILESYSTEM_LIBRARY_RELEASE} Boost_FILESYSTEM_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_SYSTEM_LIBRARY_RELEASE} Boost_SYSTEM_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_RANDOM_LIBRARY_RELEASE} Boost_RANDOM_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_REGEX_LIBRARY_RELEASE} Boost_REGEX_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_THREAD_LIBRARY_RELEASE} Boost_THREAD_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_CHRONO_LIBRARY_RELEASE} Boost_CHRONO_LIBRARY_RELEASE_REAL)
+	LIB_TO_DLL(${Boost_DATE_TIME_LIBRARY_RELEASE} Boost_DATE_TIME_LIBRARY_RELEASE_REAL)
+	install (FILES
+        ${Boost_FILESYSTEM_LIBRARY_RELEASE_REAL}
+        ${Boost_SYSTEM_LIBRARY_RELEASE_REAL}
+        ${Boost_REGEX_LIBRARY_RELEASE_REAL}
+        ${Boost_RANDOM_LIBRARY_RELEASE_REAL}
+        ${Boost_THREAD_LIBRARY_RELEASE_REAL}
+        ${Boost_CHRONO_LIBRARY_RELEASE_REAL}
+        ${Boost_DATE_TIME_LIBRARY_RELEASE_REAL}
+			DESTINATION core/sppsNee-agh)
+endif()
+
+if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+    install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION core/sppsNee-agh	COMPONENT System )
+endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
 #------------#
 #    TEST
 #------------#
