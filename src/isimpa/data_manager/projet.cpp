@@ -2047,16 +2047,7 @@ void ProjectManager::SetControlPointer(	wxTextCtrl* _logControl,uiTreeCtrl* _tre
 	propFrame=_propFrame;
 	auiManager=_auiManager;
 
-	char* pPath;
-	pPath = getenv("PYTHONPATH");
-
-	if (pPath == NULL) 
-	{
-		wxMessageBox("Couldn't find Python. Make shure that Python.exe is added to PATH and PYTHONPATH is set to Python/Lib");
-	}
-	else {
-		InitPythonEngine(); //Initialisation de python
-	}
+	InitPythonEngine(); //Initialisation de python
 
 	//Chargement de l'arbre de préférence (peut contenir des élément implémenté en python
 	UserPreferenceXmlFilePath= wxStandardPaths::Get().GetUserDataDir()+wxFileName::GetPathSeparator()+ApplicationConfiguration::CONST_USER_PREFERENCE_FILE_NAME;
