@@ -51,7 +51,7 @@ def main(argv):
     csvpath = ''
     ext = ''
     try:
-        opts, args = getopt.getopt(argv,"h+i:o:e:",["help","ifile=","ofile=","extension="])
+        opts, args = getopt.getopt(argv,"hi:o:e:",["help","ifile=","ofile=","extension="])
     except getopt.GetoptError:
         help()
         sys.exit(2)
