@@ -420,6 +420,7 @@ IF(GETTEXT_FOUND )
   MESSAGE(STATUS "Found Gettext")
   # Main isimpa locale
   add_subdirectory (lang/fr)
+  add_subdirectory (lang/pl)
   # Plugins locale
   add_subdirectory(../../currentRelease/UserScript/job_tool/locale/fr ${CMAKE_BINARY_DIR}/src/job_tool)
   add_subdirectory(../../currentRelease/UserScript/recp_tool/locale/fr ${CMAKE_BINARY_DIR}/src/recp_tool)
