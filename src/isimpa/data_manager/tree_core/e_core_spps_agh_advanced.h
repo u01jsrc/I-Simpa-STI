@@ -71,6 +71,9 @@ public:
 		if (!this->IsPropertyExist("export_receiver_incidence_angle")) {
 			InitExportReceiverIncidenceAngle(this);
 		}
+		if (!this->IsPropertyExist("angle_stats_min_reflection")) {
+			InitAngleMinReflection(this);
+		}
 	}
 
 	E_Core_Spps_AGH_advanced(Element* parent)
@@ -121,6 +124,9 @@ protected:
 	void InitExportReceiverIncidenceAngle(Element* confCore) {
 		confCore->AppendPropertyBool("export_receiver_incidence_angle", wxTRANSLATE("Export receiver incidence angle"), false, true);
 	}
+	void InitAngleMinReflection(Element* confCore) {
+		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
+	}
 	
 	/**
 	Initialisation des propriétés communes à tout les mailleurs ( fait avant l'initialisation des mailleurs spécialisés )
@@ -134,6 +140,7 @@ protected:
 		InitExportAsCSV(this);
 		InitNormalizeAngleStats(this);
 		InitExportReceiverIncidenceAngle(this);
+		InitAngleMinReflection(this);
 	}
 
 };

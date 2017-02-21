@@ -233,7 +233,7 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 	vec3& normal=face->face_scene->normal;
 	if(particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION)) && face->face_scene!=NULL)
 	{
-		//particleInfos.reflectionOrder++;
+		particleInfos.reflectionOrder++;
 		//Add intersection to history
 		this->collisionHistory.push_back(t_collision_history(face->face_scene->normal,particleInfos.reflectionOrder,particleInfos.nextModelIntersection.collisionPosition,particleInfos.direction, particleInfos.energie));
 	}else if(face->face_scene!=NULL){
@@ -245,7 +245,7 @@ void ReportManager::ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos)
 	vec3& normal=face->normal;
 	#endif
 
-	if(face->face_scene!=NULL && face->face_scene->Rec_angle==true)
+	if(face->face_scene!=NULL && face->face_scene->Rec_angle==true && particleInfos.reflectionOrder > *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::IPROP_ANGLE_STATS_MIN_REFL)))
 	{	
 		if(this->angle_energy.size() < face->face_scene->angle_group){
 			int tmp=angle_energy.size();
