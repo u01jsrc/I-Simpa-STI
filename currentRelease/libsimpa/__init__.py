@@ -14,7 +14,7 @@ def ToList(self):
     """
     lstret=[]
     for idcol in range(0,self.size()):
-        lstret.append([ self.GetColTitle(idcol)] + list(self.Index(idcol)))
+        lstret.append([ self.GetColTitle(idcol)] + [w.replace(',','.') for w in list(self.Index(idcol))])
     return lstret                    
 
 setattr(Gabe_rw,"ToList",ToList)

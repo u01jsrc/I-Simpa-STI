@@ -428,6 +428,7 @@ IF(GETTEXT_FOUND )
   add_subdirectory(../../currentRelease/UserScript/moveto_vertex/locale/fr ${CMAKE_BINARY_DIR}/src/moveto_vertex)
   add_subdirectory(../../currentRelease/UserScript/preceiv_sourceTracker/locale/fr ${CMAKE_BINARY_DIR}/src/preceiv_sourceTracker)
   add_subdirectory(../../currentRelease/UserScript/SppsReportSample/locale/fr ${CMAKE_BINARY_DIR}/src/SppsReportSample)
+  add_subdirectory(../../currentRelease/UserScript/gabe2csv/locale/pl ${CMAKE_BINARY_DIR}/src/gabe2csv)
   # Building isimpa require building pofiles
   add_dependencies(isimpa pofiles)
 ENDIF()

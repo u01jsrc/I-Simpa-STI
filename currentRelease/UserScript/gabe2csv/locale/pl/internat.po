@@ -1,0 +1,72 @@
+# English translations for PACKAGE package.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2017.
+#
+# Translators:
+# Picaut <judicael.picaut@ifsttar.fr>, 2017
+# Nicolas Fortin <github@nettrader.fr>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-21 15:26+0100\n"
+"PO-Revision-Date: 2017-02-21 15:26+0100\n"
+"Last-Translator: Nicolas Fortin <github@nettrader.fr>, 2017\n"
+"Language-Team: \n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: __init__.py:23
+msgid "Convert all binary to csv"
+msgstr "Konwertuj pliki binarne na .csv"
+
+#: __init__.py:26
+msgid "Convert to csv"
+msgstr "Konwertuj plik na .csv"
+
+#~ msgid "Acoustic parameters"
+#~ msgstr "Paramètres acoustiques"
+
+#~ msgid "EDT (s)"
+#~ msgstr "EDT (s)"
+
+#~ msgid "Make report"
+#~ msgstr "Créer un rapport"
+
+#~ msgid "Punctual receivers"
+#~ msgstr "Récepteurs ponctuels"
+
+#~ msgid "RT30"
+#~ msgstr "RT30"
+
+#~ msgid "Reverberation time"
+#~ msgstr "Temps de réverbération"
+
+#~ msgid "SPL"
+#~ msgstr "SPL"
+
+#~ msgid "Sound level"
+#~ msgstr "Niveau sonore"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistiques"
+
+#~ msgid "Surface receivers"
+#~ msgstr "Récepteurs de surface"
+
+#~ msgid "Synthesis"
+#~ msgstr "Synthèse"
+
+#~ msgid "TR-%g (s)"
+#~ msgstr "TR-%g (s)"
+
+#~ msgid "Terms of Use"
+#~ msgstr "Conditions d'utilisation"
