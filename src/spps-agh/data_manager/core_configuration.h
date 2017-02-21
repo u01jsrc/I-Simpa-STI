@@ -61,7 +61,8 @@ public:
 		IPROP_EXPORT_RECEIVER_INCIDENCE_ANGLE,
 		IPROP_EXPORT_AS_CSV,
         I_PROP_SAVE_SURFACE_INTERSECTION,           /*!< Save particle and surface intersection events*/
-        I_PROP_SAVE_RECEIVER_INTERSECTION           /*!< Save particle and receiver intersection events*/
+        I_PROP_SAVE_RECEIVER_INTERSECTION,           /*!< Save particle and receiver intersection events*/
+		IPROP_ANGLE_STATS_MIN_REFL					/*!< Min reflection order for angle stats calculation*/
 	};
 
 	/**

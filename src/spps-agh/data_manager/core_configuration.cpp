@@ -88,6 +88,7 @@ Core_Configuration::Core_Configuration( CoreString xmlFilePath )
 				SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS, advancedNode->GetProperty("extended_angle_stats").ToInt());
 				SetConfigInformation(IPROP_EXPORT_AS_CSV, advancedNode->GetProperty("export_as_CSV").ToInt());
 				SetConfigInformation(IPROP_EXPORT_RECEIVER_INCIDENCE_ANGLE, advancedNode->GetProperty("export_receiver_incidence_angle").ToInt());
+				SetConfigInformation(IPROP_ANGLE_STATS_MIN_REFL, advancedNode->GetProperty("angle_stats_min_reflection").ToInt());
 			}
 		}
 	}
