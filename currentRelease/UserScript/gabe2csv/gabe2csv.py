@@ -20,11 +20,11 @@ def GabeToCsv(filepath,csvpath):
         if data == []:
             print("Data table is empty. Check if path to binary file is correct!")
             return
-        # Rotation des données (les colonnes deviennent des lignes)
+        # Results matrix rotation
         data=zip(*data)
         # Remove unwanted characters
         data[0] = [word.replace("\n", "_") for word in data[0]]
-        # Ecriture des données
+        # Open output file
         fich=open(csvpath,'w')
         for line in data:
             firstcol=True
@@ -34,7 +34,7 @@ def GabeToCsv(filepath,csvpath):
                 else:
                     firstcol=False
                 fich.write(str(col))    # Ecriture de la cellule et virgule
-            fich.write("\n")            # Retour à la ligne
+            fich.write("\n")            # Return line
         fich.close()
         print("File converted sucesfully")
 
