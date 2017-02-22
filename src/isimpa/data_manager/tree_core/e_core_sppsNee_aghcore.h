@@ -134,7 +134,23 @@ public:
 			InitExportRs(confCore);
 		}
 		InitNewProperties();
-		this->AppendFils(new E_Core_SppsNee_AGH_advanced(this));
+
+		//Load advanced settings node from project
+		wxXmlNode* currentChild;
+		currentChild = noeudCourant->GetChildren();
+		// On va créer les fils de notre noeudCourant
+		wxString propValue;
+		while (currentChild != NULL)
+		{
+			if (currentChild->GetAttribute("eid", &propValue))
+			{
+				long typeEle;
+				propValue.ToLong(&typeEle);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced(currentChild, this));
+			}
+			currentChild = currentChild->GetNext();
+		}
 	}
 
 	E_Core_SppsNee_AGH(Element* parent)
