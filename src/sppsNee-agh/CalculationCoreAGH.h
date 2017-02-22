@@ -29,21 +29,15 @@ public:
 	 */
 	struct CONF_CALCULATION_AGH : CONF_CALCULATION
 	{
-		//uentier nbPasTemps;	/*!< Nombre de pas de temps */
-		//decimal pasTemps;	/*!< Pas de temps (s) */
 		std::list<CONF_PARTICULE_AGH> duplicatedParticles; /*!< Particules à calculer par la suite */
 	};
 
 protected:
-//t_Mesh *sceneMesh;
-//t_TetraMesh *sceneTetraMesh;
 ReportManagerAGH *reportTool;
 Core_ConfigurationAGH *configurationTool;
 CONF_CALCULATION_AGH& confEnv;
 
 public:
-	//using CalculationCore::Movement;
-	//using CalculationCore::FreeParticleTranslation;
 	bool doDirectSoundCalculation;
 	/**
 	 * @brief Constructeur du moteur de calcul.
@@ -66,10 +60,7 @@ public:
 	virtual ~CalculationCoreSPPS() {}
 protected:
 	virtual void Movement(CONF_PARTICULE_AGH &configurationP);
-	//inline decimal GetDistance(CONF_PARTICULE_AGH &configurationP);
-	//bool CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);
-	//void SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP);
-	
+
 	/**
 	* Test visability for particule "configurationP" and the point TargetPosition
 	*
@@ -78,22 +69,10 @@ protected:
 	*/
 	bool VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition);
 
-	//void SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP);
-	
-
 	/**
-		 * Translation d'une particule dans un milieu libre de collisions avec la scène
-		 */
+	* Translation d'une particule dans un milieu libre de collisions avec la scène
+	*/
 	virtual void FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector);
-	/**
-	 * Permet de connaitre la collision de la particule sur la face du tetrahèdre courant
-	 * @return Indice de la face [1-4] (-1 si la particule n'est pas dans un tetrahèdre)
-	 * @param t facteur de translationVector afin d'arrive a cette face
-	 */
-	//entier_court GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP,vec3 &translationVector,float &t);
-
-	//void OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2);
-	//void TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution);
 };
 
 #endif

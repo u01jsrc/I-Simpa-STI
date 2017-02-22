@@ -38,30 +38,4 @@ Core_ConfigurationAGH::~Core_ConfigurationAGH( )
 {
 }
 
-//void Core_ConfigurationAGH::SetConfigInformation(FPROP propertyIndex,decimal valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation((BASE_FPROP)propertyIndex,valeur);
-//}
-//void Core_ConfigurationAGH::SetConfigInformation(SPROP propertyIndex,CoreString valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation((BASE_SPROP)propertyIndex,valeur);
-//}
-//void Core_ConfigurationAGH::SetConfigInformation(IPROP propertyIndex,entier valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation((BASE_IPROP)propertyIndex,valeur);
-//}
-//
-//
-//void Core_ConfigurationAGH::SetConfigInformation(BASE_FPROP propertyIndex,decimal valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
-//}
-//void Core_ConfigurationAGH::SetConfigInformation(BASE_SPROP propertyIndex,CoreString valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
-//}
-//void Core_ConfigurationAGH::SetConfigInformation(BASE_IPROP propertyIndex,entier valeur)
-//{
-//	Base_Core_Configuration::SetConfigInformation(propertyIndex,valeur);
-//}
 

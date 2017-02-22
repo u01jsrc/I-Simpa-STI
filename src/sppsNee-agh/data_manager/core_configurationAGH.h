@@ -28,26 +28,6 @@ public:
 	 * Destructeur
 	 */
 	~Core_ConfigurationAGH( );
-	/////////////////////////////////////////////////////////
-	//	Trés rapide
-	/////////////////////////////////////////////////////////
-	//inline decimal* FastGetConfigValue(FPROP propertyIndex){return (tabFloatProp+propertyIndex); }
-	//inline CoreString* FastGetConfigValue(SPROP propertyIndex){return (tabStringProp+propertyIndex); }
-	//inline entier* FastGetConfigValue(IPROP propertyIndex){return (tabIntProp+propertyIndex); }
-	//
-	//inline decimal* FastGetConfigValue(BASE_FPROP propertyIndex){return (tabFloatProp+propertyIndex); }
-	//inline CoreString* FastGetConfigValue(BASE_SPROP propertyIndex){return (tabStringProp+propertyIndex); }
-	//inline entier* FastGetConfigValue(BASE_IPROP propertyIndex){return (tabIntProp+propertyIndex); }
-
-private:
-	//void SetConfigInformation(FPROP propertyIndex,decimal valeur);
-	//void SetConfigInformation(SPROP propertyIndex,CoreString valeur);
-	//void SetConfigInformation(IPROP propertyIndex,entier valeur);
-	//void SetConfigInformation(BASE_FPROP propertyIndex,decimal valeur);
-	//void SetConfigInformation(BASE_SPROP propertyIndex,CoreString valeur);
-	//void SetConfigInformation(BASE_IPROP propertyIndex,entier valeur);
-	
-
 };
 
 #endif
