@@ -5,8 +5,8 @@
 #include "tools/dotdistribution.h"
 #include <iostream>
 
-NextEventEstimationCore::NextEventEstimationCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool)
-	: CalculationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool) 
+NextEventEstimationCore::NextEventEstimationCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool)
+	: CalculationCoreSPPS(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool) 
 {
 	doDirectSoundCalculation = true;
 };

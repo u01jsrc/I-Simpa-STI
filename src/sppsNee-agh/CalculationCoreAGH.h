@@ -2,23 +2,24 @@
 						// Il est déconseillé d'utiliser d'autre types que ceux déclaré dans ce fichier dans le programme
 #include "input_output/reportmanagerAGH.h"
 #include "data_manager/Core_ConfigurationAGH.h"
+#include "CalculationCore.h"
 #include <list>
 #ifndef __CALC_CORE_AGH__
 #define __CALC_CORE_AGH__
 
 /**
- * @file CalculationCore.h
+ * @file CalculationCoreSPPS.h
  * @brief Moteur de calcul basé sur le calcul particule par particule
  */
 
 
-void printVec(vec3 inf);
+//void printVec(vec3 inf);
 /**
  * @brief Moteur de calcul basé sur le calcul particule par particule
  *
  * Ce moteur de calcul utilise le maillage du modèle afin d'optimiser le temps de recherche de collision.
  */
-class CalculationCore
+class CalculationCoreSPPS : public CalculationCore
 {
 public:
 	/**
@@ -26,21 +27,23 @@ public:
 	 *
 	 * Structure de données donnant les informations sur les paramètres globaux de calcul
 	 */
-	struct CONF_CALCULATION
+	struct CONF_CALCULATION_AGH : CONF_CALCULATION
 	{
-		uentier nbPasTemps;	/*!< Nombre de pas de temps */
-		decimal pasTemps;	/*!< Pas de temps (s) */
+		//uentier nbPasTemps;	/*!< Nombre de pas de temps */
+		//decimal pasTemps;	/*!< Pas de temps (s) */
 		std::list<CONF_PARTICULE_AGH> duplicatedParticles; /*!< Particules à calculer par la suite */
 	};
 
 protected:
-t_Mesh *sceneMesh;
-t_TetraMesh *sceneTetraMesh;
+//t_Mesh *sceneMesh;
+//t_TetraMesh *sceneTetraMesh;
 ReportManagerAGH *reportTool;
 Core_ConfigurationAGH *configurationTool;
-CONF_CALCULATION& confEnv;
+CONF_CALCULATION_AGH& confEnv;
 
 public:
+	//using CalculationCore::Movement;
+	//using CalculationCore::FreeParticleTranslation;
 	bool doDirectSoundCalculation;
 	/**
 	 * @brief Constructeur du moteur de calcul.
@@ -52,20 +55,20 @@ public:
 	 * @param _reportTool Classe d'enregistrements des résultats de calculs.
 	 * @param _configurationTool Classe de gestion de configuration
 	 */
-	CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION &confEnv, Core_ConfigurationAGH &_configurationTool,ReportManagerAGH* _reportTool);
+	CalculationCoreSPPS(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION_AGH &confEnv, Core_ConfigurationAGH &_configurationTool,ReportManagerAGH* _reportTool);
 	/**
 	 * Execute le calcul pour une particule
 	 * @param configurationP Configuration de la particule
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
-	virtual bool Run(CONF_PARTICULE_AGH configurationP);
+	bool Run(CONF_PARTICULE_AGH configurationP);
 	void CalculateDirectSound(CONF_PARTICULE_AGH shadowRay, t_Source& sourceInfo, float distancePerTimeStep);
-	virtual ~CalculationCore() {}
+	virtual ~CalculationCoreSPPS() {}
 protected:
 	virtual void Movement(CONF_PARTICULE_AGH &configurationP);
-	inline decimal GetDistance(CONF_PARTICULE_AGH &configurationP);
-	bool CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);
-	void SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP);
+	//inline decimal GetDistance(CONF_PARTICULE_AGH &configurationP);
+	//bool CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);
+	//void SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP);
 	
 	/**
 	* Test visability for particule "configurationP" and the point TargetPosition
@@ -75,7 +78,7 @@ protected:
 	*/
 	bool VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition);
 
-	void SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP);
+	//void SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP);
 	
 
 	/**
@@ -87,10 +90,10 @@ protected:
 	 * @return Indice de la face [1-4] (-1 si la particule n'est pas dans un tetrahèdre)
 	 * @param t facteur de translationVector afin d'arrive a cette face
 	 */
-	entier_court GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP,vec3 &translationVector,float &t);
+	//entier_court GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP,vec3 &translationVector,float &t);
 
-	void OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2);
-	void TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution);
+	//void OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2);
+	//void TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution);
 };
 
 #endif

@@ -45,13 +45,13 @@
  */
 struct t_ToolBox
 {
-	CalculationCore* calculationTool;
+	CalculationCoreSPPS* calculationTool;
 	ReportManagerAGH* outputTool;
 	Core_ConfigurationAGH* configurationTool;
 	t_Mesh* sceneMesh;
 	t_TetraMesh* tetraMesh;
 	progressionInfo* mainProgressionOutput;
-	CalculationCore::CONF_CALCULATION confCalc;
+	CalculationCoreSPPS::CONF_CALCULATION_AGH confCalc;
 };
 
 /**
@@ -188,11 +188,11 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 	applicationTools.outputTool=&outputTool;
 
 	//sellect calculation code based on sellection
-	CalculationCore* calculationTool = nullptr;
+	CalculationCoreSPPS* calculationTool = nullptr;
 	switch (*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_CALCULATION_CORE_SELLECTION))
 	{
 	case CLASSIC_SPPS:
-		calculationTool = new CalculationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
+		calculationTool = new CalculationCoreSPPS(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
 		break;
 	case NEXT_EVENT_ESTIMATION:
 		calculationTool = new NextEventEstimationCore(*applicationTools.sceneMesh, *applicationTools.tetraMesh, applicationTools.confCalc, *applicationTools.configurationTool, &outputTool);
@@ -339,7 +339,7 @@ int MainProcess(int argc, char* argv[])
 	//**************************************************
 	// 7: Executer les threads de calculs
 
-	CalculationCore::CONF_CALCULATION confCalc;
+	CalculationCoreSPPS::CONF_CALCULATION_AGH confCalc;
 	confCalc.nbPasTemps=reportParameter.nbTimeStep;
 	confCalc.pasTemps=(*configManager.FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP));
 	applicationToolBox.calculationTool=NULL;

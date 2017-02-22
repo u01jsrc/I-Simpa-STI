@@ -13,35 +13,36 @@
 				if(collision_manager::intersect_triangle(posPart,dirPart,scenenodes[sommetsFace.a].v,scenenodes[sommetsFace.b].v,scenenodes[sommetsFace.c].v,&t,&u,&v)==1)\
 					return idFace;
 
-void printVec(vec3 inf)
+//void printVec(vec3 inf)
+//{
+//	using namespace std;
+//	std::string retStr;
+//	cout<<"["<<inf.x<<";"<<inf.y<<";"<<inf.z<<"]";
+//}
+
+
+
+CalculationCoreSPPS::CalculationCoreSPPS(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool,ReportManagerAGH* _reportTool): 
+CalculationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool), confEnv(_confEnv)
+//:confEnv(_confEnv)
 {
-	using namespace std;
-	std::string retStr;
-	cout<<"["<<inf.x<<";"<<inf.y<<";"<<inf.z<<"]";
-}
-
-
-
-CalculationCore::CalculationCore(t_Mesh& _sceneMesh,t_TetraMesh& _sceneTetraMesh,CONF_CALCULATION &_confEnv, Core_ConfigurationAGH &_configurationTool,ReportManagerAGH* _reportTool)
-:confEnv(_confEnv)
-{
-	sceneMesh=&_sceneMesh;
+	//sceneMesh=&_sceneMesh;
 	configurationTool=&_configurationTool;
-	sceneTetraMesh=&_sceneTetraMesh;
+	//sceneTetraMesh=&_sceneTetraMesh;
 	reportTool=_reportTool;
 	doDirectSoundCalculation = false;
 }
 
-void CalculationCore::SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP)
-{
-	if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && configurationP.currentTetra->volumeEncombrement)
-	{
-		//Tirage aléatoire de la distance
-		configurationP.distanceToNextEncombrementEle=-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].lambda*log((float)(1-GetRandValue()));
-	}
-}
+//void CalculationCoreSPPS::SetNextParticleCollisionWithObstructionElement(CONF_PARTICULE_AGH &configurationP)
+//{
+//	if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && configurationP.currentTetra->volumeEncombrement)
+//	{
+//		//Tirage aléatoire de la distance
+//		configurationP.distanceToNextEncombrementEle=-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].lambda*log((float)(1-GetRandValue()));
+//	}
+//}
 
-void CalculationCore::CalculateDirectSound(CONF_PARTICULE_AGH prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
+void CalculationCoreSPPS::CalculateDirectSound(CONF_PARTICULE_AGH prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
 {
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
@@ -77,7 +78,7 @@ void CalculationCore::CalculateDirectSound(CONF_PARTICULE_AGH prototypeParticle,
 	}
 }
 
-bool CalculationCore::Run(CONF_PARTICULE_AGH configurationP)
+bool CalculationCoreSPPS::Run(CONF_PARTICULE_AGH configurationP)
 {
 	decimal densite_proba_absorption_atmospherique=configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
 	SetNextParticleCollision(configurationP);						//1er test de collision
@@ -153,361 +154,366 @@ bool CalculationCore::Run(CONF_PARTICULE_AGH configurationP)
 	return true;
 }
 
-void CalculationCore::Movement(CONF_PARTICULE_AGH &configurationP)
+void CalculationCoreSPPS::Movement(CONF_PARTICULE_AGH &configurationP)
 {
-	decimal deltaT=*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP) ;
-	decimal distanceSurLePas=configurationP.direction.length();
-	decimal celeriteLocal=distanceSurLePas/deltaT;
-	decimal faceDirection;
-	bool collisionResolution=true; //On test de nouveau la collision dans le pas de temps courant si cette valeur est à vrai
-	int iteration=0;
-	decimal distanceCollision=0.f;
-	decimal distanceToTravel=0.f;
-	while(collisionResolution && configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-	{
-		iteration++;
-		collisionResolution=false;
-		//Si il y a collision avec une face (avec prise en compte de la distance parcourue)
-		distanceCollision=(configurationP.nextModelIntersection.collisionPosition-configurationP.position).length();
-		distanceToTravel=celeriteLocal*(deltaT-configurationP.elapsedTime);
-
-		//Test de collision avec un élément de l'encombrement entre la position de la particule et une face du tetrahèdre courant.
-		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel>=configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
-		{
-			//Collision avec un élément virtuel de l'encombrement courant
-
-			//Test d'absorption
-
-			if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
-			{
-				//Energétique
-				configurationP.energie*=(1-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha);
-				if(configurationP.energie<=configurationP.energie_epsilon)
-				{
-					configurationP.stateParticule=PARTICULE_STATE_ABS_ENCOMBREMENT;
-					return;
-				}
-			}else{
-				//Aléatoire
-				if( GetRandValue()<=configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha)
-				{
-					//Absorbé
-					configurationP.energie=0.f;
-					configurationP.stateParticule=PARTICULE_STATE_ABS_ENCOMBREMENT;
-					return;
-				}
-			}
-			//N'est pas absorbé
-
-			//On incrémente le temps de parcourt entre la position avant et aprés collision avec l'encombrement virtuel
-			configurationP.elapsedTime+=configurationP.distanceToNextEncombrementEle/celeriteLocal;
-			//On place la particule sur la position de collision
-			FreeParticleTranslation(configurationP,(configurationP.direction/configurationP.direction.length())*configurationP.distanceToNextEncombrementEle);
-			collisionResolution=true;
-			//On change la direction de la particule en fonction de la loi de distribution
-			vec3 newDir;
-			switch(configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].law_diffusion)
-			{
-				case DIFFUSION_LAW_UNIFORM:
-					ParticleDistribution::GenSphereDistribution(configurationP,configurationP.direction.length());
-					break;
-				case DIFFUSION_LAW_REFLEXION_UNIFORM:
-					newDir=ReflectionLawsAGH::FittingUniformReflection(configurationP.direction);
-					newDir.normalize();
-					configurationP.direction=newDir*configurationP.direction.length();
-					break;
-				case DIFFUSION_LAW_REFLEXION_LAMBERT:
-					newDir=ReflectionLawsAGH::FittingLambertReflection(configurationP.direction);
-					newDir.normalize();
-					configurationP.direction=newDir*configurationP.direction.length();
-					break;
-				
-			};
-			//Calcul du nouveau point de collision
-			SetNextParticleCollision(configurationP);
-			SetNextParticleCollisionWithObstructionElement(configurationP);
-		}
-		else if(distanceCollision<=distanceToTravel) // && configurationP.nextModelIntersection.idface!=-1
-		{
-			//Enregistrement de l'énergie passé à la paroi
-			reportTool->ParticuleCollideWithSceneMesh(configurationP);
-			
-			vec3 vecTranslation=configurationP.nextModelIntersection.collisionPosition-configurationP.position;
-			//On incrémente le temps de parcourt entre la position avant et aprés collision
-			configurationP.elapsedTime+=(vecTranslation/configurationP.direction.length()).length()*deltaT;
-
-			//On place la particule sur la position de collision
-			FreeParticleTranslation(configurationP,vecTranslation);
-
-			// Récuperation de l'information de la face
-			t_cFace* faceInfo=NULL;
-
-			#ifdef UTILISER_MAILLAGE_OPTIMISATION
-			faceInfo=configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
-
-			//test de passage d'un tétraèdre à un autre
-
-			//Vrai si la paroi est anormalement orientée
-			bool doInvertNormal(false);
-			if(faceInfo)
-			{
-				faceDirection=configurationP.direction.dot(faceInfo->normal);
-				doInvertNormal=(faceDirection<=-BARELY_EPSILON);
-			}
-			//On traverse la paroi du tetrahedre si (pas de résolution de collision si)
-			//	- Ce n'est pas une surface du modèle
-			//  - (ou) Elle n'est pas orientée vers nous et le matériau n'affecte les surfaces sur une orientation
-			//  - (ou) Cette surface est un encombrement et qu'un autre volume nous attend derrière
-			if(!faceInfo || ((faceInfo->faceEncombrement || (!(faceInfo->faceMaterial->doubleSidedMaterialEffect) && doInvertNormal)) && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface]))
-			{
-				TraverserTetra(configurationP,collisionResolution);
-			}else{
-			#else
-			faceInfo=&sceneMesh->pfaces[configurationP.nextModelIntersection.idface];
-			///////////////////////////////////
-			// Test de passage d'un milieu libre à un milieu encombré (et inversement)
-			if(!faceInfo->faceEncombrement)
-			{
-			#endif
-
-				//On stocke le materiau dans la variable materialInfo
-				t_Material_BFreq* materialInfo=&(*faceInfo).faceMaterial->matSpectrumProperty[configurationP.frequenceIndex];
-
-
-				bool transmission=false;
-				//Tirage aléatoire pour le test d'absorption
-				if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_CHAMP_DIRECT))
-				{
-					//Particule absorbée
-					if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-						configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
-					configurationP.energie=0.f;
-					return;
-				}else{
-					if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
-					{
-						//Methode énérgétique, particule en collision avec la paroi
-						//Particule courante = (1-alpha)*epsilon
-						//Si l'absorption est totale la particule est absorbée si tau=0
-						if(materialInfo->absorption==1) //Pas de duplication possible de la particule (forcement non réfléchie)
-						{
-							if(!materialInfo->dotransmission || !(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
-							{
-								if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-									configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
-								configurationP.energie=0;
-								return;
-							}else{
-								transmission=true;
-								configurationP.energie*=materialInfo->tau;
-							}
-						}else{
-							if(materialInfo->absorption!=0) //Pas de duplication possible de la particule (forcement réfléchie)
-							{
-								if(materialInfo->dotransmission && materialInfo->tau!=0 && configurationP.energie*materialInfo->tau>configurationP.energie_epsilon && (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
-								{
-									//On va dupliquer la particule
-									CONF_PARTICULE_AGH configurationPTransmise=configurationP;
-									configurationPTransmise.energie*=materialInfo->tau;
-									bool localcolres;
-									TraverserTetra(configurationPTransmise,localcolres);
-									//configurationPTransmise.currentTetra=configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface];
-									if(configurationPTransmise.energie>configurationPTransmise.energie_epsilon)
-									{
-										confEnv.duplicatedParticles.push_back(configurationPTransmise);
-										/*
-										reportTool->SaveParticule();
-										reportTool->NewParticule(configurationPTransmise);
-										Run(configurationPTransmise);
-										reportTool->SaveParticule();
-										reportTool->NewParticule(configurationP);
-										*/
-									}
-								}
-								configurationP.energie*=(1-materialInfo->absorption);
-							} //else reflexion sans absorption
-						}
-					}else{
-						//Test d'absorption en aléatoire
-						if(GetRandValue()<=materialInfo->absorption)
-						{
-							// Particule non réfléchie
-							if((*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)) && materialInfo->dotransmission && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface] && GetRandValue()*materialInfo->absorption<=materialInfo->tau)
-							{
-								transmission=true;
-							}else{
-								//Particule absorbée
-								if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-									configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
-								configurationP.energie=0.;
-								return;
-							}
-						}
-					}
-				}
-				if(configurationP.energie<=configurationP.energie_epsilon)
-				{
-					if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-						configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
-					return;
-				}
-				//Si Transmission on traverse la paroi
-				if(transmission)
-				{
-					TraverserTetra(configurationP,collisionResolution);
-				}else{
-					// Choix de la méthode de reflexion en fonction de la valeur de diffusion
-					vec3 nouvDirection;
-					vec3 faceNormal;
-					if (!doInvertNormal)
-						faceNormal = -faceInfo->normal;
-					else
-						faceNormal = faceInfo->normal;
-
-					//Get direction for diffuse or specular part based on material info
-					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
-					{
-						nouvDirection=ReflectionLawsAGH::SolveDiffusePart(configurationP.direction,*materialInfo, faceNormal);
-					}else{
-						nouvDirection=ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal);
-					}
-
-					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
-					configurationP.direction=nouvDirection*distanceSurLePas;
-					collisionResolution=true;
-					SetNextParticleCollision(configurationP);
-				}
-			}
-		}
-
-		if(iteration>1000)
-		{
-			//Elle est détruite et l'utilisateur en sera informé
-			if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-				configurationP.stateParticule=PARTICULE_STATE_LOOP;
-			configurationP.energie=0;
-			return;
-		}
-	}
-	if(configurationP.elapsedTime==0.f)
-	{   //Aucune collision sur le pas de temps courant
-		FreeParticleTranslation(configurationP,configurationP.direction);
-	}else{
-		//Il y a eu une ou plusieurs collisions sur le pas de temps courant
-		FreeParticleTranslation(configurationP,configurationP.direction*((deltaT-configurationP.elapsedTime)/deltaT));
-		configurationP.elapsedTime=0; //remise du compteur à 0
-	}
+	CalculationCore::Movement(configurationP);
 }
 
+//void CalculationCoreSPPS::Movement(CONF_PARTICULE_AGH &configurationP)
+//{
+//	decimal deltaT=*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP) ;
+//	decimal distanceSurLePas=configurationP.direction.length();
+//	decimal celeriteLocal=distanceSurLePas/deltaT;
+//	decimal faceDirection;
+//	bool collisionResolution=true; //On test de nouveau la collision dans le pas de temps courant si cette valeur est à vrai
+//	int iteration=0;
+//	decimal distanceCollision=0.f;
+//	decimal distanceToTravel=0.f;
+//	while(collisionResolution && configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//	{
+//		iteration++;
+//		collisionResolution=false;
+//		//Si il y a collision avec une face (avec prise en compte de la distance parcourue)
+//		distanceCollision=(configurationP.nextModelIntersection.collisionPosition-configurationP.position).length();
+//		distanceToTravel=celeriteLocal*(deltaT-configurationP.elapsedTime);
+//
+//		//Test de collision avec un élément de l'encombrement entre la position de la particule et une face du tetrahèdre courant.
+//		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && distanceToTravel>=configurationP.distanceToNextEncombrementEle && distanceCollision>configurationP.distanceToNextEncombrementEle && configurationP.currentTetra->volumeEncombrement)
+//		{
+//			//Collision avec un élément virtuel de l'encombrement courant
+//
+//			//Test d'absorption
+//
+//			if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
+//			{
+//				//Energétique
+//				configurationP.energie*=(1-configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha);
+//				if(configurationP.energie<=configurationP.energie_epsilon)
+//				{
+//					configurationP.stateParticule=PARTICULE_STATE_ABS_ENCOMBREMENT;
+//					return;
+//				}
+//			}else{
+//				//Aléatoire
+//				if( GetRandValue()<=configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].alpha)
+//				{
+//					//Absorbé
+//					configurationP.energie=0.f;
+//					configurationP.stateParticule=PARTICULE_STATE_ABS_ENCOMBREMENT;
+//					return;
+//				}
+//			}
+//			//N'est pas absorbé
+//
+//			//On incrémente le temps de parcourt entre la position avant et aprés collision avec l'encombrement virtuel
+//			configurationP.elapsedTime+=configurationP.distanceToNextEncombrementEle/celeriteLocal;
+//			//On place la particule sur la position de collision
+//			FreeParticleTranslation(configurationP,(configurationP.direction/configurationP.direction.length())*configurationP.distanceToNextEncombrementEle);
+//			collisionResolution=true;
+//			//On change la direction de la particule en fonction de la loi de distribution
+//			vec3 newDir;
+//			switch(configurationP.currentTetra->volumeEncombrement->encSpectrumProperty[configurationP.frequenceIndex].law_diffusion)
+//			{
+//				case DIFFUSION_LAW_UNIFORM:
+//					ParticleDistribution::GenSphereDistribution(configurationP,configurationP.direction.length());
+//					break;
+//				case DIFFUSION_LAW_REFLEXION_UNIFORM:
+//					newDir=ReflectionLawsAGH::FittingUniformReflection(configurationP.direction);
+//					newDir.normalize();
+//					configurationP.direction=newDir*configurationP.direction.length();
+//					break;
+//				case DIFFUSION_LAW_REFLEXION_LAMBERT:
+//					newDir=ReflectionLawsAGH::FittingLambertReflection(configurationP.direction);
+//					newDir.normalize();
+//					configurationP.direction=newDir*configurationP.direction.length();
+//					break;
+//				
+//			};
+//			//Calcul du nouveau point de collision
+//			SetNextParticleCollision(configurationP);
+//			SetNextParticleCollisionWithObstructionElement(configurationP);
+//		}
+//		else if(distanceCollision<=distanceToTravel) // && configurationP.nextModelIntersection.idface!=-1
+//		{
+//			//Enregistrement de l'énergie passé à la paroi
+//			reportTool->ParticuleCollideWithSceneMesh(configurationP);
+//			
+//			vec3 vecTranslation=configurationP.nextModelIntersection.collisionPosition-configurationP.position;
+//			//On incrémente le temps de parcourt entre la position avant et aprés collision
+//			configurationP.elapsedTime+=(vecTranslation/configurationP.direction.length()).length()*deltaT;
+//
+//			//On place la particule sur la position de collision
+//			FreeParticleTranslation(configurationP,vecTranslation);
+//
+//			// Récuperation de l'information de la face
+//			t_cFace* faceInfo=NULL;
+//
+//			#ifdef UTILISER_MAILLAGE_OPTIMISATION
+//			faceInfo=configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
+//
+//			//test de passage d'un tétraèdre à un autre
+//
+//			//Vrai si la paroi est anormalement orientée
+//			bool doInvertNormal(false);
+//			if(faceInfo)
+//			{
+//				faceDirection=configurationP.direction.dot(faceInfo->normal);
+//				doInvertNormal=(faceDirection<=-BARELY_EPSILON);
+//			}
+//			//On traverse la paroi du tetrahedre si (pas de résolution de collision si)
+//			//	- Ce n'est pas une surface du modèle
+//			//  - (ou) Elle n'est pas orientée vers nous et le matériau n'affecte les surfaces sur une orientation
+//			//  - (ou) Cette surface est un encombrement et qu'un autre volume nous attend derrière
+//			if(!faceInfo || ((faceInfo->faceEncombrement || (!(faceInfo->faceMaterial->doubleSidedMaterialEffect) && doInvertNormal)) && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface]))
+//			{
+//				TraverserTetra(configurationP,collisionResolution);
+//			}else{
+//			#else
+//			faceInfo=&sceneMesh->pfaces[configurationP.nextModelIntersection.idface];
+//			///////////////////////////////////
+//			// Test de passage d'un milieu libre à un milieu encombré (et inversement)
+//			if(!faceInfo->faceEncombrement)
+//			{
+//			#endif
+//
+//				//On stocke le materiau dans la variable materialInfo
+//				t_Material_BFreq* materialInfo=&(*faceInfo).faceMaterial->matSpectrumProperty[configurationP.frequenceIndex];
+//
+//
+//				bool transmission=false;
+//				//Tirage aléatoire pour le test d'absorption
+//				if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_CHAMP_DIRECT))
+//				{
+//					//Particule absorbée
+//					if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//						configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
+//					configurationP.energie=0.f;
+//					return;
+//				}else{
+//					if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ENERGY_CALCULATION_METHOD))
+//					{
+//						//Methode énérgétique, particule en collision avec la paroi
+//						//Particule courante = (1-alpha)*epsilon
+//						//Si l'absorption est totale la particule est absorbée si tau=0
+//						if(materialInfo->absorption==1) //Pas de duplication possible de la particule (forcement non réfléchie)
+//						{
+//							if(!materialInfo->dotransmission || !(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
+//							{
+//								if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//									configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
+//								configurationP.energie=0;
+//								return;
+//							}else{
+//								transmission=true;
+//								configurationP.energie*=materialInfo->tau;
+//							}
+//						}else{
+//							if(materialInfo->absorption!=0) //Pas de duplication possible de la particule (forcement réfléchie)
+//							{
+//								if(materialInfo->dotransmission && materialInfo->tau!=0 && configurationP.energie*materialInfo->tau>configurationP.energie_epsilon && (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)))
+//								{
+//									//On va dupliquer la particule
+//									CONF_PARTICULE_AGH configurationPTransmise=configurationP;
+//									configurationPTransmise.energie*=materialInfo->tau;
+//									bool localcolres;
+//									TraverserTetra(configurationPTransmise,localcolres);
+//									//configurationPTransmise.currentTetra=configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface];
+//									if(configurationPTransmise.energie>configurationPTransmise.energie_epsilon)
+//									{
+//										confEnv.duplicatedParticles.push_back(configurationPTransmise);
+//										/*
+//										reportTool->SaveParticule();
+//										reportTool->NewParticule(configurationPTransmise);
+//										Run(configurationPTransmise);
+//										reportTool->SaveParticule();
+//										reportTool->NewParticule(configurationP);
+//										*/
+//									}
+//								}
+//								configurationP.energie*=(1-materialInfo->absorption);
+//							} //else reflexion sans absorption
+//						}
+//					}else{
+//						//Test d'absorption en aléatoire
+//						if(GetRandValue()<=materialInfo->absorption)
+//						{
+//							// Particule non réfléchie
+//							if((*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_TRANSMISSION)) && materialInfo->dotransmission && configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface] && GetRandValue()*materialInfo->absorption<=materialInfo->tau)
+//							{
+//								transmission=true;
+//							}else{
+//								//Particule absorbée
+//								if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//									configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
+//								configurationP.energie=0.;
+//								return;
+//							}
+//						}
+//					}
+//				}
+//				if(configurationP.energie<=configurationP.energie_epsilon)
+//				{
+//					if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//						configurationP.stateParticule=PARTICULE_STATE_ABS_SURF;
+//					return;
+//				}
+//				//Si Transmission on traverse la paroi
+//				if(transmission)
+//				{
+//					TraverserTetra(configurationP,collisionResolution);
+//				}else{
+//					// Choix de la méthode de reflexion en fonction de la valeur de diffusion
+//					vec3 nouvDirection;
+//					vec3 faceNormal;
+//					if (!doInvertNormal)
+//						faceNormal = -faceInfo->normal;
+//					else
+//						faceNormal = faceInfo->normal;
+//
+//					//Get direction for diffuse or specular part based on material info
+//					if(materialInfo->diffusion==1 || GetRandValue()<materialInfo->diffusion)
+//					{
+//						nouvDirection=ReflectionLawsAGH::SolveDiffusePart(configurationP.direction,*materialInfo, faceNormal);
+//					}else{
+//						nouvDirection=ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal);
+//					}
+//
+//					//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
+//					configurationP.direction=nouvDirection*distanceSurLePas;
+//					collisionResolution=true;
+//					SetNextParticleCollision(configurationP);
+//				}
+//			}
+//		}
+//
+//		if(iteration>1000)
+//		{
+//			//Elle est détruite et l'utilisateur en sera informé
+//			if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//				configurationP.stateParticule=PARTICULE_STATE_LOOP;
+//			configurationP.energie=0;
+//			return;
+//		}
+//	}
+//	if(configurationP.elapsedTime==0.f)
+//	{   //Aucune collision sur le pas de temps courant
+//		FreeParticleTranslation(configurationP,configurationP.direction);
+//	}else{
+//		//Il y a eu une ou plusieurs collisions sur le pas de temps courant
+//		FreeParticleTranslation(configurationP,configurationP.direction*((deltaT-configurationP.elapsedTime)/deltaT));
+//		configurationP.elapsedTime=0; //remise du compteur à 0
+//	}
+//}
 
-void CalculationCore::TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution)
-{
-	// Récuperation de l'information de la face
-	t_cFace* faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
-	//test de passage d'un tétraèdre à un autre
-	//PASSAGE DE TETRAEDRE
 
-	if(!configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface])
-	{
-		#ifdef _DEBUG
-		std::cout<<"La particule va sortir du perimètre du volume car une face du domaine est mal orientée ou le maillage est incorrect. La particule a été supprimée";
-		#endif
-		configurationP.energie=0;
-		if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-			configurationP.stateParticule=PARTICULE_STATE_LOST;
-		return;
-	}else{
-		reportTool->ParticuleGoToNextTetrahedra(configurationP,configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface]);
-		t_Tetra* oldTetra=configurationP.currentTetra;
-		//Affectation du nouveau volume
-		configurationP.currentTetra=configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface];
-		//Calcul de la prochaine collision
-		SetNextParticleCollision(configurationP);
-		collisionResolution=true; //On refait un test de collision avec les tetrahedres
+//void CalculationCoreSPPS::TraverserTetra(CONF_PARTICULE_AGH &configurationP, bool& collisionResolution)
+//{
+//	// Récuperation de l'information de la face
+//	t_cFace* faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
+//	//test de passage d'un tétraèdre à un autre
+//	//PASSAGE DE TETRAEDRE
+//
+//	if(!configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface])
+//	{
+//		#ifdef _DEBUG
+//		std::cout<<"La particule va sortir du perimètre du volume car une face du domaine est mal orientée ou le maillage est incorrect. La particule a été supprimée";
+//		#endif
+//		configurationP.energie=0;
+//		if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//			configurationP.stateParticule=PARTICULE_STATE_LOST;
+//		return;
+//	}else{
+//		reportTool->ParticuleGoToNextTetrahedra(configurationP,configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface]);
+//		t_Tetra* oldTetra=configurationP.currentTetra;
+//		//Affectation du nouveau volume
+//		configurationP.currentTetra=configurationP.currentTetra->voisins[configurationP.nextModelIntersection.idface];
+//		//Calcul de la prochaine collision
+//		SetNextParticleCollision(configurationP);
+//		collisionResolution=true; //On refait un test de collision avec les tetrahedres
+//
+//		//Si la particule passe d'un volume d'encombrement à un autre type de volume (faceInfo appartient à l'ancien volume)
+//		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && faceInfo && oldTetra->volumeEncombrement!=configurationP.currentTetra->volumeEncombrement)
+//			SetNextParticleCollisionWithObstructionElement(configurationP);
+//	}
+//}
 
-		//Si la particule passe d'un volume d'encombrement à un autre type de volume (faceInfo appartient à l'ancien volume)
-		if(*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_DO_CALC_ENCOMBREMENT) && faceInfo && oldTetra->volumeEncombrement!=configurationP.currentTetra->volumeEncombrement)
-			SetNextParticleCollisionWithObstructionElement(configurationP);
-	}
-}
-
-void CalculationCore::OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2)
-{
-	double c1=configurationP.direction.length();
-	double c2=configurationTool->GetNormVecPart(configurationP.position,tetra2);
-	double xy_length=vec3(configurationP.direction.x,configurationP.direction.y,0).length();
-	double cos_gamma1=xy_length/c1;
-	double cos_phi=configurationP.direction.x/xy_length;
-	double sin_phi=configurationP.direction.y/xy_length;
-	double cos_gamma2=(cos_gamma1*c2)/c1;
-
-	short sgn=INTSIGN(configurationP.direction.z);
-	if(cos_gamma2>1)
-	{
-		cos_gamma2=1-EPSILON;
-		sgn=-sgn;
-	}
-	double sin_gamma2=sqrt(1-pow(cos_gamma2,2));
-
-	configurationP.direction.x=c2*cos_gamma2*cos_phi;
-	configurationP.direction.y=c2*cos_gamma2*sin_phi;
-	configurationP.direction.z=sgn*c2*sin_gamma2;
-}
+//void CalculationCoreSPPS::OnChangeCelerite(CONF_PARTICULE_AGH &configurationP, t_Tetra* tetra2)
+//{
+//	double c1=configurationP.direction.length();
+//	double c2=configurationTool->GetNormVecPart(configurationP.position,tetra2);
+//	double xy_length=vec3(configurationP.direction.x,configurationP.direction.y,0).length();
+//	double cos_gamma1=xy_length/c1;
+//	double cos_phi=configurationP.direction.x/xy_length;
+//	double sin_phi=configurationP.direction.y/xy_length;
+//	double cos_gamma2=(cos_gamma1*c2)/c1;
+//
+//	short sgn=INTSIGN(configurationP.direction.z);
+//	if(cos_gamma2>1)
+//	{
+//		cos_gamma2=1-EPSILON;
+//		sgn=-sgn;
+//	}
+//	double sin_gamma2=sqrt(1-pow(cos_gamma2,2));
+//
+//	configurationP.direction.x=c2*cos_gamma2*cos_phi;
+//	configurationP.direction.y=c2*cos_gamma2*sin_phi;
+//	configurationP.direction.z=sgn*c2*sin_gamma2;
+//}
 
 
-entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP, vec3 &translationVector, float &t)
-{
-	vec3 dir=translationVector;
-	float* posPart=configurationP.position;
-	float* dirPart=dir;
-	float u,v;
-	vec3* scenenodes=sceneTetraMesh->nodes;
-	ivec3 tmpsmt;
-	ivec3& sommetsFace=tmpsmt;
-	if(configurationP.currentTetra)
-	{
-
-		//////////////
-		// Test de passage a un autre tétraèdre
-		TetraFaceTest(0);
-		TetraFaceTest(1);
-		TetraFaceTest(2);
-		TetraFaceTest(3);
-
-		//Dû à une marge d'erreur aucune collision sur les faces du tétrahèdre n'a pu être trouvé
-		// Cette marge d'erreur dépend du maillage du volumes et de la position d'origine des particules
-
-		//configurationP.outputToParticleFile=true; //debug
-		//On recherche parmis les tétraèdres voisins(ceux où la particule est également sur la surface du tétraèdre), lequel est capable de positionner la prochaine face
-		//de collision.
-		//Si il est toujours impossible de positionner la particule, celle-ci sera détruite
-		t_Tetra* old_tetra=configurationP.currentTetra;
-		for(unsigned short idtet=0;idtet<4;idtet++)
-		{
-			if(old_tetra->voisins[idtet]!=NULL)
-			{
-				configurationP.currentTetra=old_tetra->voisins[idtet];
-				if(core_mathlib::DotInTetra(configurationP.position,this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.a],
-					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.b],
-					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.c],
-					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.d]))
-				{
-					TetraFaceTest(0);
-					TetraFaceTest(1);
-					TetraFaceTest(2);
-					TetraFaceTest(3);
-				}
-			}
-		}
-		configurationP.energie=0;
-		if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
-			configurationP.stateParticule=PARTICULE_STATE_LOST;
-	}
-	return -1;
-}
+//entier_court  CalculationCoreSPPS::GetTetraFaceCollision(CONF_PARTICULE_AGH &configurationP, vec3 &translationVector, float &t)
+//{
+//	vec3 dir=translationVector;
+//	float* posPart=configurationP.position;
+//	float* dirPart=dir;
+//	float u,v;
+//	vec3* scenenodes=sceneTetraMesh->nodes;
+//	ivec3 tmpsmt;
+//	ivec3& sommetsFace=tmpsmt;
+//	if(configurationP.currentTetra)
+//	{
+//
+//		//////////////
+//		// Test de passage a un autre tétraèdre
+//		TetraFaceTest(0);
+//		TetraFaceTest(1);
+//		TetraFaceTest(2);
+//		TetraFaceTest(3);
+//
+//		//Dû à une marge d'erreur aucune collision sur les faces du tétrahèdre n'a pu être trouvé
+//		// Cette marge d'erreur dépend du maillage du volumes et de la position d'origine des particules
+//
+//		//configurationP.outputToParticleFile=true; //debug
+//		//On recherche parmis les tétraèdres voisins(ceux où la particule est également sur la surface du tétraèdre), lequel est capable de positionner la prochaine face
+//		//de collision.
+//		//Si il est toujours impossible de positionner la particule, celle-ci sera détruite
+//		t_Tetra* old_tetra=configurationP.currentTetra;
+//		for(unsigned short idtet=0;idtet<4;idtet++)
+//		{
+//			if(old_tetra->voisins[idtet]!=NULL)
+//			{
+//				configurationP.currentTetra=old_tetra->voisins[idtet];
+//				if(core_mathlib::DotInTetra(configurationP.position,this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.a],
+//					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.b],
+//					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.c],
+//					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.d]))
+//				{
+//					TetraFaceTest(0);
+//					TetraFaceTest(1);
+//					TetraFaceTest(2);
+//					TetraFaceTest(3);
+//				}
+//			}
+//		}
+//		configurationP.energie=0;
+//		if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
+//			configurationP.stateParticule=PARTICULE_STATE_LOST;
+//	}
+//	return -1;
+//}
 
 #ifndef UTILISER_MAILLAGE_OPTIMISATION
-void CalculationCore::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
+void CalculationCoreSPPS::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
 {
 	INTERSECTION_INFO collisionInfos;
 	float minDist=9999999999.f;
@@ -529,7 +535,7 @@ void CalculationCore::SetNextParticleCollision(CONF_PARTICULE_AGH &configuration
 	}
 }
 
-void CalculationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
+void CalculationCoreSPPS::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
 {
 	if(configurationP.currentTetra)
 	{
@@ -560,7 +566,7 @@ void CalculationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP
 	configurationP.position+=translationVector;
 }
 
-bool CalculationCore::CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance)
+bool CalculationCoreSPPS::CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance)
 {
 	using namespace std;
 
@@ -593,16 +599,31 @@ bool CalculationCore::CollisionTest(CONF_PARTICULE_AGH &configurationP,uentier &
 }
 
 #else
-void CalculationCore::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
-{
-	//INTERSECTION_INFO collisionInfos;
-	float t;
-	configurationP.nextModelIntersection.idface=GetTetraFaceCollision(configurationP,configurationP.direction,t);
+//void CalculationCoreSPPS::SetNextParticleCollision(CONF_PARTICULE_AGH &configurationP)
+//{
+//	INTERSECTION_INFO collisionInfos;
+//	float t;
+//	configurationP.nextModelIntersection.idface=GetTetraFaceCollision(configurationP,configurationP.direction,t);
+//
+//	configurationP.nextModelIntersection.collisionPosition=configurationP.position+configurationP.direction*t;
+//}
 
-	configurationP.nextModelIntersection.collisionPosition=configurationP.position+configurationP.direction*t;
+void CalculationCoreSPPS::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector)
+{
+	CalculationCore::FreeParticleTranslation(configurationP, translationVector);
 }
 
-bool CalculationCore::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition)
+//void CalculationCoreSPPS::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
+//{
+//	reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
+//	// On prend en compte le rapprochement vers l'encombrement virtuel
+//	if(configurationP.currentTetra->volumeEncombrement)
+//		configurationP.distanceToNextEncombrementEle-=translationVector.length();
+//	configurationP.position+=translationVector;
+//}
+#endif
+
+bool CalculationCoreSPPS::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition)
 {
 	float obst_dist;
 	float t;
@@ -626,7 +647,7 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &T
 		{
 			return false;
 		}
-		else 
+		else
 		{
 			testParticle.currentTetra = nextTetra;
 			testParticle.nextModelIntersection.idface = GetTetraFaceCollision(testParticle, testParticle.direction, t);
@@ -642,14 +663,4 @@ bool CalculationCore::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &T
 
 	return false;
 }
-
-void CalculationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP,const vec3 &translationVector)
-{
-	reportTool->ParticuleFreeTranslation(configurationP,configurationP.position+translationVector);
-	// On prend en compte le rapprochement vers l'encombrement virtuel
-	if(configurationP.currentTetra->volumeEncombrement)
-		configurationP.distanceToNextEncombrementEle-=translationVector.length();
-	configurationP.position+=translationVector;
-}
-#endif
 

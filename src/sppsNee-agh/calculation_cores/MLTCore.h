@@ -6,7 +6,7 @@
 class MLTCore : public  NextEventEstimationCore
 {
 public:
-	MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool);
+	MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool);
 	bool RunInitialSeed(CONF_PARTICULE_MLT &inputParticle);
 
 	float pLarge = 0.5;

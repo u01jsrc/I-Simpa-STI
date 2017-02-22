@@ -6,7 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
-MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION& _confEnv, Core_ConfigurationAGH& _configurationTool, ReportManagerAGH* _reportTool)
+MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH& _confEnv, Core_ConfigurationAGH& _configurationTool, ReportManagerAGH* _reportTool)
 	: NextEventEstimationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool)
 {
 	doDirectSoundCalculation = true;
