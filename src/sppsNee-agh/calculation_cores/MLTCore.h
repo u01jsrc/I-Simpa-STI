@@ -26,7 +26,6 @@ protected:
 	void Follow(CONF_PARTICULE_MLT& propagationParticle);
 	void FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector) override;
 	bool GetNextCollision(CONF_PARTICULE_MLT &configurationP, double &distance);
-	void GenerateShadowRays(CONF_PARTICULE_MLT& particle, t_Material_BFreq* materialInfo, t_cFace* faceInfo, double deltaT, double distanceToTravel);
 	void MutationGenerator(double& value) const;
 };
 

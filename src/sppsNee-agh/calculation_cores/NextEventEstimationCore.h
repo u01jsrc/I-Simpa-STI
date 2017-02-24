@@ -13,6 +13,7 @@ public:
 protected:
 	virtual void Movement(CONF_PARTICULE_AGH &configurationP) override;
 	virtual void FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector) override;
+	void GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq * materialInfo, t_cFace * faceInfo, double deltaT, double distanceToTravel, std::list<CONF_PARTICULE_AGH>* shadowRays, double* probability = nullptr);
 };
 
 #endif

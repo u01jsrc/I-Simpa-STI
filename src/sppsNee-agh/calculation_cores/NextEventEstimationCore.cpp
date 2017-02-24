@@ -194,38 +194,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 					faceNormal = faceInfo->normal;
 
 				//Calculate and cast shadow rays
-				for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
-				{
-					CONF_PARTICULE_AGH shadowRay = configurationP;
-					vec3 newDirection, toReceiver;
-
-					toReceiver = receiver->position - shadowRay.position;
-					newDirection = toReceiver;
-					newDirection.normalize();
-					shadowRay.direction = newDirection*distanceSurLePas;
-
-					if (VisabilityTest(shadowRay, receiver->position))
-					{
-						shadowRay.targetReceiver = receiver;
-						shadowRay.isShadowRay = true;
-
-						float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, configurationP.direction, configurationTool);
-						shadowRay.energie *= energy;
-
-						//fast forward particle to receiver surrounding
-						int timeStepNum = (toReceiver.length() - ((deltaT - configurationP.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceSurLePas;
-
-						decimal densite_proba_absorption_atmospherique = configurationTool->freqList[configurationP.frequenceIndex]->densite_proba_absorption_atmospherique;
-						shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - configurationP.elapsedTime) / deltaT);
-						shadowRay.elapsedTime = 0;
-						shadowRay.pasCourant += timeStepNum+1; //+1 for current time step (?)
-						shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
-						shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
-
-						confEnv.duplicatedParticles.push_back(shadowRay);
-
-					}
-				}
+				GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, &confEnv.duplicatedParticles);
 
 				//Get direction for diffuse or specular part based on material info
 				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
@@ -274,4 +243,45 @@ void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &config
 	if (configurationP.currentTetra->volumeEncombrement)
 		configurationP.distanceToNextEncombrementEle -= translationVector.length();
 	configurationP.position += translationVector;
+}
+
+void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq* materialInfo, t_cFace* faceInfo, double deltaT, double distanceToTravel, std::list<CONF_PARTICULE_AGH>* shadowRays, double* probability)
+{
+	//Calculate and cast shadow rays
+	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
+	{
+		CONF_PARTICULE_AGH shadowRay = particle;
+		vec3 newDirection, toReceiver;
+
+		toReceiver = receiver->position - shadowRay.position;
+		newDirection = toReceiver;
+		newDirection.normalize();
+		shadowRay.direction = newDirection * distanceToTravel;
+
+		if (VisabilityTest(shadowRay, receiver->position))
+		{
+			shadowRay.targetReceiver = receiver;
+			shadowRay.isShadowRay = true;
+
+			float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, particle.direction, configurationTool);
+			shadowRay.energie *= energy;
+
+			//fast forward particle to receiver surrounding
+			int timeStepNum = (toReceiver.length() - ((deltaT - particle.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceToTravel;
+
+			decimal densite_proba_absorption_atmospherique = configurationTool->freqList[particle.frequenceIndex]->densite_proba_absorption_atmospherique;
+			shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - particle.elapsedTime) / deltaT);
+			shadowRay.elapsedTime = 0;
+			shadowRay.pasCourant += timeStepNum + 1; //+1 for current time step
+
+			if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP) < particle.pasCourant)
+				break;
+
+			shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
+			shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
+
+			shadowRays->push_back(shadowRay);
+			if(probability != nullptr) *probability *= energy;
+		}
+	}
 }
