@@ -55,7 +55,7 @@ public:
 	 * @param configurationP Configuration de la particule
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
-	bool Run(CONF_PARTICULE_AGH configurationP);
+	virtual bool Run(CONF_PARTICULE_AGH configurationP);
 	void CalculateDirectSound(CONF_PARTICULE_AGH shadowRay, t_Source& sourceInfo, float distancePerTimeStep);
 	virtual ~CalculationCoreSPPS() {}
 protected:
