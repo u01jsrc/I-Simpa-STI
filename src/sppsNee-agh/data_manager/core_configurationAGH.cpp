@@ -2,8 +2,8 @@
 #include <iostream>
 
 
-Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath )
-	:Core_Configuration(xmlFilePath)
+Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbose_mode)
+	:Core_Configuration(xmlFilePath, verbose_mode)
 {
 	CXml fichierXml(xmlFilePath);
 

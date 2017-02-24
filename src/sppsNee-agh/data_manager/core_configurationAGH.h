@@ -23,7 +23,7 @@ public:
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML
 	 * @param xmlFilePath Chemin du fichier XML
 	 */
-	Core_ConfigurationAGH( CoreString xmlFilePath );
+	Core_ConfigurationAGH( CoreString xmlFilePath, bool verbose_mode = false);
 	/**
 	 * Destructeur
 	 */

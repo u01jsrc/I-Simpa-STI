@@ -36,17 +36,10 @@ public:
 
 	formatGABE::GABE_Object* GetColStats();
 
-	struct t_Stats
+	struct t_StatsAGH : public t_Stats
 	{
-		uentier_long partLost;
-		uentier_long partAbsAtmo;
-		uentier_long partAbsSurf;
-		uentier_long partAbsEncombrement;
 		uentier_long partShadowRay;
-		uentier_long partLoop;
-		uentier_long partAlive;
-		uentier_long partTotal;
-		t_Stats() { memset(this,0,sizeof(t_Stats)); }
+		t_StatsAGH() { memset(this,0,sizeof(t_StatsAGH)); }
 	} statReport;
 
 	/**
