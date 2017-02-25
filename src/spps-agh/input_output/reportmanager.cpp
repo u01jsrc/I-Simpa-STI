@@ -346,13 +346,11 @@ formatGABE::GABE_Object* ReportManager::GetColStats()
 bool ReportManager::GetAngleStats(t_sppsThreadParam& data, bool NormalizeAngleStats)
 {
 	if(angle_energy.size()==0){
-		data.AngleGroupNum=0;
 		return 1;
 	}
-
 	else{
 		using namespace formatGABE;
-		GABE_Data_Float** statValues=new GABE_Data_Float*[angle_energy.size()];
+		data.GabeAngleData.reserve(angle_energy.size());
 
 		for(short i=0;i<angle_energy.size();i++){
 			angle_energy[i].calc_energy_density();
@@ -360,16 +358,16 @@ bool ReportManager::GetAngleStats(t_sppsThreadParam& data, bool NormalizeAngleSt
 				angle_energy[i].normalize_energy_density();
 			}
 
-			statValues[i]=new GABE_Data_Float(angle_energy[i].energy.size());
-			statValues[i]->headerData.numOfDigits=22;
-			statValues[i]->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz, group "+CoreString::FromInt(i+1)).c_str());
+			GABE_Data_Float* statValues=new GABE_Data_Float(angle_energy[i].energy.size());
+			statValues->headerData.numOfDigits=22;
+			statValues->SetLabel((CoreString::FromInt(paramReport.freqValue)+" Hz, group "+CoreString::FromInt(i+1)).c_str());
 
 			for(int j=0;j<angle_energy[i].energy.size();j++){
-				statValues[i]->Set(j,angle_energy[i].energy[j]);
+				statValues->Set(j,angle_energy[i].energy[j]);
 			}
-		}
-		data.GabeAngleData=statValues;
-		data.AngleGroupNum=angle_energy.size();
+
+			data.GabeAngleData.push_back(statValues);
+		}		
 	}
 	return 0;
 }
@@ -551,9 +549,9 @@ void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& 
 	uentier nbgroupsUsed=0;
 	for(std::size_t idfreq=0;idfreq<cols.size();idfreq++)
 	{
-		if(cols[idfreq].GabeAngleData){
+		if(!cols[idfreq].GabeAngleData.empty()){
 			nbfreqUsed++;
-			nbgroupsUsed=cols[idfreq].AngleGroupNum;
+			nbgroupsUsed= cols[idfreq].GabeAngleData.size();
 		}
 	}
 
@@ -568,9 +566,9 @@ void ReportManager::SaveAngleStats(const CoreString& filename,const CoreString& 
 	{
 		for(int id_gr=0;id_gr<nbgroupsUsed;id_gr++)
 		{
-			if(cols[idfreq].GabeAngleData)
+			if(!cols[idfreq].GabeAngleData.empty())
 			{
-				exportTab.SetCol(currentIndex,cols[idfreq].GabeAngleData[id_gr]);
+				exportTab.SetCol(currentIndex,*cols[idfreq].GabeAngleData[id_gr]);
 				currentIndex++;
 			}
 		}

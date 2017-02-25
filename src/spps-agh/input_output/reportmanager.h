@@ -22,11 +22,10 @@
 
 struct t_sppsThreadParam
 {
-	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;GabeAngleData=NULL;AngleGroupNum=0;}
+	t_sppsThreadParam() { GabeColData=NULL;GabeSumEnergyFreq=NULL;}
 	t_FreqUsage* freqInfos;
-	int AngleGroupNum;
 	formatGABE::GABE_Object* GabeColData;
-	formatGABE::GABE_Data_Float** GabeAngleData;
+	std::vector<formatGABE::GABE_Data_Float*> GabeAngleData;
 	formatGABE::GABE_Data_Float* GabeSumEnergyFreq;
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosPhi;		/*!< Tableau de récepteur ponctuel */
 	std::vector<formatGABE::GABE_Data_Float*> GabeSumEnergyCosSqrtPhi;	/*!< Tableau de récepteur ponctuel */
@@ -50,6 +49,8 @@ struct t_sppsThreadParam
 				delete GabeAngleInc[dim][idrecp];
 		for(uentier idrecp=0;idrecp<SrcContrib.size();idrecp++) 
 			delete[] SrcContrib[idrecp];
+		for (uentier idrecp = 0; idrecp<GabeAngleData.size(); idrecp++)
+			delete GabeAngleData[idrecp];
 	}
 };
 typedef dvec3 veci_t;
@@ -103,17 +104,11 @@ public:
 	{	
 		extended=mode;
 		if(!extended){
-			for(int j = 0; j < 90; j++)
-			{
-				energy.push_back(0);
-				correction.push_back(0);
-			}
+			energy.resize(90);
+			correction.resize(90);
 		}else{
-			for(int j = 0; j < 90*360; j++)
-			{
-				energy.push_back(0);
-				correction.push_back(0);
-			}
+			energy.resize(90 * 360);
+			correction.resize(90 * 360);
 		}
 	}	
 	void calc_angle(CONF_PARTICULE& particleInfos, t_cFace face)
