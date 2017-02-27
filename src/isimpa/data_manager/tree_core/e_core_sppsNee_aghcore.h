@@ -128,11 +128,12 @@ public:
 				InitSurfaceReceiverMethod(confCore);
 			if (!confCore->IsPropertyExist("calculation_core"))
 				InitCalculationCores(confCore);
-			if (!confCore->IsPropertyExist("output_recp_bysource")) {
+			if (!confCore->IsPropertyExist("output_recp_bysource"))
 				InitOutputRecpBySource(confCore);
-			}
+
 			InitExportRs(confCore);
 		}
+		
 		InitNewProperties();
 
 		//Load advanced settings node from project
@@ -146,11 +147,26 @@ public:
 			{
 				long typeEle;
 				propValue.ToLong(&typeEle);
-				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED)
-					this->AppendFils(new E_Core_SppsNee_AGH_advanced(currentChild, this));
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(currentChild, this))->Hide(true);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(currentChild, this))->Hide(true);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(currentChild, this))->Hide(true);
 			}
 			currentChild = currentChild->GetNext();
 		}
+
+		Element* el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED);
+		if (el != nullptr)
+			confCore->DeleteElementByXmlId(el->GetXmlId());
+
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(this));
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(this));
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(this));
 	}
 
 	E_Core_SppsNee_AGH(Element* parent)
@@ -203,7 +219,9 @@ public:
 		#endif */
 
 		this->AppendFils(new E_Core_Core_Bfreqselection(this));
-		this->AppendFils(new E_Core_SppsNee_AGH_advanced(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(this));
 
 		this->AppendPropertyText("modelName", "", "mesh.cbin", true, true)->Hide();
 		this->AppendPropertyText("exeName", "", "sppsNee-agh.exe")->Hide();
@@ -248,11 +266,25 @@ public:
 			}
 			else if (filsInfo.libelleElement == "calculation_core")
 			{
+				Element* el;
+				Element* el2;
 				switch (elConf->GetListConfig("calculation_core")) 
 				{
 				case CALCULATION_CORES::CLASSIC_SPPS:
 					elConf->SetReadOnlyConfig("computation_method", false);
 					elConf->SetReadOnlyConfig("surf_receiv_method", false);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS);
+					el->Hide(true);
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT);
+					el->Hide();
+					el->Reparent(this);
 					break;
 
 				case CALCULATION_CORES::MLT:
@@ -260,6 +292,18 @@ public:
 					elConf->SetReadOnlyConfig("computation_method", true);
 
 					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT);
+					el->Hide(true);
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS);
+					el->Hide();
+					el->Reparent(this);
 					break;
 
 				case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
@@ -267,6 +311,18 @@ public:
 					elConf->SetReadOnlyConfig("computation_method", true);
 
 					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE);
+					el->Hide(true);
+					el->Reparent(this);
+			
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT);
+					el->Hide();
+					el->Reparent(this);
 					break;
 				}
 			}

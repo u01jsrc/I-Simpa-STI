@@ -42,21 +42,24 @@
 /**
 \brief Element permettant de paramétrer le moteur de maillage de la scène
 */
-class E_Core_SppsNee_AGH_advanced : public Element
+class E_Core_SppsNee_AGH_advanced_SPPS : public Element
 {
 public:
-	E_Core_SppsNee_AGH_advanced(wxXmlNode* noeudCourant, Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED, noeudCourant)
+	E_Core_SppsNee_AGH_advanced_SPPS(wxXmlNode* noeudCourant, Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		//Add debug mode parameter v<1.21
 		if (!this->IsPropertyExist("random_seed")) {
 			InitRandomSeed(this);
 		}
+		if (!this->IsPropertyExist("angle_filename")) {
+			InitAngleStatsCalc(this);
+		}
 	}
 
-	E_Core_SppsNee_AGH_advanced(Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED)
+	E_Core_SppsNee_AGH_advanced_SPPS(Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		InitProperties();
@@ -64,16 +67,15 @@ public:
 
 	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent)
 	{
-		wxXmlNode* NoeudCourant = new wxXmlNode(NoeudParent, wxXML_ELEMENT_NODE, "advanced");
+		wxXmlNode* NoeudCourant = new wxXmlNode(NoeudParent, wxXML_ELEMENT_NODE, "advancedSPPS");
 		return Element::SaveXMLCoreDoc(NoeudCourant);
 	}
 	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent)
 	{
 		wxXmlNode* thisNode = Element::SaveXMLDoc(NoeudParent);
-		thisNode->SetName("spps-agh-advanced"); // Nom de la balise xml ( pas d'espace autorise )
+		thisNode->SetName("advancedSPPS"); // Nom de la balise xml ( pas d'espace autorise )
 		return thisNode;
 	}
-
 
 protected:
 
@@ -82,8 +84,72 @@ protected:
 		Element::Modified(eModif);
 	}
 
+	/**
+	Initialisation des propriétés communes à tout les mailleurs ( fait avant l'initialisation des mailleurs spécialisés )
+	*/
+	void InitProperties()
+	{
+		InitRandomSeed(this);
+		InitAngleStatsCalc(this);
+	}
+
 	void InitRandomSeed(Element* confCore) {
 		confCore->AppendPropertyInteger("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
+	}
+
+	void InitAngleStatsCalc(Element* confCore) {
+		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
+		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
+		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
+	}
+};
+
+
+
+class E_Core_SppsNee_AGH_advanced_NEE : public Element
+{
+public:
+	E_Core_SppsNee_AGH_advanced_NEE(wxXmlNode* noeudCourant, Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE, noeudCourant)
+	{
+		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		//Add debug mode parameter v<1.21
+		if (!this->IsPropertyExist("random_seed")) {
+			InitRandomSeed(this);
+		}
+		if (!this->IsPropertyExist("angle_filename")) {
+			InitAngleStatsCalc(this);
+		}
+		if (!this->IsPropertyExist("SR_to_surface_reciver")) {
+			InitCastShadowRaysToSurfRec(this);
+		}
+	}
+
+	E_Core_SppsNee_AGH_advanced_NEE(Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE)
+	{
+		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		InitProperties();
+	}
+
+	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent)
+	{
+		wxXmlNode* NoeudCourant = new wxXmlNode(NoeudParent, wxXML_ELEMENT_NODE, "advancedNEE");
+		return Element::SaveXMLCoreDoc(NoeudCourant);
+	}
+	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent)
+	{
+		wxXmlNode* thisNode = Element::SaveXMLDoc(NoeudParent);
+		thisNode->SetName("advancedNEE"); // Nom de la balise xml ( pas d'espace autorise )
+		return thisNode;
+	}
+
+protected:
+
+	void Modified(Element* eModif)
+	{
+		Element::Modified(eModif);
 	}
 
 	/**
@@ -92,9 +158,88 @@ protected:
 	void InitProperties()
 	{
 		InitRandomSeed(this);
+		InitAngleStatsCalc(this);
+		InitCastShadowRaysToSurfRec(this);
 	}
 
+	void InitRandomSeed(Element* confCore) {
+		confCore->AppendPropertyInteger("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
+	}
+
+	void InitAngleStatsCalc(Element* confCore) {
+		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
+		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
+		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
+	}
+	void InitCastShadowRaysToSurfRec(Element* confCore) {
+		confCore->AppendPropertyBool("SR_to_surface_reciver", wxTRANSLATE("Cast shadow rays to surface receivers"), false, true);
+	}
 };
+
+
+class E_Core_SppsNee_AGH_advanced_MLT : public Element
+{
+public:
+	E_Core_SppsNee_AGH_advanced_MLT(wxXmlNode* noeudCourant, Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT, noeudCourant)
+	{
+		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		//Add debug mode parameter v<1.21
+		if (!this->IsPropertyExist("random_seed")) {
+			InitRandomSeed(this);
+		}
+		if (!this->IsPropertyExist("mutationNumber")) {
+			InitBaseMLTProperties(this);
+		}
+	}
+
+	E_Core_SppsNee_AGH_advanced_MLT(Element* parent)
+		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT)
+	{
+		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		InitProperties();
+	}
+
+	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent)
+	{
+		wxXmlNode* NoeudCourant = new wxXmlNode(NoeudParent, wxXML_ELEMENT_NODE, "advancedMLT");
+		return Element::SaveXMLCoreDoc(NoeudCourant);
+	}
+	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent)
+	{
+		wxXmlNode* thisNode = Element::SaveXMLDoc(NoeudParent);
+		thisNode->SetName("advancedMLT"); // Nom de la balise xml ( pas d'espace autorise )
+		return thisNode;
+	}
+
+protected:
+
+	void Modified(Element* eModif)
+	{
+		Element::Modified(eModif);
+	}
+
+	/**
+	Initialisation des propriétés communes à tout les mailleurs ( fait avant l'initialisation des mailleurs spécialisés )
+	*/
+	void InitProperties()
+	{
+		InitRandomSeed(this);
+		InitBaseMLTProperties(this);
+	}
+
+	void InitRandomSeed(Element* confCore) {
+		confCore->AppendPropertyInteger("random_seed", wxTRANSLATE("Random seed"), 0, true, false, true);
+	}
+
+	void InitBaseMLTProperties(Element* confCore) {
+		confCore->AppendPropertyDecimal("largeStepProb", wxTRANSLATE("Large step probability"), 0.5, false, 2, true, true, 1, 0, true);
+		confCore->AppendPropertyDecimal("specularReflProbabilityMulti", wxTRANSLATE("Specular reflection probability multiplier"), 0.5, false, 3, true, true, 10, 0.01, true);
+		confCore->AppendPropertyInteger("mutationNumber", wxTRANSLATE("Mutation number"), 25, true, false, true, 0, 0);
+	}
+};
+
 
 #endif
 #pragma once
