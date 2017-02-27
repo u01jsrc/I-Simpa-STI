@@ -19,6 +19,26 @@
 class Core_ConfigurationAGH : public Core_Configuration
 {
 public:
+	enum NEW_SPROP
+	{
+		SPROP_ANGLE_FILE_PATH = 70,
+	};
+
+	enum NEW_FPROP
+	{
+		MLT_LARGE_STEP_PROB = 70,
+		MLT_SPECULAR_REFL_PROB,
+		MLT_MUTATION_NUMBER,
+	};
+
+	enum NEW_IPROP
+	{
+		I_PROP_CALCULATION_CORE_SELLECTION = 70,
+		IPROP_NORMALIZE_ANGLE_STATS,
+		IPROP_EXTENDED_ANGLE_STATS,
+		IPROP_ANGLE_STATS_MIN_REFL,					/*!< Min reflection order for angle stats calculation*/
+		IPROP_CAST_SR_TO_SURFACE_REC
+	};
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML
 	 * @param xmlFilePath Chemin du fichier XML
@@ -28,6 +48,32 @@ public:
 	 * Destructeur
 	 */
 	~Core_ConfigurationAGH( );
+	
+	inline decimal* FastGetConfigValue(FPROP propertyIndex) { return (tabFloatProp + propertyIndex); }
+	inline CoreString* FastGetConfigValue(SPROP propertyIndex) { return (tabStringProp + propertyIndex); }
+	inline entier* FastGetConfigValue(IPROP propertyIndex) { return (tabIntProp + propertyIndex); }
+
+	inline decimal* FastGetConfigValue(BASE_FPROP propertyIndex) { return (tabFloatProp + propertyIndex); }
+	inline CoreString* FastGetConfigValue(BASE_SPROP propertyIndex) { return (tabStringProp + propertyIndex); }
+	inline entier* FastGetConfigValue(BASE_IPROP propertyIndex) { return (tabIntProp + propertyIndex); }
+
+	inline decimal* FastGetConfigValue(NEW_FPROP propertyIndex) { return (tabFloatProp + propertyIndex); }
+	inline CoreString* FastGetConfigValue(NEW_SPROP propertyIndex) { return (tabStringProp + propertyIndex); }
+	inline entier* FastGetConfigValue(NEW_IPROP propertyIndex) { return (tabIntProp + propertyIndex); }
+
+	void SetConfigInformation(FPROP propertyIndex, decimal valeur);
+	void SetConfigInformation(SPROP propertyIndex, CoreString valeur);
+	void SetConfigInformation(IPROP propertyIndex, entier valeur);
+	void SetConfigInformation(BASE_FPROP propertyIndex, decimal valeur);
+	void SetConfigInformation(BASE_SPROP propertyIndex, CoreString valeur);
+	void SetConfigInformation(BASE_IPROP propertyIndex, entier valeur);
+	void SetConfigInformation(NEW_FPROP propertyIndex, decimal valeur);
+	void SetConfigInformation(NEW_SPROP propertyIndex, CoreString valeur);
+	void SetConfigInformation(NEW_IPROP propertyIndex, entier valeur);
+
+	void LoadAdvancedSPPS(CXmlNode * simuNode);
+	void LoadAdvancedNEE(CXmlNode * simuNode);
+	void LoadAdvancedMLT(CXmlNode * simuNode);
 };
 
 #endif

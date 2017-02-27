@@ -25,7 +25,7 @@ public:
 	{
 		SPROP_PARTICULE_FILE_PATH,					/*!< Nom du fichier de sortiedes particules (par bande) */
 		SPROP_PARTICULE_FOLDER_PATH,					/*!< Nom de dossier de sortie des particules (toute bande) */
-		SPROP_STATS_FILE_PATH						/*!< Nom du fichier de statistiques des particules */
+		SPROP_STATS_FILE_PATH,						/*!< Nom du fichier de statistiques des particules */
 	};
 	/**
 	 * Enumeration des propriétés de type float
@@ -54,8 +54,7 @@ public:
 		I_PROP_OUTPUT_RECEIVER_BY_SOURCE,			/*!< 0 Output soundprec.recp, 1 output soudprec.recp by source */
 		I_PROP_RANDOM_SEED,							/*!< Random SEED */
         I_PROP_SAVE_SURFACE_INTERSECTION,           /*!< Save particle and surface intersection events*/
-        I_PROP_SAVE_RECEIVER_INTERSECTION,           /*!< Save particle and receiver intersection events*/
-		I_PROP_CALCULATION_CORE_SELLECTION
+        I_PROP_SAVE_RECEIVER_INTERSECTION,           /*!< Save particle and receiver intersection events*/				
 	};
 
 	/**
