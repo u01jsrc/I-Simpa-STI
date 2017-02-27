@@ -176,7 +176,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
  * @param freqInfo Informations sur la fréquence à utiliser pour l'émission
  * @param confPartFrame Informations de bases pour toutes les particules
  */
-void runFrequenceCalculation(  progressOperation* parentOperation, ReportManagerAGH::t_ParamReport reportParameter, t_ToolBox applicationTools, t_sppsThreadParam* threadData, CONF_PARTICULE_AGH confPartFrame)
+void runFrequenceCalculation(  progressOperation* parentOperation, ReportManagerAGH::t_ParamReport reportParameter, t_ToolBox applicationTools, t_sppsThreadParamAGH* threadData, CONF_PARTICULE_AGH confPartFrame)
 {
 	using namespace std;
 	//Reserve l'espace mémoire pour cette bande de fréquence
@@ -250,6 +250,7 @@ void runFrequenceCalculation(  progressOperation* parentOperation, ReportManager
 		threadData->GabeColData=outputTool.GetColStats();	//Recupere les données des etats de particules
 		threadData->GabeSumEnergyFreq=outputTool.GetSumEnergy();//Recupere les données du niveau sonore global
 		outputTool.FillWithLefData(*threadData); //Recupere les données du lef (utilisé pour le calcul du LF et LFC)
+		outputTool.GetAngleStats(*threadData, *applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_NORMALIZE_ANGLE_STATS));
 		cout<<"End of calculation at "<<threadData->freqInfos->freqValue<<" Hz."<<endl;
 
 	#if __USE_MULTITHREAD__
@@ -379,7 +380,7 @@ int MainProcess(int argc, char* argv[])
 	progressionInfo progOutputManager(*configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_BFREQ_TO_CALCULATE)); //gestionnaire d'affichage de progression
 	applicationToolBox.mainProgressionOutput=&progOutputManager;
 
-	std::vector<t_sppsThreadParam> threadsData(configManager.freqList.size());
+	std::vector<t_sppsThreadParamAGH> threadsData(configManager.freqList.size());
 
 
 	for(std::size_t idfreq=0;idfreq<configManager.freqList.size();idfreq++)
@@ -408,18 +409,29 @@ int MainProcess(int argc, char* argv[])
 	// 8: Une fois tout les threads de calculs fermés on compile les fichiers de resultats
 	reportCompilation(configManager,workingDir);
 
+	//cast extended results to oryginal class
+	std::vector<t_sppsThreadParam> threadDataCast;
+	for (t_sppsThreadParamAGH& element : threadsData)
+	{
+		threadDataCast.push_back(element);
+	}
+
 	ReportManagerAGH::SaveThreadsStats(workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_STATS_FILE_PATH),workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_CUMUL_FILE_PATH),threadsData,reportParameter);
 
+	if (verbose_mode) { cout << "Saving Angle of incidence statistics..." << endl; }
+	ReportManagerAGH::SaveAngleStats(workingDir + *configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_ANGLE_FILE_PATH), workingDir + *configManager.FastGetConfigValue(Core_Configuration::SPROP_CUMUL_FILE_PATH), threadsData, reportParameter, *configManager.FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS));
+	if (verbose_mode) { cout << "End of save of Angle of incidence statistics." << endl; }
+
 	if (verbose_mode) { cout << "Saving Ponctual Receiver Advanced Parameters..." << endl; }
-	ReportManagerAGH::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH),threadsData,reportParameter);
+	ReportManagerAGH::SaveRecpAcousticParamsAdvance(*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_ADV_PONCTUAL_RECEIVER_FILE_PATH), threadDataCast,reportParameter);
 	if (verbose_mode) { cout << "End of save of Ponctual Receiver Advanced Parameters." << endl; }
 
 	if (verbose_mode) { cout << "Saving Ponctual Receiver Intensity..." << endl; }
-	ReportManagerAGH::SaveRecpIntensity("Punctual receiver intensity.gabe",threadsData,reportParameter);
+	ReportManagerAGH::SaveRecpIntensity("Punctual receiver intensity.gabe", threadDataCast,reportParameter);
 	if (verbose_mode) { cout << "End of save of Ponctual Receiver intensity." << endl; }
 
 	if (verbose_mode) { cout << "Saving sound level for each Ponctual Receiver per source..." << endl; }
-	ReportManagerAGH::SaveSoundLevelBySource("Sound level per source.recp",threadsData,reportParameter);
+	ReportManagerAGH::SaveSoundLevelBySource("Sound level per source.recp", threadDataCast,reportParameter);
 	if (verbose_mode) { cout << "End of save sound level for each Ponctual Receiver per source." << endl; }
 	st_mkdir(workingDir + *configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH));
 	stringClass globalRecSurfPath = workingDir + *configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH) + "Global" + st_path_separator();
@@ -445,7 +457,7 @@ int MainProcess(int argc, char* argv[])
 	{
 		if (configManager.freqList[idfreq]->doCalculation)
 		{
-			const t_sppsThreadParam& tdata = threadsData.at(idfreq);
+			const t_sppsThreadParamAGH& tdata = threadsData.at(idfreq);
 			totalLost += tdata.particleStats.partLost + tdata.particleStats.partLoop;
 			total += tdata.particleStats.partTotal;
 		}
