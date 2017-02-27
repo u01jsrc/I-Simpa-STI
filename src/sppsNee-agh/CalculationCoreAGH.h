@@ -56,7 +56,7 @@ public:
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
 	virtual bool Run(CONF_PARTICULE_AGH configurationP);
-	void CalculateDirectSound(CONF_PARTICULE_AGH shadowRay, t_Source& sourceInfo, float distancePerTimeStep);
+	void CalculateDirectSound(const CONF_PARTICULE_AGH& shadowRay, t_Source& sourceInfo,const float& distancePerTimeStep);
 	virtual ~CalculationCoreSPPS() {}
 protected:
 	virtual void Movement(CONF_PARTICULE_AGH &configurationP);
@@ -67,7 +67,7 @@ protected:
 	* @param configurationP particle to be tested
 	* @param TargetPosition destination
 	*/
-	bool VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition);
+	bool VisabilityTest(const CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition);
 
 	/**
 	* Translation d'une particule dans un milieu libre de collisions avec la scène

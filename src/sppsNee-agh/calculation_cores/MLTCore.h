@@ -8,9 +8,10 @@ class MLTCore : public  NextEventEstimationCore
 public:
 	MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool);
 	bool RunInitialSeed(CONF_PARTICULE_MLT &inputParticle);
+	
+	float b = 0; //bias value - auto calculated - start with 0!;
 
 	float pLarge = 0.5;
-	float b = 0;
 	float pSpecular = 0.5;
 	int mutation_number = 25;
 

@@ -194,7 +194,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 					faceNormal = faceInfo->normal;
 
 				//Calculate and cast shadow rays
-				GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, &confEnv.duplicatedParticles);
+				GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, confEnv.duplicatedParticles);
 
 				//Get direction for diffuse or specular part based on material info
 				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
@@ -245,7 +245,7 @@ void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &config
 	configurationP.position += translationVector;
 }
 
-void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq* materialInfo, t_cFace* faceInfo, double deltaT, double distanceToTravel, std::list<CONF_PARTICULE_AGH>* shadowRays, double* probability)
+void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq* materialInfo, t_cFace* faceInfo,const double& deltaT,const double& distanceToTravel, std::list<CONF_PARTICULE_AGH>& shadowRays, double* probability)
 {
 	//Calculate and cast shadow rays
 	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
@@ -280,7 +280,7 @@ void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t
 			shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
 			shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
 
-			shadowRays->push_back(shadowRay);
+			shadowRays.push_back(shadowRay);
 			if(probability != nullptr) *probability *= energy;
 		}
 	}

@@ -22,8 +22,8 @@ CalculationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _repo
 	reportTool=_reportTool;
 	doDirectSoundCalculation = false;
 }
-
-void CalculationCoreSPPS::CalculateDirectSound(CONF_PARTICULE_AGH prototypeParticle, t_Source& sourceInfo, float distancePerTimeStep)
+//todo Fix method so it can use any source directivity 
+void CalculationCoreSPPS::CalculateDirectSound(const CONF_PARTICULE_AGH& prototypeParticle, t_Source& sourceInfo,const float& distancePerTimeStep)
 {
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
@@ -145,7 +145,7 @@ void CalculationCoreSPPS::FreeParticleTranslation(CONF_PARTICULE_AGH &configurat
 	CalculationCore::FreeParticleTranslation(configurationP, translationVector);
 }
 
-bool CalculationCoreSPPS::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition)
+bool CalculationCoreSPPS::VisabilityTest(const CONF_PARTICULE_AGH &configurationP, vec3 &TargetPosition)
 {
 	float obst_dist;
 	float t;
@@ -157,7 +157,7 @@ bool CalculationCoreSPPS::VisabilityTest(CONF_PARTICULE_AGH &configurationP, vec
 	testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
 	obst_dist = configurationP.direction.length()*t;
 
-	int maxIteration = 5000;
+	int maxIteration = rec_dist/configurationP.direction.length() + 20;
 	int iteration = 0;
 
 	while (testParticle.currentTetra->faces[testParticle.nextModelIntersection.idface].face_scene == NULL && iteration++<maxIteration)

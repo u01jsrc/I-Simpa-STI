@@ -10,6 +10,10 @@ MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULAT
 	: NextEventEstimationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool)
 {
 	doDirectSoundCalculation = true;
+
+	pLarge = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_LARGE_STEP_PROB);
+	pSpecular = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_SPECULAR_REFL_PROB);
+	mutation_number = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_MUTATION_NUMBER);
 };
 
 bool MLTCore::Run(CONF_PARTICULE_AGH configurationP)
@@ -233,7 +237,7 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 
 	//******************************* SHADOW RAY GENERATION ***************************************//
 
-	GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, &configurationP.shadowRays, &configurationP.totalProbability);
+	GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, configurationP.shadowRays, &configurationP.totalProbability);
 
 	//******************************* REFLECTION ***************************************//
 

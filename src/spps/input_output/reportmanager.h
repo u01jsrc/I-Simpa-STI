@@ -205,7 +205,7 @@ public:
 	 * Une particule est entrée en collision avec une face du modèle
 	 * L'appel doit se faire avant la recherche de la prochaine collision
 	 */
-	void ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos);
+	virtual void ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos);
 
 	void SaveAndCloseParticleFile();
 
