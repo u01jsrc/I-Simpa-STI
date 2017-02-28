@@ -112,7 +112,47 @@ formatGABE::GABE_Object* ReportManagerAGH::GetColStats()
 	return statValues;
 }
 
-void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParam>& cols,const t_ParamReport& params)
+void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE & particleInfos)
+{
+	ReportManager::ParticuleCollideWithSceneMesh(particleInfos);
+
+	t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
+	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
+	if (face->face_scene != NULL && face->face_scene->Rec_angle == true && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	{
+		if (this->surfIncidenceAngleEnergy.size() < face->face_scene->angle_group) {
+			int tmp = surfIncidenceAngleEnergy.size();
+			this->surfIncidenceAngleEnergy.resize(face->face_scene->angle_group);
+			for (int i = tmp; i<face->face_scene->angle_group; i++)
+				this->surfIncidenceAngleEnergy[i].fill_empty_data(*(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS)));
+		}
+		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].calc_angle(particleInfos, *face->face_scene);
+		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].add_energy(particleInfos);
+	}
+
+}
+
+void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE_AGH & particleInfos)
+{
+	ReportManager::ParticuleCollideWithSceneMesh(particleInfos);
+
+	t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
+	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
+	if (face->face_scene != NULL && face->face_scene->Rec_angle == true && particleInfos.reflectionOrder > *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	{
+		if (this->surfIncidenceAngleEnergy.size() < face->face_scene->angle_group) {
+			int tmp = surfIncidenceAngleEnergy.size();
+			this->surfIncidenceAngleEnergy.resize(face->face_scene->angle_group);
+			for (int i = tmp; i<face->face_scene->angle_group; i++)
+				this->surfIncidenceAngleEnergy[i].fill_empty_data(*(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS)));
+		}
+		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].calc_angle(particleInfos, *face->face_scene);
+		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].add_energy(particleInfos);
+	}
+
+}
+
+void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreString& filenamedBLvl,std::vector<t_sppsThreadParamAGH>& cols,const t_ParamReport& params)
 {
 	/////////////////////////////////////
 	// 1: Sauvegarde des statistiques des états finaux des particules
@@ -171,4 +211,99 @@ void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreStr
 		}
 	}
 	exportdBLevelTab.Save(filenamedBLvl.c_str());
+}
+
+bool ReportManagerAGH::GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats)
+{
+	if (surfIncidenceAngleEnergy.size() == 0) {
+		return 1;
+	}
+	else {
+		using namespace formatGABE;
+		data.GabeAngleData.reserve(surfIncidenceAngleEnergy.size());
+
+		for (short i = 0; i<surfIncidenceAngleEnergy.size(); i++) {
+			surfIncidenceAngleEnergy[i].calc_energy_density();
+			if (NormalizeAngleStats) {
+				surfIncidenceAngleEnergy[i].normalize_energy_density();
+			}
+
+			GABE_Data_Float* statValues = new GABE_Data_Float(surfIncidenceAngleEnergy[i].energy.size());
+			statValues->headerData.numOfDigits = 22;
+			statValues->SetLabel((CoreString::FromInt(paramReport.freqValue) + " Hz, group " + CoreString::FromInt(i + 1)).c_str());
+
+			for (int j = 0; j<surfIncidenceAngleEnergy[i].energy.size(); j++) {
+				statValues->Set(j, surfIncidenceAngleEnergy[i].energy[j]);
+			}
+
+			data.GabeAngleData.push_back(statValues);
+		}
+	}
+	return 0;
+}
+
+void ReportManagerAGH::SaveAngleStats(const CoreString& filename, const CoreString& filenamedBLvl, std::vector<t_sppsThreadParamAGH>& cols, const t_ParamReport& params, bool extended)
+{
+	/////////////////////////////////////
+	// 1: Sauvegarde des statistiques des états finaux des particules
+	using namespace formatGABE;
+	int size;
+	if (!extended) {
+		size = 90;
+	}
+	else {
+		size = 90 * 360;
+	}
+
+	GABE_Data_ShortString* statLbl = new GABE_Data_ShortString(size);
+	statLbl->SetLabel("Angle");
+
+	if (!extended) {
+		for (int i = 0; i<90; i++)
+		{
+			statLbl->SetString(i, (CoreString::FromInt(i + 1)).c_str());
+		}
+	}
+	else {
+		int licz = 0;
+		for (int phi = -180; phi<180; phi++) {
+			for (int theta = 0; theta<90; theta++) {
+				statLbl->SetString(licz, ("phi=" + CoreString::FromInt(phi + 1) + ", theta=" + CoreString::FromInt(theta + 1)).c_str());
+				licz++;
+			}
+		}
+	}
+
+	uentier nbfreqUsed = 0;
+	uentier nbgroupsUsed = 0;
+	for (std::size_t idfreq = 0; idfreq<cols.size(); idfreq++)
+	{
+		if (!cols[idfreq].GabeAngleData.empty()) {
+			nbfreqUsed++;
+			nbgroupsUsed = cols[idfreq].GabeAngleData.size();
+		}
+	}
+
+
+	GABE exportTab(nbfreqUsed*nbgroupsUsed + 1);
+	exportTab.LockData();
+	exportTab.SetCol(0, statLbl);
+
+	uentier currentIndex = 1;
+
+	for (std::size_t idfreq = 0; idfreq<cols.size(); idfreq++)
+	{
+		for (int id_gr = 0; id_gr<nbgroupsUsed; id_gr++)
+		{
+			if (!cols[idfreq].GabeAngleData.empty())
+			{
+				exportTab.SetCol(currentIndex, *cols[idfreq].GabeAngleData[id_gr]);
+				currentIndex++;
+			}
+		}
+	}
+
+	if (nbgroupsUsed != 0) {
+		exportTab.Save(filename.c_str());
+	}
 }

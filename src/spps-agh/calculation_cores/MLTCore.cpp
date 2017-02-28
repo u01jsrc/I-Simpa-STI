@@ -6,10 +6,14 @@
 #include <iostream>
 #include <algorithm>
 
-MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION& _confEnv, Core_ConfigurationAGH& _configurationTool, ReportManagerAGH* _reportTool)
+MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH& _confEnv, Core_ConfigurationAGH& _configurationTool, ReportManagerAGH* _reportTool)
 	: NextEventEstimationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool)
 {
 	doDirectSoundCalculation = true;
+
+	pLarge = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_LARGE_STEP_PROB);
+	pSpecular = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_SPECULAR_REFL_PROB);
+	mutation_number = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_MUTATION_NUMBER);
 };
 
 bool MLTCore::Run(CONF_PARTICULE_AGH configurationP)
@@ -202,7 +206,7 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 	//******************************* ABSORBTION ***************************************//
 
 	// Récuperation de l'information de la face
-	t_cFace* faceInfo = NULL;
+	t_cFace* faceInfo;
 	faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;
 
 	//On stocke le materiau dans la variable materialInfo
@@ -233,7 +237,7 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 
 	//******************************* SHADOW RAY GENERATION ***************************************//
 
-	GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel);
+	GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, configurationP.shadowRays, &configurationP.totalProbability);
 
 	//******************************* REFLECTION ***************************************//
 
@@ -370,47 +374,6 @@ bool MLTCore::GetNextCollision(CONF_PARTICULE_MLT& configurationP, double& dista
 	return false;
 }
 
-void MLTCore::GenerateShadowRays(CONF_PARTICULE_MLT& particle, t_Material_BFreq* materialInfo, t_cFace* faceInfo, double deltaT, double distanceToTravel)
-{
-	//Calculate and cast shadow rays
-	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
-	{
-		CONF_PARTICULE_AGH shadowRay = particle;
-		vec3 newDirection, toReceiver;
-
-		toReceiver = receiver->position - shadowRay.position;
-		newDirection = toReceiver;
-		newDirection.normalize();
-		shadowRay.direction = newDirection * distanceToTravel;
-
-		if (VisabilityTest(shadowRay, receiver->position))
-		{
-			shadowRay.targetReceiver = receiver;
-			shadowRay.isShadowRay = true;
-
-			float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, particle.direction, configurationTool);
-			shadowRay.energie *= energy;
-
-			//fast forward particle to receiver surrounding
-			int timeStepNum = (toReceiver.length() - ((deltaT - particle.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceToTravel;
-
-			decimal densite_proba_absorption_atmospherique = configurationTool->freqList[particle.frequenceIndex]->densite_proba_absorption_atmospherique;
-			shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - particle.elapsedTime) / deltaT);
-			shadowRay.elapsedTime = 0;
-			shadowRay.pasCourant += timeStepNum + 1; //+1 for current time step
-
-			if (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP) < particle.pasCourant)
-				break;
-
-			shadowRay.currentTetra = &sceneTetraMesh->tetraedres[receiver->indexTetra];
-			shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
-
-			particle.shadowRays.push_back(shadowRay);
-			particle.totalProbability *= energy;
-			//confEnv.duplicatedParticles.push_back(shadowRay);
-		}
-	}
-}
 
 void MLTCore::MutationGenerator(double& value) const
 {

@@ -33,7 +33,7 @@ public:
 		std::list<CONF_PARTICULE> duplicatedParticles; /*!< Particules à calculer par la suite */
 	};
 
-private:
+protected:
 t_Mesh *sceneMesh;
 t_TetraMesh *sceneTetraMesh;
 ReportManager *reportTool;
@@ -60,7 +60,7 @@ public:
 	 */
 	bool Run(CONF_PARTICULE configurationP);
 
-private:
+protected:
 	void Movement(CONF_PARTICULE &configurationP);
 	inline decimal GetDistance(CONF_PARTICULE &configurationP);
 	bool CollisionTest(CONF_PARTICULE &configurationP,uentier &faceIndex,INTERSECTION_INFO &infoIntersection, float &factDistance);

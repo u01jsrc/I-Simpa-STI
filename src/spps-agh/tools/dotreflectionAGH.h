@@ -24,25 +24,18 @@ public:
 		{
 			case REFLECTION_LAW_SPECULAR:
 				return SpecularReflection(vectorDirection,faceNormal);
-				break;
 			case REFLECTION_LAW_LAMBERT:
 				return BaseWnReflection(vectorDirection,faceNormal,1);
-				break;
 			case REFLECTION_LAW_UNIFORM:
 				return BaseWnReflection(vectorDirection,faceNormal,0);
-				break;
 			case REFLECTION_LAW_W2:
 				return BaseWnReflection(vectorDirection,faceNormal,2);
-				break;
 			case REFLECTION_LAW_W3:
 				return BaseWnReflection(vectorDirection,faceNormal,3);
-				break;
 			case REFLECTION_LAW_W4:
 				return BaseWnReflection(vectorDirection,faceNormal,4);
-				break;
 			case REFLECTION_LAW_PHONG:
 				return BaseWnReflection(vectorDirection, faceNormal, 1);
-				break;
 			default:
 				return SpecularReflection(vectorDirection,faceNormal);
 		};
@@ -54,7 +47,6 @@ public:
 		{
 		case REFLECTION_LAW_PHONG:
 			return PhongSpecularPart(vectorDirection, faceNormal, materialInfo);
-			break;
 		default:
 			return SpecularReflection(vectorDirection, faceNormal);
 		};
@@ -73,8 +65,6 @@ private:
 
 		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n);
 		target = rotationMatrix*target;
-
-		double test = target.dot(faceNormal);
 
 		//test if reflected ray is pointing into ground
 		if(target.dot(faceNormal) >= M_PI/2)
@@ -111,25 +101,18 @@ public:
 		case REFLECTION_LAW_SPECULAR:
 			probability = (1 - materialInfo.diffusion);
 			return SpecularReflection(vectorDirection, faceNormal);
-			break;
 		case REFLECTION_LAW_LAMBERT:
 			return BaseWnReflection(vectorDirection, faceNormal, 1, rnd1, rnd2, probability);
-			break;
 		case REFLECTION_LAW_UNIFORM:
 			return BaseWnReflection(vectorDirection, faceNormal, 0, rnd1, rnd2, probability);
-			break;
 		case REFLECTION_LAW_W2:
 			return BaseWnReflection(vectorDirection, faceNormal, 2, rnd1, rnd2, probability);
-			break;
 		case REFLECTION_LAW_W3:
 			return BaseWnReflection(vectorDirection, faceNormal, 3, rnd1, rnd2, probability);
-			break;
 		case REFLECTION_LAW_W4:
 			return BaseWnReflection(vectorDirection, faceNormal, 4, rnd1, rnd2, probability);
-			break;
 		case REFLECTION_LAW_PHONG:
 			return BaseWnReflection(vectorDirection, faceNormal, 1, rnd1, rnd2, probability);
-			break;
 		default:
 			return SpecularReflection(vectorDirection, faceNormal);
 		};
@@ -141,7 +124,6 @@ public:
 		{
 		case REFLECTION_LAW_PHONG:
 			return PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, materialInfo, rnd1, rnd2, probability);
-			break;
 		default:
 			probability = (1 - materialInfo.diffusion);
 			return SpecularReflection(vectorDirection, faceNormal);
@@ -161,8 +143,6 @@ private:
 
 		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n, rnd1, rnd2, probability);
 		target = rotationMatrix*target;
-
-		double test = target.dot(faceNormal);
 
 		//test if reflected ray is pointing into ground
 		if (target.dot(faceNormal) >= M_PI / 2)
