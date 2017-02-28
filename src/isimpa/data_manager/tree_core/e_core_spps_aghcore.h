@@ -31,19 +31,19 @@
 #include "first_header_include.hpp"
 
 #include "data_manager/tree_core/e_core_core.h"
-#include "data_manager/tree_core/e_core_spps_agh_advanced.h"
+#include "data_manager/tree_core/e_core_spps_aghcore_advanced.h"
+//#include "e_core_sppscore.h"
+//#include <wx/log.h>
 
 #ifndef __E_CORE_SPPS_AGH__
-#define __E_CORE_SPPS_AGH_
+#define __E_CORE_SPPS_AGH__
 
-/*! \file e_core_sppscore.h
-\brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
-*/
-//enum COMPUTATION_METHOD
-//{
-//	COMPUTATION_METHOD_ALEATOIRE,
-//	COMPUTATION_METHOD_ENERGETIQUE
-//};
+enum CALCULATION_CORES
+{
+	CLASSIC_SPPS,
+	NEXT_EVENT_ESTIMATION,				/*!<  Path tracing with next event estimation  */
+	MLT									/*!<  Kelemen style MLT*/
+};
 
 /**
 \brief Element correspondant au moteur de calcul "Simulation de la propagation de particules sonores"
@@ -53,7 +53,7 @@ class E_Core_Spps_AGH : public E_Core_Core
 protected:
 	void InitTransmission(E_Core_Core_Configuration* confCore)
 	{
-		confCore->AppendPropertyDecimal("trans_epsilon", wxTRANSLATE("Active calculation transmission (limit)"), 5, false, 1, true, true, 10, 0, true);
+		confCore->AppendPropertyDecimal("trans_epsilon", wxTRANSLATE("Active calculation transmission (limit)"), 5, true, 1, true, true, 10, 0, true);
 		confCore->AppendPropertyBool("trans_calc", wxTRANSLATE("Active calculation transmission"), true, true);
 		confCore->AppendPropertyDecimal("rayon_recepteurp", wxTRANSLATE("Receiver radius"), .31f, false, 5, false, true, 0, EPSILON, true);
 	}
@@ -67,6 +67,21 @@ protected:
 		surfMethodIndex.push_back(1);
 		confCore->AppendPropertyList("surf_receiv_method", wxTRANSLATE("Surface receiver export"), surfMethod, 0, false, 1, surfMethodIndex, true);
 	}
+
+	void InitCalculationCores(E_Core_Core_Configuration* confCore)
+	{
+		std::vector<wxString> coreMethod;
+		std::vector<int> coreMethodIndex;
+		coreMethod.push_back(wxTRANSLATE("SPPS"));
+		coreMethodIndex.push_back(CALCULATION_CORES::CLASSIC_SPPS);
+		coreMethod.push_back(wxTRANSLATE("SPPS + Next Event Estimation"));
+		coreMethodIndex.push_back(CALCULATION_CORES::NEXT_EVENT_ESTIMATION);
+		coreMethod.push_back(wxTRANSLATE("MLT (Kelemen)"));
+		coreMethodIndex.push_back(CALCULATION_CORES::MLT);
+		confCore->AppendPropertyList("calculation_core", wxTRANSLATE(" CALCULATION CORE"), coreMethod, 0, false, 1, coreMethodIndex, true);
+	}
+
+
 	void InitNewProperties() //Nouvelle proprietes 07/04/2009
 	{
 		/* this->AppendPropertyText("stats_filename",wxString(_("SPPS calculation statistics"))+wxString(".gabe"),true,true)->Hide(); */
@@ -97,7 +112,7 @@ protected:
 public:
 
 	E_Core_Spps_AGH(Element* parent, wxXmlNode* noeudCourant)
-		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPS_AGH, noeudCourant)
+		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPSAGH, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_EXPANDED, GRAPH_SPPSCORE_OPEN);
 		SetIcon(GRAPH_STATE_NORMAL, GRAPH_SPPSCORE_CLOSE);
@@ -113,17 +128,51 @@ public:
 			}
 			if (!confCore->IsPropertyExist("surf_receiv_method"))
 				InitSurfaceReceiverMethod(confCore);
-			if (!confCore->IsPropertyExist("output_recp_bysource")) {
+			if (!confCore->IsPropertyExist("calculation_core"))
+				InitCalculationCores(confCore);
+			if (!confCore->IsPropertyExist("output_recp_bysource"))
 				InitOutputRecpBySource(confCore);
-			}
+
 			InitExportRs(confCore);
 		}
+		
 		InitNewProperties();
-		this->AppendFils(new E_Core_Spps_AGH_advanced(this));
+
+		//Load advanced settings node from project
+		wxXmlNode* currentChild;
+		currentChild = noeudCourant->GetChildren();
+		// On va créer les fils de notre noeudCourant
+		wxString propValue;
+		while (currentChild != NULL)
+		{
+			if (currentChild->GetAttribute("eid", &propValue))
+			{
+				long typeEle;
+				propValue.ToLong(&typeEle);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(currentChild, this))->Hide(true);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(currentChild, this))->Hide(true);
+				if (typeEle == Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT)
+					this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(currentChild, this))->Hide(true);
+			}
+			currentChild = currentChild->GetNext();
+		}
+
+		//Element* el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED);
+		//if (el != nullptr)
+		//	confCore->DeleteElementByXmlId(el->GetXmlId());
+
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(this));
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(this));
+		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT) == nullptr)
+			this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(this));
 	}
 
 	E_Core_Spps_AGH(Element* parent)
-		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPS_AGH)
+		:E_Core_Core(parent, "SPPS-AGH", ELEMENT_TYPE_CORE_SPPSAGH)
 	{
 
 		SetIcon(GRAPH_STATE_EXPANDED, GRAPH_SPPSCORE_OPEN);
@@ -136,6 +185,7 @@ public:
 		InitNewProperties();
 		InitExportRs(confCore);
 		InitSurfaceReceiverMethod(confCore);
+		InitCalculationCores(confCore);
 		InitOutputRecpBySource(confCore);
 		//Ajout des propriétés propres à spps
 		std::vector<wxString> computationMethods;
@@ -171,7 +221,9 @@ public:
 		#endif */
 
 		this->AppendFils(new E_Core_Core_Bfreqselection(this));
-		this->AppendFils(new E_Core_Spps_AGH_advanced(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_NEE(this));
+		this->AppendFils(new E_Core_SppsNee_AGH_advanced_MLT(this));
 
 		this->AppendPropertyText("modelName", "", "mesh.cbin", true, true)->Hide();
 		this->AppendPropertyText("exeName", "", "spps-agh.exe")->Hide();
@@ -206,18 +258,75 @@ public:
 				if (nbpartrendu>0)
 				{
 					unsigned int nbpasdetemps = elConf->GetDecimalConfig("duree_simulation") / elConf->GetDecimalConfig("pasdetemps");
-					unsigned int total_data = nbpartrendu*nbpasdetemps*sizeof(float) * 4 * ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources_Actives;
+					unsigned int total_data = nbpartrendu*nbpasdetemps * sizeof(float) * 4 * ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_Sources_Actives;
 					wxLogWarning(wxTRANSLATE("The size of the particle file, for each frequency band, is around %.2f Mo"), float(total_data) / pow(10.f, 6.f));
 				}
 			}
 			else if (filsInfo.libelleElement == "computation_method")
 			{
 				elConf->SetReadOnlyConfig("trans_epsilon", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
+			}
+			else if (filsInfo.libelleElement == "calculation_core")
+			{
+				Element* el;
+				Element* el2;
+				switch (elConf->GetListConfig("calculation_core")) 
+				{
+				case CALCULATION_CORES::CLASSIC_SPPS:
+					elConf->SetReadOnlyConfig("computation_method", false);
+					elConf->SetReadOnlyConfig("surf_receiv_method", false);
 
-				Element* elAdvancedConf = this->GetElementByType(ELEMENT_TYPE_CORE_SPPS_AGH_ADVANCED);
-				elAdvancedConf->SetReadOnlyConfig("diffusion_order", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
-				elAdvancedConf->UpdateEntierConfig("diffusion_order", 0);
-				elAdvancedConf->SetReadOnlyConfig("specular_when_order_reached", !elConf->GetListConfig("computation_method") == COMPUTATION_METHOD_ENERGETIQUE);
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS);
+					el->Hide(true);
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT);
+					el->Hide();
+					el->Reparent(this);
+					break;
+
+				case CALCULATION_CORES::MLT:
+					elConf->UpdateEntierConfig("computation_method", 0);
+					elConf->SetReadOnlyConfig("computation_method", true);
+
+					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT);
+					el->Hide(true);
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS);
+					el->Hide();
+					el->Reparent(this);
+					break;
+
+				case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
+					elConf->UpdateEntierConfig("computation_method", 1);
+					elConf->SetReadOnlyConfig("computation_method", true);
+
+					elConf->SetReadOnlyConfig("surf_receiv_method", true);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE);
+					el->Hide(true);
+					el->Reparent(this);
+			
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS);
+					el->Hide();
+					el->Reparent(this);
+
+					el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT);
+					el->Hide();
+					el->Reparent(this);
+					break;
+				}
 			}
 		}
 		Element::Modified(eModif);

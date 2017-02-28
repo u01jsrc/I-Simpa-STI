@@ -46,7 +46,7 @@ class E_Core_SppsNee_AGH_advanced_SPPS : public Element
 {
 public:
 	E_Core_SppsNee_AGH_advanced_SPPS(wxXmlNode* noeudCourant, Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS, noeudCourant)
+		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		//Add debug mode parameter v<1.21
@@ -59,7 +59,7 @@ public:
 	}
 
 	E_Core_SppsNee_AGH_advanced_SPPS(Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_SPPS)
+		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		InitProperties();
@@ -111,7 +111,7 @@ class E_Core_SppsNee_AGH_advanced_NEE : public Element
 {
 public:
 	E_Core_SppsNee_AGH_advanced_NEE(wxXmlNode* noeudCourant, Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE, noeudCourant)
+		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		//Add debug mode parameter v<1.21
@@ -127,7 +127,7 @@ public:
 	}
 
 	E_Core_SppsNee_AGH_advanced_NEE(Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_NEE)
+		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		InitProperties();
@@ -182,7 +182,7 @@ class E_Core_SppsNee_AGH_advanced_MLT : public Element
 {
 public:
 	E_Core_SppsNee_AGH_advanced_MLT(wxXmlNode* noeudCourant, Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT, noeudCourant)
+		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT, noeudCourant)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		//Add debug mode parameter v<1.21
@@ -195,7 +195,7 @@ public:
 	}
 
 	E_Core_SppsNee_AGH_advanced_MLT(Element* parent)
-		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH_ADVANCED_MLT)
+		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT)
 	{
 		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
 		InitProperties();

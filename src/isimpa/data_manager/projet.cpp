@@ -694,7 +694,7 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 		return;
 	}
 
-	if (coreCalculation->GetElementInfos().typeElement != Element::ELEMENT_TYPE_CORE_SPPSNEE_AGH)
+	if (coreCalculation->GetElementInfos().typeElement != Element::ELEMENT_TYPE_CORE_SPPSAGH)
 	{
 		std::vector<Element*> lstMatRow, egroupeSurf;
 		std::vector<long> usedIdx;
