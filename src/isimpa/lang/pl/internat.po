@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: I-SIMPA\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 17:38+0100\n"
-"PO-Revision-Date: 2017-02-17 18:02+0100\n"
+"POT-Creation-Date: 2017-02-28 13:38+0100\n"
+"PO-Revision-Date: 2017-02-28 13:43+0100\n"
 "Last-Translator: Ifsttar <Judicael.Picaut@ifsttar.fr>\n"
 "Language-Team: Wojciech Binek <wbinek@poczta.agh.edu.pl>\n"
 "Language: pl_PL\n"
@@ -2676,7 +2676,7 @@ msgstr "Widmo użytkownika"
 msgid "Reference material"
 msgstr "Materiał odniesienia"
 
-#: data_manager/tree_core/e_core.h:70
+#: data_manager/tree_core/e_core.h:69
 msgid "Calculation code"
 msgstr "Metoda obliczeniowa"
 
@@ -2782,219 +2782,213 @@ msgstr "Korekcja modelu przed generacją siatki"
 msgid "Test mesh topology"
 msgstr "Testuj topologię siatki"
 
-#: data_manager/tree_core/e_core_sppsNee_agh_advanced.h:49
-#: data_manager/tree_core/e_core_sppsNee_agh_advanced.h:59
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:49
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:77
-msgid "Advanced"
-msgstr "Zaawansowane"
-
-#: data_manager/tree_core/e_core_sppsNee_agh_advanced.h:86
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:104
-msgid "Random seed"
-msgstr "Ziarno generatora"
-
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:54
 #: data_manager/tree_core/e_core_spps_aghcore.h:56
 msgid "Active calculation transmission (limit)"
 msgstr "Wymieranie cząstek (10^-n)"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:55
 #: data_manager/tree_core/e_core_spps_aghcore.h:57
 msgid "Active calculation transmission"
 msgstr "Aktywna transmisja"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:56
 #: data_manager/tree_core/e_core_spps_aghcore.h:58
 #: data_manager/tree_core/e_core_sppscore.h:57
 msgid "Receiver radius"
 msgstr "Promień odbiorników"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:62
 #: data_manager/tree_core/e_core_spps_aghcore.h:64
 #: data_manager/tree_core/e_core_sppscore.h:63
 msgid "Soundmap: intensity"
 msgstr "Natężenie dźwięku"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:64
 #: data_manager/tree_core/e_core_spps_aghcore.h:66
 #: data_manager/tree_core/e_core_sppscore.h:65
 msgid "Soundmap: SPL"
 msgstr "SPL"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:66
 #: data_manager/tree_core/e_core_spps_aghcore.h:68
 #: data_manager/tree_core/e_core_sppscore.h:67
 msgid "Surface receiver export"
 msgstr "Parametr odbiorników powierzchniowych"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:73
+#: data_manager/tree_core/e_core_spps_aghcore.h:75
 #: data_manager/tree_core/e_core_sppsoctreecore.h:95
 msgid "SPPS"
 msgstr "SPPS"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:75
+#: data_manager/tree_core/e_core_spps_aghcore.h:77
 msgid "SPPS + Next Event Estimation"
 msgstr "SPPS + Next Event Estimation"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:77
+#: data_manager/tree_core/e_core_spps_aghcore.h:79
 msgid "MLT (Kelemen)"
 msgstr " MLT (Kelemen)"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:79
+#: data_manager/tree_core/e_core_spps_aghcore.h:81
 msgid " CALCULATION CORE"
 msgstr " Kod obliczeniowy"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:86
-#: data_manager/tree_core/e_core_spps_aghcore.h:73
+#: data_manager/tree_core/e_core_spps_aghcore.h:88
 msgid "statsSPPS"
 msgstr "Statystyki SPPS"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:87
-#: data_manager/tree_core/e_core_spps_aghcore.h:74
+#: data_manager/tree_core/e_core_spps_aghcore.h:89
 msgid "angle_stats"
 msgstr "Statystyki kątów"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:88
-#: data_manager/tree_core/e_core_spps_aghcore.h:75
+#: data_manager/tree_core/e_core_spps_aghcore.h:90
 msgid "IntensityAnimation"
 msgstr "Animacja natężenia"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:89
-#: data_manager/tree_core/e_core_spps_aghcore.h:76
+#: data_manager/tree_core/e_core_spps_aghcore.h:91
 #: data_manager/tree_core/e_core_sppscore.h:73
 msgid "Intensity vector"
 msgstr "Wektor natężenia"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:93
-#: data_manager/tree_core/e_core_spps_aghcore.h:80
+#: data_manager/tree_core/e_core_spps_aghcore.h:95
 #: data_manager/tree_core/e_core_sppscore.h:77
 msgid "Punctual receiver intensity"
 msgstr "Natężenie odbiornika punktowego"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:94
-#: data_manager/tree_core/e_core_spps_aghcore.h:81
+#: data_manager/tree_core/e_core_spps_aghcore.h:96
 msgid "Particles absorbed by the atmosphere"
 msgstr "Cząstki pochłonięte przez atmosferę"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:95
-#: data_manager/tree_core/e_core_spps_aghcore.h:82
+#: data_manager/tree_core/e_core_spps_aghcore.h:97
 msgid "Particles absorbed by the materials"
 msgstr "Cząstki pochłonięte przez materiały"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:96
-#: data_manager/tree_core/e_core_spps_aghcore.h:83
+#: data_manager/tree_core/e_core_spps_aghcore.h:98
 msgid "Particles absorbed by the fittings"
 msgstr "Cząstki pochłonięte przez strefy dopasowania"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:97
-#: data_manager/tree_core/e_core_spps_aghcore.h:84
+#: data_manager/tree_core/e_core_spps_aghcore.h:99
 msgid "Particles lost by infinite loops"
 msgstr "Cząstki stracone w nieskończonych pętlach"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:98
-#: data_manager/tree_core/e_core_spps_aghcore.h:85
+#: data_manager/tree_core/e_core_spps_aghcore.h:100
 msgid "Particles lost by meshing problems"
 msgstr "Cząstki stracone w związku z błędami siatki"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:99
-#: data_manager/tree_core/e_core_spps_aghcore.h:86
+#: data_manager/tree_core/e_core_spps_aghcore.h:101
 msgid "Particles remaining at the end of the calculation"
 msgstr "Cząstki pozostałe na końcu symulacji"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:100
-#: data_manager/tree_core/e_core_spps_aghcore.h:87
+#: data_manager/tree_core/e_core_spps_aghcore.h:102
 #: data_manager/tree_core/e_core_sppscore.h:78
 msgid "Sound level per source"
 msgstr "Poziom dźwięku na źródło"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:105
-#: data_manager/tree_core/e_core_spps_aghcore.h:92
+#: data_manager/tree_core/e_core_spps_aghcore.h:107
 #: data_manager/tree_core/e_core_sppscore.h:82
 #: data_manager/tree_core/e_core_sppsoctreecore.h:98
 #: data_manager/tree_core/e_core_tccore.h:52
 msgid "Export surface receivers for each frequency band"
 msgstr "Eksportuj odbiorniki powierzchniowe dla każdej częstotliwości"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:108
-#: data_manager/tree_core/e_core_spps_aghcore.h:95
+#: data_manager/tree_core/e_core_spps_aghcore.h:110
 #: data_manager/tree_core/e_core_sppscore.h:85
 msgid "Echogram per source"
 msgstr "Echogram na źródło"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:162
-#: data_manager/tree_core/e_core_spps_aghcore.h:146
+#: data_manager/tree_core/e_core_spps_aghcore.h:196
 #: data_manager/tree_core/e_core_sppscore.h:163
 #: data_manager/tree_core/e_core_sppsoctreecore.h:100
 msgid "Number of sound particles per source"
 msgstr "Ilość cząstek na źródło"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:163
-#: data_manager/tree_core/e_core_spps_aghcore.h:147
+#: data_manager/tree_core/e_core_spps_aghcore.h:197
 #: data_manager/tree_core/e_core_sppscore.h:164
 #: data_manager/tree_core/e_core_sppsoctreecore.h:101
 msgid "Number of sound particles per source (display)"
 msgstr "Wyświetlana ilość cząstek na źródło"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:164
-#: data_manager/tree_core/e_core_spps_aghcore.h:148
+#: data_manager/tree_core/e_core_spps_aghcore.h:198
 #: data_manager/tree_core/e_core_sppscore.h:165
 #: data_manager/tree_core/e_core_sppsoctreecore.h:102
 msgid "Active calculation of atmospheric absorption"
 msgstr "Aktywne pochłanianie atmosferyczne"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:165
-#: data_manager/tree_core/e_core_spps_aghcore.h:149
+#: data_manager/tree_core/e_core_spps_aghcore.h:199
 #: data_manager/tree_core/e_core_sppscore.h:166
 #: data_manager/tree_core/e_core_sppsoctreecore.h:103
 msgid "Active calculation of diffusion by fitting objects"
 msgstr "Aktywne pochłanianie przez strefy dopasowania"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:166
-#: data_manager/tree_core/e_core_spps_aghcore.h:150
+#: data_manager/tree_core/e_core_spps_aghcore.h:200
 #: data_manager/tree_core/e_core_sppscore.h:167
 #: data_manager/tree_core/e_core_sppsoctreecore.h:104
 msgid "Active calculation of direct field only"
 msgstr "Aktywne obliczanie tylko dźwięku bezpośredniego "
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:167
-#: data_manager/tree_core/e_core_spps_aghcore.h:151
+#: data_manager/tree_core/e_core_spps_aghcore.h:201
 #: data_manager/tree_core/e_core_sppscore.h:168
 #: data_manager/tree_core/e_core_sppsoctreecore.h:99
 msgid "Calculation method"
 msgstr "Metoda obliczeniowa"
 
-#: data_manager/tree_core/e_core_sppsNee_aghcore.h:226
-#: data_manager/tree_core/e_core_spps_aghcore.h:210
+#: data_manager/tree_core/e_core_spps_aghcore.h:262
 #: data_manager/tree_core/e_core_sppscore.h:207
 #, c-format
 msgid ""
 "The size of the particle file, for each frequency band, is around %.2f Mo"
 msgstr "Rozmiar pliku cząstek dla każdej częstotliwości to około %.2f Mo"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:107
-msgid "Diffusion order"
-msgstr "Rząd rozproszenia"
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:49
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:62
+msgid "Advanced - SPPS"
+msgstr "Zaawansowane - SPPS"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:110
-msgid "Specular when order reached"
-msgstr "Odbicie lustrzane po osiągnięcu rzędu rozproszenia"
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:97
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:166
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:233
+msgid "Random seed"
+msgstr "Ziarno generatora"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:113
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:101
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:170
+msgid "Surface incidence angle stats"
+msgstr "Statystyki kątów padania energii na powierzchnie"
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:102
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:171
 msgid "Normalize angle stats"
 msgstr "Normalizuj statystyki kąta padania"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:116
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:103
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:172
+msgid "Min reflection for incidence angle record"
+msgstr "Minimalny rząd odbicia dla rejestracji kąta padania"
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:104
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:173
 msgid "Extended angle stats"
 msgstr "Oblicz zaawansowane statystyki kąta padania"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:119
-msgid "Export results as CSV"
-msgstr "Eksportuj wyniki jako CSV"
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:114
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:130
+msgid "Advanced - NEE"
+msgstr "Zaawansowane - NEE"
 
-#: data_manager/tree_core/e_core_spps_agh_advanced.h:122
-msgid "Export receiver incidence angle"
-msgstr "Eksportuj kąty padania energii do odbiornika"
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:176
+msgid "Cast shadow rays to surface receivers"
+msgstr "Generuj promiwnie pozorne do odbiorników powierzchniowych"
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:185
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:198
+msgid "Advanced - MLT"
+msgstr "Zaawansowane - MLT"
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:237
+msgid "Large step probability"
+msgstr "Prawdopodobieństwo \"dużego kroku\""
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:238
+msgid "Specular reflection probability multiplier"
+msgstr "Mnożnik prawdopodobieństwa odbicia lustrzanego"
+
+#: data_manager/tree_core/e_core_spps_aghcore_advanced.h:239
+msgid "Mutation number"
+msgstr "Liczba mutacji"
 
 #: data_manager/tree_core/e_core_sppscore.h:55
 #: data_manager/tree_core/e_core_sppscore.h:135
@@ -3886,278 +3880,3 @@ msgstr "Czas"
 #: data_manager/python_interface/py_ui_module/samples/add_data_sample.py:62
 msgid "Static"
 msgstr "Statyczne"
-
-#~ msgid "Temps total de l'opération de dessin %i ms"
-#~ msgstr "Całkowity czas obliczeń %i ms"
-
-#~ msgid "Calculation time: %i ms"
-#~ msgstr "Czas obliczeń: %i ms"
-
-#~ msgid "Total time calculation: %i ms"
-#~ msgstr "Całkowity czas obliczeń: %i ms"
-
-#~ msgid "Total time of meshing: %i ms"
-#~ msgstr "Całkowity czas generowania siatki: %i ms"
-
-#~ msgid "Python(TM) parameter %s not found"
-#~ msgstr "Python(TM) nie znaleziono parametru %s"
-
-#~ msgid "Please enter scene dimensions"
-#~ msgstr "Wprowadź wymiary obiektu"
-
-#~ msgid "Elapsed time : "
-#~ msgstr "Upłynęło:"
-
-#~ msgid "Remaining time : "
-#~ msgstr "Pozostało:"
-
-#~ msgid "Tetrahedalization file is empty, the calculation can't be done !"
-#~ msgstr ""
-#~ "Plik triangulacji jest pusty, nie można wykonać obliczeń! \n"
-#~ "Sprawdź poprawność modelu."
-
-#~ msgid "The path of the XML configuration file must be specified!"
-#~ msgstr "Ścieżka do konfiguracji XML musi być zdefiniowana!"
-
-#~ msgid "XML configuration file is currently loading..."
-#~ msgstr "Wczytywanie konfiguracji XML..."
-
-#~ msgid "main_calculation"
-#~ msgstr "Główne obliczenia"
-
-#~ msgid "Punctual receivers\\"
-#~ msgstr "Odbiorniki punktowe\\"
-
-#~ msgid "YZ plan"
-#~ msgstr "Płaszczyzna YZ"
-
-#~ msgid "Calculate the mean free path"
-#~ msgstr "Obliczaj średnią drogę swobodną"
-
-#~ msgid "Mean free path"
-#~ msgstr "Średnia droga swobodna"
-
-#~ msgid "Calculation output:"
-#~ msgstr "Wynik symulacji"
-
-#~ msgid "Make report"
-#~ msgstr "Generuj raport"
-
-#~ msgid "Reverberation time"
-#~ msgstr "Czas pogłosu"
-
-#~ msgid "SPL"
-#~ msgstr "SPL"
-
-#~ msgid "RT30"
-#~ msgstr "RT30"
-
-#~ msgid "Synthesis"
-#~ msgstr "Synteza"
-
-#~ msgid "Statistics"
-#~ msgstr "Statystyki"
-
-#~ msgid "Terms of Use"
-#~ msgstr "Warunki użytkowania"
-
-#~ msgid "%i tasks :"
-#~ msgstr "%i zadań:"
-
-#~ msgid "AddRun"
-#~ msgstr "Dodaj zadanie"
-
-#~ msgid "AddRunx10"
-#~ msgstr "Dodaj 10 zadań"
-
-#~ msgid "ClearJobLst"
-#~ msgstr "Wyczyść listę zadań"
-
-#~ msgid "Confirmation"
-#~ msgstr "Potwierdzenie"
-
-#~ msgid "ExecJobs"
-#~ msgstr "Wykonaj zadania"
-
-#~ msgid "PrintJobLst"
-#~ msgstr "Wyświetl listę zadań"
-
-#~ msgid "JobLst"
-#~ msgstr "Lista zadań"
-
-#~ msgid "Move to an existing group"
-#~ msgstr "Przenieś do istniejącej grupy"
-
-#~ msgid "Label"
-#~ msgstr "Etykieta"
-
-#~ msgid "Move faces"
-#~ msgstr "Przenieś powierzchnie"
-
-#~ msgid "(Please select the group of destination:"
-#~ msgstr "Proszę wybierz grupę przeznaczenia:"
-
-#~ msgid "Source name"
-#~ msgstr "Nazwa źródła"
-
-#~ msgid "Source selection"
-#~ msgstr "Wybór źródła"
-
-#~ msgid "Please choose the source:"
-#~ msgstr "Wybierz źródło:"
-
-#~ msgid "Delete the link with the source"
-#~ msgstr "Usuń powiązanie ze źródłem"
-
-#~ msgid "Orient the group to a position"
-#~ msgstr "Skieruj grupę na punkt"
-
-#~ msgid "Translation of receivers"
-#~ msgstr "Przesunięcie odbiorników"
-
-#~ msgid "Rotation of receivers"
-#~ msgstr "Obrót odbiorników"
-
-#~ msgid "Create a receiver grid"
-#~ msgstr "Stwórz siatkę odbiorników"
-
-#~ msgid "Starting position [x,y,z] (m)"
-#~ msgstr "Punkt początkowy [x,y,z] (m)"
-
-#~ msgid "Number of rows"
-#~ msgstr "Ilość wierszy"
-
-#~ msgid "Number of cols"
-#~ msgstr "Ilość kolumn"
-
-#~ msgid "Row step [x,y,z] (m)"
-#~ msgstr "Krok - wiersz [x,y,z] (m)"
-
-#~ msgid "Col step [x,y,z] (m)"
-#~ msgstr "Krok - kolumna [x,y,z] (m)"
-
-#~ msgid "Please fill the following fields to create the receivers points grid"
-#~ msgstr "Wypełnij poniższe pola aby utworzyć siatkę odbiorników"
-
-#~ msgid "Orient to position [x,y,z]"
-#~ msgstr "Skieruj na punkt [x,y,z]"
-
-#~ msgid "Orient a group of receivers to a point"
-#~ msgstr "Skieruj grupę odbiorników na punkt"
-
-#~ msgid "Please enter the coordinates of the orientation point"
-#~ msgstr "Proszę podaj współrzędne punktu docelowego"
-
-#~ msgid "Vector of rotation (m)"
-#~ msgstr "Wektor obrotu (m)"
-
-#~ msgid "Angle of rotation (degrees)"
-#~ msgstr "Kąt obrotu (stopnie)"
-
-#~ msgid "Rotation center (m)"
-#~ msgstr "Środek obrotu"
-
-#~ msgid "Rotation of a group of receivers"
-#~ msgstr "Obrót grupy odbiorników"
-
-#~ msgid "Wrong parameters"
-#~ msgstr "Złe parametry"
-
-#~ msgid "Direction (m)"
-#~ msgstr "Kierunek (m)"
-
-#~ msgid "Translation of a group of receivers"
-#~ msgstr "Przesunięcie grupy odbiorników"
-
-#~ msgid "Rotation"
-#~ msgstr "Obrót"
-
-#~ msgid "Translation"
-#~ msgstr "Przesunięcie"
-
-#~ msgid "All sources"
-#~ msgstr "Wszystkie źródła"
-
-#~ msgid "Create a line of sound sources"
-#~ msgstr "Utwórz linię źródeł"
-
-#~ msgid "Number of sources"
-#~ msgstr "Ilość źródeł"
-
-#~ msgid "Step [x,y,z] (m)"
-#~ msgstr "Krok [x,y,z] (m)"
-
-#~ msgid "Please fill the following fields to create the sound source line"
-#~ msgstr "Wypełnij poniższe pola aby utworzyć linię źródeł"
-
-#~ msgid "Vector of rotation"
-#~ msgstr "Wektor obrotu"
-
-#~ msgid "Angle (degrees)"
-#~ msgstr "Kąt (stopnie)"
-
-#~ msgid "Rotation centre"
-#~ msgstr "Środek obrotu"
-
-#~ msgid "Rotation of a group of sound sources"
-#~ msgstr "Obrót grupy źródeł"
-
-#~ msgid "Translation of a group of sound sources"
-#~ msgstr "Przesunięcie grupy źródeł"
-
-#~ msgid "Reflection model"
-#~ msgstr "Model odbicia"
-
-#~ msgid "Number of group must be greater than 0"
-#~ msgstr "Numer grupy musi być większy od 0"
-
-#~ msgid "toto"
-#~ msgstr "SPPS Statistics"
-
-#~ msgid "Core Statistics"
-#~ msgstr "Core Statistics"
-
-#~ msgid "Sound_level.csbin"
-#~ msgstr "Sound level.csbin"
-
-#~ msgid "Niveau_Sonore.csbin"
-#~ msgstr "Sound level.csbin"
-
-#~ msgid "Standard tools"
-#~ msgstr "Standard tools"
-
-#~ msgid " (E*cos² theta)"
-#~ msgstr " (E*cos² theta)"
-
-#~ msgid "Random number generator initialization"
-#~ msgstr "Random number generator initialization"
-
-#~ msgid "Limit of propagation (10^n)"
-#~ msgstr "Limit of propagation (10^n)"
-
-#~ msgid "Active calculation of acoustic transmission"
-#~ msgstr "Active calculation of acoustic transmission"
-
-#~ msgid "Punctual intensity"
-#~ msgstr "Punctual intensity"
-
-#~ msgid "Limite de transmission"
-#~ msgstr "Active calculation transmission (limit)"
-
-#~ msgid "Calcul Transmission"
-#~ msgstr "Active transmission calculation"
-
-#~ msgid "Rayon des récepteurs ponctuels"
-#~ msgstr "Receiver radius"
-
-#~ msgid "Model correction"
-#~ msgstr "Model correction"
-
-#~ msgid "Main"
-#~ msgstr "Main"
-
-#~ msgid "Display time step (s)"
-#~ msgstr "Display time step (s)"
-
-#~ msgid "Online forums"
-#~ msgstr "Online forums"
