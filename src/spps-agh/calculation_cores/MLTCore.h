@@ -8,6 +8,9 @@ class MLTCore : public  NextEventEstimationCore
 public:
 	MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool);
 	bool RunInitialSeed(CONF_PARTICULE_MLT &inputParticle);
+	virtual bool Run(CONF_PARTICULE_AGH configurationP);
+	bool SeedIsEmpty();
+	void RunMutation();
 	
 	float b = 0; //bias value - auto calculated - start with 0!;
 
@@ -22,7 +25,6 @@ protected:
 	bool MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rndDir1, double rndDir2, double rndTravelProbability, double rndMatAbsorbtion, float deltaT, float distanceToTravel);
 	void CastShadowRays(CONF_PARTICULE_MLT& input_particle);
 	void DoMutations(CONF_PARTICULE_MLT& inputParticle, int totalParticleNumber);
-	virtual bool Run(CONF_PARTICULE_AGH configurationP);
 	void Movement(CONF_PARTICULE_MLT &configurationP);
 	void Follow(CONF_PARTICULE_MLT& propagationParticle);
 	void FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector) override;

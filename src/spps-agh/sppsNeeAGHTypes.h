@@ -75,6 +75,8 @@ struct CONF_PARTICULE_MLT : public CONF_PARTICULE_AGH
 		vec3 position;
 		int creationTime;
 		double energie;
+		PARTICULE_STATE stateParticule;
+
 	};
 
 	initialState iniState;
@@ -110,6 +112,7 @@ struct CONF_PARTICULE_MLT : public CONF_PARTICULE_AGH
 		iniState.position = input_particle.position;
 		iniState.creationTime = input_particle.creationTime;
 		iniState.energie = input_particle.energie;
+		iniState.stateParticule = input_particle.stateParticule;
 	}
 	void ResetToInitialState()
 	{
@@ -118,6 +121,7 @@ struct CONF_PARTICULE_MLT : public CONF_PARTICULE_AGH
 		position = iniState.position;
 		creationTime = iniState.creationTime;
 		energie = iniState.energie;
+		stateParticule = iniState.stateParticule;
 	}
 };
 

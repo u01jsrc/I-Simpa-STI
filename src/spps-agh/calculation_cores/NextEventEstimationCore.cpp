@@ -281,7 +281,7 @@ void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t
 			shadowRay.energie *= pow(densite_proba_absorption_atmospherique, timeStepNum);
 
 			shadowRays.push_back(shadowRay);
-			if(probability != nullptr) *probability *= energy;
+			//if(probability != nullptr) *probability *= energy;
 		}
 	}
 }

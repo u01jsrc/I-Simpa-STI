@@ -87,7 +87,12 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 		if (verbose_mode) { std::cout << "No directivity data for frequency: " << freq << " => skipping" << std::endl; }
 		return;
 	}
-	progressOperation thisSrcOperation(parentOperation,quandparticules);
+
+	int progresSteps = quandparticules;
+	if (*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_CALCULATION_CORE_SELLECTION) == MLT) progresSteps *= 2;
+
+	progressOperation thisSrcOperation(parentOperation, progresSteps);
+		
 	//Prise en compte du délai de la source
 	confPartFrame.pasCourant=(uentier_court)ceil(sourceInfo.sourceDelay/(*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_TIME_STEP)));
 	confPartFrame.stateParticule=PARTICULE_STATE_ALIVE;
@@ -165,6 +170,20 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 			applicationTools.mainProgressionOutput->OutputCurrentProgression();
 			//progressOperation thisPartOperation(&thisSrcOperation);
 			thisSrcOperation.Next();
+		}
+
+		if(*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_CALCULATION_CORE_SELLECTION)==MLT)
+		{
+			while (!static_cast<MLTCore*>(applicationTools.calculationTool)->SeedIsEmpty()) 
+			{
+				static_cast<MLTCore*>(applicationTools.calculationTool)->RunMutation();
+
+				#if __USE_MULTITHREAD__
+					boost::mutex::scoped_lock lock(mutex);
+				#endif
+				applicationTools.mainProgressionOutput->OutputCurrentProgression();
+				thisSrcOperation.Next();
+			}
 		}
 	}
 }

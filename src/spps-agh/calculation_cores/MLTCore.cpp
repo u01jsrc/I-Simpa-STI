@@ -28,23 +28,13 @@ bool MLTCore::Run(CONF_PARTICULE_AGH configurationP)
 
 		CONF_PARTICULE_MLT inputParticle(configurationP);
 		inputParticle.SetInitialState(inputParticle);
-		inputParticle.weight = 1;
+		inputParticle.weight = 1/mutation_number;
 
 		int totalParticleNumber = (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_PARTICLE_CALCULATION) * configurationTool->srcList.size());
 
 		RunInitialSeed(inputParticle);
 		Seeds.push_back(inputParticle);
 		b += inputParticle.totalProbability / totalParticleNumber;
-
-		if (totalParticleNumber == Seeds.size())
-		{
-			while (!Seeds.empty())
-			{
-				inputParticle = Seeds.front();
-				Seeds.pop_front();
-				DoMutations(inputParticle, totalParticleNumber);
-			}
-		}
 	}
 	else
 	{
@@ -52,6 +42,18 @@ bool MLTCore::Run(CONF_PARTICULE_AGH configurationP)
 	}
 
 	return true;
+}
+
+bool MLTCore::SeedIsEmpty()
+{
+	return Seeds.empty();
+}
+
+void MLTCore::RunMutation()
+{
+	CONF_PARTICULE_MLT inputParticle = Seeds.front();
+	Seeds.pop_front();
+	DoMutations(inputParticle, (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_PARTICLE_CALCULATION) * configurationTool->srcList.size()));
 }
 
 void MLTCore::CastShadowRays(CONF_PARTICULE_MLT& input_particle)
@@ -82,8 +84,8 @@ void MLTCore::DoMutations(CONF_PARTICULE_MLT& inputParticle, int totalParticleNu
 
 		ratio = std::min(mutatedParticle.totalProbability / inputParticle.totalProbability, 1.);
 
-		inputParticle.weight += (1 - ratio) / (inputParticle.totalProbability / b + pLarge) / (totalParticleNumber*mutation_number);
-		mutatedParticle.weight += (ratio+mutatedParticle.largeStep) / (mutatedParticle.totalProbability / b + pLarge) / (totalParticleNumber*mutation_number);
+		inputParticle.weight += (1 - ratio) / ((inputParticle.totalProbability / b + pLarge)*(mutation_number));
+		mutatedParticle.weight += (ratio + mutatedParticle.largeStep) / ((mutatedParticle.totalProbability / b + pLarge)*(mutation_number));
 
 		if(mutatedParticle.largeStep==1)
 		{
@@ -157,8 +159,8 @@ void MLTCore::Mutate(const CONF_PARTICULE_MLT& input_particle, CONF_PARTICULE_ML
 	mutetedParticle = input_particle;
 	mutetedParticle.shadowRays.clear();
 
-	bool large_step = (GetRandValue() < pLarge) ? 1 : 0;
-	if (large_step)
+	//bool large_step = (GetRandValue() < pLarge) ? 1 : 0;
+	if (GetRandValue() < pLarge)
 	{
 		mutetedParticle.reflectionsNum = 0;
 		mutetedParticle.refDir1.clear();
@@ -166,6 +168,7 @@ void MLTCore::Mutate(const CONF_PARTICULE_MLT& input_particle, CONF_PARTICULE_ML
 		mutetedParticle.travelProbability.clear();
 		mutetedParticle.matAbsorbtions.clear();
 		mutetedParticle.largeStep = 1;
+		mutetedParticle.weight = 0;
 
 	}else{
 		for (int i = 0; i < input_particle.reflectionsNum; i++)
