@@ -55,6 +55,9 @@ float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CON
 {
 	switch (material.reflectionLaw)
 	{
+	case REFLECTION_LAW_SPECULAR:
+		return SolveSpecularBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
+
 	case REFLECTION_LAW_LAMBERT:
 		return SolveSpecularLambertBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
 
@@ -70,6 +73,22 @@ vec3 BRDFs::SolveSpecularReflection(vec3 &incomingDirection, vec3 &faceNormal)
 {
 	vec3 retVal = (incomingDirection - (faceNormal*(incomingDirection.dot(faceNormal)) * 2));
 	return retVal / retVal.length();
+}
+
+float BRDFs::SolveSpecularBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
+{
+	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
+	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	double specularEnergy = 0;
+	l_decimal mu1, mu2;
+	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
+
+	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
+	{
+		specularEnergy = (1 - material.diffusion) * (abs(mu2 - mu1) * specular.length() * 1000) / (2 * receiverRadius);
+	}
+
+	return  specularEnergy;
 }
 
 float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)

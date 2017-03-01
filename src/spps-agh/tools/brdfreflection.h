@@ -55,6 +55,8 @@ public:
 	*/
 	static vec3 SolveSpecularReflection(vec3& incomingDirection, vec3& faceNormal);
 
+	static float SolveSpecularBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH & shadowRay, vec3 incomingDirection, Core_ConfigurationAGH * configurationTool);
+
 	/**
 	* Solves reflecion energy using Specular+Lambert BRDF
 	*
