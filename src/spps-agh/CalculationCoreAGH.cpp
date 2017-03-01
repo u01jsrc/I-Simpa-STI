@@ -23,7 +23,7 @@ CalculationCore(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _repo
 	doDirectSoundCalculation = false;
 }
 //todo Fix method so it can use any source directivity 
-void CalculationCoreSPPS::CalculateDirectSound(const CONF_PARTICULE_AGH& prototypeParticle, t_Source& sourceInfo,const float& distancePerTimeStep)
+void CalculationCoreSPPS::CalculateDirectSound(const CONF_PARTICULE_AGH& prototypeParticle, t_Source& sourceInfo,const float& distancePerTimeStep, unsigned int freq)
 {
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
@@ -39,14 +39,61 @@ void CalculationCoreSPPS::CalculateDirectSound(const CONF_PARTICULE_AGH& prototy
 		shadowRay.direction = toReceiver;
 		shadowRay.direction.normalize();
 		shadowRay.direction *= distancePerTimeStep;
+		
+		bool isVisible = VisabilityTest(shadowRay, receiver->position);
 
-		if (VisabilityTest(shadowRay, receiver->position) && sourceInfo.type == SOURCE_TYPE_OMNIDIRECTION) {
+		if (isVisible && sourceInfo.type == SOURCE_TYPE_OMNIDIRECTION) {
 			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
 
 			//0.66 is normalization factor used to acount for not treating receiver as sphere 
 			//- points far from sphere center ar treated with the same weight as ones in the middle,
 			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
 			shadowRay.energie = (1 / (4 * M_PI))*solidAngle*0.66*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}		
+		else if (isVisible && sourceInfo.type == SOURCE_TYPE_DIRECTION) {
+			double solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
+
+			std::tuple<double, double> coord_sph = t_DirectivityBalloon::loudspeaker_coordinate(sourceInfo.Direction, shadowRay.direction);
+			double phi = RadToDeg(std::get<0>(coord_sph));
+			double theta = RadToDeg(std::get<1>(coord_sph));
+			if (sourceInfo.directivity->asInterpolatedValue(freq, phi, theta))
+			{
+				double spl = sourceInfo.directivity->getInterpolatedValue(freq, phi, theta);
+				shadowRay.energie = sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j * pow(10, spl / 10);
+			}
+
+			//0.66 is normalization factor used to acount for not treating receiver as sphere 
+			//- points far from sphere center ar treated with the same weight as ones in the middle,
+			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+			shadowRay.energie *= (1 / (4 * M_PI))*solidAngle*0.66;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}
+		else if (isVisible && sourceInfo.type == SOURCE_TYPE_XY && sourceInfo.Position.z == receiver->position.z) {
+			double rad = (2*receiverRadius) / (toReceiver.length());
+
+			//0.7854 is normalization factor used to acount for not treating receiver cut as circle 
+			//- points far from sphere center ar treated with the same weight as ones in the middle,
+			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+			shadowRay.energie = (1/(2 * M_PI))*rad*0.7854*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}
+		else if (isVisible && sourceInfo.type == SOURCE_TYPE_XZ && sourceInfo.Position.y == receiver->position.y) {
+			double rad = (2 * receiverRadius) / (toReceiver.length());
+
+			//0.7854 is normalization factor used to acount for not treating receiver cut as circle 
+			//- points far from sphere center ar treated with the same weight as ones in the middle,
+			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+			shadowRay.energie = (1 / (2 * M_PI))*rad*0.7854*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
+			confEnv.duplicatedParticles.push_back(shadowRay);
+		}
+		else if (isVisible && sourceInfo.type == SOURCE_TYPE_YZ && sourceInfo.Position.x == receiver->position.x) {
+			double rad = (2 * receiverRadius) / (toReceiver.length());
+
+			//0.7854 is normalization factor used to acount for not treating receiver cut as circle 
+			//- points far from sphere center ar treated with the same weight as ones in the middle,
+			//proper weight schould be proportional to length of intersection, but it is hard to be evaluated quickly
+			shadowRay.energie = (1 / (2 * M_PI))*rad*0.7854*sourceInfo.bandeFreqSource[shadowRay.frequenceIndex].w_j;
 			confEnv.duplicatedParticles.push_back(shadowRay);
 		}
 		else if (VisabilityTest(prototypeParticle, receiver->position) && sourceInfo.type == SOURCE_TYPE_UNIDIRECTION) {

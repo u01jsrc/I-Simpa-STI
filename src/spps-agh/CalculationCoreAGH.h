@@ -56,7 +56,7 @@ public:
 	 * @return Vrai si le calcul c'est effectué avec succès 
 	 */
 	virtual bool Run(CONF_PARTICULE_AGH configurationP);
-	void CalculateDirectSound(const CONF_PARTICULE_AGH& shadowRay, t_Source& sourceInfo,const float& distancePerTimeStep);
+	void CalculateDirectSound(const CONF_PARTICULE_AGH& shadowRay, t_Source& sourceInfo,const float& distancePerTimeStep, unsigned int freq);
 	virtual ~CalculationCoreSPPS() {}
 protected:
 	virtual void Movement(CONF_PARTICULE_AGH &configurationP);

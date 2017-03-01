@@ -159,10 +159,6 @@ public:
 			currentChild = currentChild->GetNext();
 		}
 
-		//Element* el = this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED);
-		//if (el != nullptr)
-		//	confCore->DeleteElementByXmlId(el->GetXmlId());
-
 		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS) == nullptr)
 			this->AppendFils(new E_Core_SppsNee_AGH_advanced_SPPS(this));
 		if (this->GetElementByType(ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE) == nullptr)
@@ -269,7 +265,6 @@ public:
 			else if (filsInfo.libelleElement == "calculation_core")
 			{
 				Element* el;
-				Element* el2;
 				switch (elConf->GetListConfig("calculation_core")) 
 				{
 				case CALCULATION_CORES::CLASSIC_SPPS:
@@ -290,7 +285,7 @@ public:
 					break;
 
 				case CALCULATION_CORES::MLT:
-					elConf->UpdateEntierConfig("computation_method", 0);
+					elConf->UpdateListConfig("computation_method", 0);
 					elConf->SetReadOnlyConfig("computation_method", true);
 
 					elConf->SetReadOnlyConfig("surf_receiv_method", true);
@@ -309,7 +304,7 @@ public:
 					break;
 
 				case CALCULATION_CORES::NEXT_EVENT_ESTIMATION:
-					elConf->UpdateEntierConfig("computation_method", 1);
+					elConf->UpdateListConfig("computation_method", 1);
 					elConf->SetReadOnlyConfig("computation_method", true);
 
 					elConf->SetReadOnlyConfig("surf_receiv_method", true);
@@ -337,6 +332,7 @@ public:
 		wxXmlNode* NoeudCourant = E_Core_Core::SaveXMLCoreDoc(NoeudParent);
 		NoeudCourant->AddAttribute("particules_directory", ApplicationConfiguration::CONST_REPORT_PARTICLE_FOLDER_PATH);
 		NoeudCourant->AddAttribute("particules_filename", ApplicationConfiguration::CONST_REPORT_PARTICLE_FILENAME);
+		NoeudCourant->AddAttribute("directivities_directory", ApplicationConfiguration::CONST_REPORT_DIRECTIVITIES_FOLDER_PATH);
 		return NoeudCourant;
 	}
 };

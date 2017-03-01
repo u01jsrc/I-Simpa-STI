@@ -96,7 +96,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 		int lastmill=-1;
 
 		if(applicationTools.calculationTool->doDirectSoundCalculation)
-			applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse);
+			applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse, freq);
 
 		for(uentier idpart=1;idpart<=quandparticules;idpart++)
 		{
