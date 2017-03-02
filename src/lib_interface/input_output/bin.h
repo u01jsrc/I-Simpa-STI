@@ -57,10 +57,10 @@ class t_pos
 {
 public :
 	float v[3];
-	t_pos(float _x, float _y, float _z){ v[0] = _x; v[1] = _y; v[2] = _z; }
-	t_pos(){ v[0] = 0; v[1] = 0; v[2] = 0; }
+	t_pos(float _x, float _y, float _z) : v{ _x, _y, _z } { }
+	t_pos() : v{ 0, 0, 0 } { }
 	operator float*() { return this->v; }
-	int operator==(const t_pos &_v) {
+	bool operator==(const t_pos &_v) {
 		return (fabs(v[0] - _v[0]) < EPSILON && fabs(v[1] - _v[1]) < EPSILON && fabs(v[2] - _v[2]) < EPSILON);
 	}
 
@@ -70,8 +70,15 @@ public :
  * @brief Structure d'une face, déstiné à l'echange fichier<->CObjet3D
  */
 struct ioFace {
-	int operator==(const ioFace &_f) {
-		return a==_f.a && b==_f.b && c==_f.c && idMat==_f.idMat && idRs==_f.idRs && idEn==_f.idEn && Rec_angle==_f.Rec_angle && angle_group==_f.angle_group;
+	bool operator==(const ioFace &_f) {
+		return a==_f.a && b==_f.b && c==_f.c && idMat==_f.idMat && idRs==_f.idRs && idEn==_f.idEn;
+	}
+	ioFace() {
+	
+	}
+	ioFace(indiceV _a, indiceV _b, indiceV _c, indiceMat _idMat, indiceRS _idRs, indiceEN _idEn)
+	: a(_a), b(_b), c(_c), idMat(_idMat), idRs(_idRs), idEn(_idEn) {
+		
 	}
 	bool Rec_angle; /*!< Sets if energy in funciton of angle is recorded for this face */
 	int angle_group; /*!< Sets if energy in funciton of angle is recorded for this face */

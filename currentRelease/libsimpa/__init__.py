@@ -1,20 +1,23 @@
-# -*- coding: cp1252 -*-
+ï»¿# -*- coding: utf-8 -*-
 from libsimpa import *
-from vec3 import vec3
 
-
-#Ajout de fonctionnalité par rapport a la librairie en C++
+# Add new functionalities
 
 ###########################################################
 ## Gabe_rw
 
 def ToList(self):
     """
-        Retourne les données sous forme de listes python
+        Return data using python array
     """
     lstret=[]
-    for idcol in range(0,self.size()):
-        lstret.append([ self.GetColTitle(idcol)] + [w.replace(',','.') for w in list(self.Index(idcol))])
+    coltypes=list(self.GetTabTypes())
+    func_binding={ GABE_OBJECTTYPE_SHORTSTRING : self.ReadColStr,
+                   GABE_OBJECTTYPE_INT : self.ReadColInt,
+                   GABE_OBJECTTYPE_FLOAT : self.ReadColFloat
+                 }
+    for idcol in range(0,len(self)):
+        lstret.append([ self.GetColTitle(idcol)] + list(func_binding[coltypes[idcol]](idcol)))
     return lstret                    
 
 setattr(Gabe_rw,"ToList",ToList)
