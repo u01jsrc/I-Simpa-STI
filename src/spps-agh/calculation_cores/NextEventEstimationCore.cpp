@@ -263,7 +263,7 @@ void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t
 			shadowRay.targetReceiver = receiver;
 			shadowRay.isShadowRay = true;
 
-			float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, shadowRay, particle.direction, configurationTool);
+			float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceInfo->normal, receiver->position, shadowRay, particle.direction, configurationTool);
 			shadowRay.energie *= energy;
 
 			//fast forward particle to receiver surrounding

@@ -11,9 +11,9 @@ MLTCore::MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULAT
 {
 	doDirectSoundCalculation = true;
 
-	pLarge = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_LARGE_STEP_PROB);
-	pSpecular = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_SPECULAR_REFL_PROB);
-	mutation_number = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::MLT_MUTATION_NUMBER);
+	pLarge = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_MLT_LARGE_STEP_PROB);
+	pSpecular = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_MLT_SPECULAR_REFL_PROB);
+	mutation_number = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_MLT_MUTATION_NUMBER);
 };
 
 bool MLTCore::Run(CONF_PARTICULE_AGH configurationP)

@@ -51,39 +51,39 @@ BRDFs::Initializer::Initializer()
 	calcPixelizedReceivers(19.5, pixelizedCircle40pt);
 }
 
-float BRDFs::SolveBRDFReflection(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH &shadowRay, vec3 incomingDirection, Core_ConfigurationAGH *configurationTool)
+float BRDFs::SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool)
 {
 	switch (material.reflectionLaw)
 	{
 	case REFLECTION_LAW_SPECULAR:
-		return SolveSpecularBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
+		return SolveSpecularBRDF(material, faceNormal, targetPoint, shadowRay, incomingDirection, configurationTool);
 
 	case REFLECTION_LAW_LAMBERT:
-		return SolveSpecularLambertBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
+		return SolveSpecularLambertBRDF(material, faceNormal, targetPoint, shadowRay, incomingDirection, configurationTool);
 
 	case REFLECTION_LAW_PHONG:
-		return SolvePhongBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
+		return SolvePhongBRDF(material, faceNormal, targetPoint, shadowRay, incomingDirection, configurationTool);
 
 	default:
-		return SolveSpecularLambertBRDF(material, faceNormal, shadowRay, incomingDirection, configurationTool);
+		return SolveSpecularLambertBRDF(material, targetPoint, faceNormal, shadowRay, incomingDirection, configurationTool);
 	}
 }
 
-vec3 BRDFs::SolveSpecularReflection(vec3 &incomingDirection, vec3 &faceNormal)
+vec3 BRDFs::SolveSpecularReflection(const vec3 &incomingDirection, const vec3 &faceNormal)
 {
 	vec3 retVal = (incomingDirection - (faceNormal*(incomingDirection.dot(faceNormal)) * 2));
 	return retVal / retVal.length();
 }
 
-float BRDFs::SolveSpecularBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
+float BRDFs::SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	vec3 toReceiver = targetPoint - shadowRay.position;
 	double specularEnergy = 0;
 	l_decimal mu1, mu2;
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
-	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
+	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, targetPoint, receiverRadius, &mu1, &mu2))
 	{
 		specularEnergy = (1 - material.diffusion) * (abs(mu2 - mu1) * specular.length() * 1000) / (2 * receiverRadius);
 	}
@@ -91,15 +91,15 @@ float BRDFs::SolveSpecularBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_
 	return  specularEnergy;
 }
 
-float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
+float BRDFs::SolveSpecularLambertBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	vec3 toReceiver = targetPoint - shadowRay.position;
 	double specularEnergy = 0, lambertEnergy;
 	l_decimal mu1, mu2;
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
-	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, shadowRay.targetReceiver->position, receiverRadius, &mu1, &mu2))
+	if (RaySphereIntersection(shadowRay.position, shadowRay.position + specular * 1000, targetPoint, receiverRadius, &mu1, &mu2))
 	{
 		specularEnergy = (1 - material.diffusion) * (abs(mu2 - mu1) * specular.length()*1000)/(2*receiverRadius);
 	}
@@ -116,10 +116,10 @@ float BRDFs::SolveSpecularLambertBRDF(t_Material_BFreq material, vec3 faceNormal
 	return  specularEnergy + lambertEnergy;
 }
 
-float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PARTICULE_AGH& shadowRay, vec3 incomingDirection, Core_ConfigurationAGH* configurationTool)
+float BRDFs::SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = shadowRay.targetReceiver->position - shadowRay.position;
+	vec3 toReceiver = targetPoint - shadowRay.position;
 	Matrix3 rotMatrix;
 	double energyFactor = 0, solidAngle, dl;	
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
@@ -133,7 +133,7 @@ float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PAR
 	if (receiverRadius / toReceiver.length() < 0.01)
 	{
 		solidAngle = (M_PI*receiverRadius*receiverRadius) / (toReceiver.length()*toReceiver.length());
-		evaluatePhongAtPoint(n, material.diffusion, solidAngle, 1, shadowRay.targetReceiver->position, shadowRay.position, faceNormal, specular, toReceiver / toReceiver.length(), energyFactor);
+		evaluatePhongAtPoint(n, material.diffusion, solidAngle, 1, targetPoint, shadowRay.position, faceNormal, specular, toReceiver / toReceiver.length(), energyFactor);
 		return energyFactor*0.66;
 	}
 
@@ -165,7 +165,7 @@ float BRDFs::SolvePhongBRDF(t_Material_BFreq material, vec3 faceNormal, CONF_PAR
 	//calculate and sum energy factors for all subfaces
 	for each(subSurface subSurf in sellectedParametrization)
 	{		
-		vec3 subFacePosition = rotMatrix*subSurf.center + shadowRay.targetReceiver->position;
+		vec3 subFacePosition = rotMatrix*subSurf.center + targetPoint;
 		vec3 subFaceNormal = rotMatrix * vec3(0, 0, 1);
 
 		evaluatePhongAtPoint(n, material.diffusion, solidAngle, subSurf.weight, subFacePosition, shadowRay.position, faceNormal, specular, subFaceNormal, energyFactor);
