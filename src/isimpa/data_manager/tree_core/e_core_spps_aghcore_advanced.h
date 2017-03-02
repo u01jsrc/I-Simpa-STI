@@ -121,9 +121,9 @@ public:
 		if (!this->IsPropertyExist("angle_filename")) {
 			InitAngleStatsCalc(this);
 		}
-		if (!this->IsPropertyExist("SR_to_surface_reciver")) {
-			InitCastShadowRaysToSurfRec(this);
-		}
+		//if (!this->IsPropertyExist("SR_to_surface_reciver")) {
+		//	InitCastShadowRaysToSurfRec(this);
+		//}
 	}
 
 	E_Core_SppsNee_AGH_advanced_NEE(Element* parent)
@@ -159,7 +159,7 @@ protected:
 	{
 		InitRandomSeed(this);
 		InitAngleStatsCalc(this);
-		InitCastShadowRaysToSurfRec(this);
+		//InitCastShadowRaysToSurfRec(this);
 	}
 
 	void InitRandomSeed(Element* confCore) {

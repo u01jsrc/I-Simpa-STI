@@ -132,9 +132,9 @@ void Core_ConfigurationAGH::LoadAdvancedMLT(CXmlNode* simuNode) {
 			std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl;
 		}
 		SetConfigInformation(I_PROP_RANDOM_SEED, seed);
-		SetConfigInformation(MLT_SPECULAR_REFL_PROB, advancedNode->GetProperty("specularReflProbabilityMulti").ToFloat());
-		SetConfigInformation(MLT_MUTATION_NUMBER, advancedNode->GetProperty("mutationNumber").ToInt());
-		SetConfigInformation(MLT_LARGE_STEP_PROB, advancedNode->GetProperty("largeStepProb").ToFloat());
+		SetConfigInformation(FPROP_MLT_SPECULAR_REFL_PROB, advancedNode->GetProperty("specularReflProbabilityMulti").ToFloat());
+		SetConfigInformation(FPROP_MLT_MUTATION_NUMBER, advancedNode->GetProperty("mutationNumber").ToInt());
+		SetConfigInformation(FPROP_MLT_LARGE_STEP_PROB, advancedNode->GetProperty("largeStepProb").ToFloat());
 	}
 }
 
