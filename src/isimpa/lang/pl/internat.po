@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: I-Simpa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 16:15+0100\n"
-"PO-Revision-Date: 2017-03-03 16:19+0100\n"
+"POT-Creation-Date: 2017-03-03 16:35+0100\n"
+"PO-Revision-Date: 2017-03-03 16:37+0100\n"
 "Last-Translator: Travis Lae <travis_lae@noise-planet.org>\n"
 "Language-Team: Polish (http://www.transifex.com/LAE/i-simpa/language/pl/)\n"
 "Language: pl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Generator: Poedit 1.8.12\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: _\n"
+"X-Poedit-KeywordsList: _;wxTRANSLATE\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.py\n"
 
@@ -1062,6 +1062,7 @@ msgid "Specular"
 msgstr "Lustrzane"
 
 #: src/isimpa/data_manager/appconfig.cpp:145
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:105
 msgid "Uniform"
 msgstr "Jednorodne"
 
@@ -1111,6 +1112,7 @@ msgstr "Usuń"
 #: src/isimpa/main/i_simpa_main.cpp:508
 #: src/isimpa/data_manager/tree_core/e_core_core_config.h:55
 #: src/isimpa/data_manager/tree_scene/e_scene_encombrements_encombrement_proprietes.h:66
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:63
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteur_proprietes.h:67
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_proprietes.h:64
 #: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:128
@@ -1135,6 +1137,11 @@ msgstr ""
 "To pole nie istnieje!\n"
 "Nazwa elementu: %s Nazwa pola: %s"
 
+#: src/isimpa/data_manager/generic_element/e_directivity.cpp:83
+#: src/isimpa/data_manager/generic_element/e_directivity.cpp:120
+msgid "Directivity file"
+msgstr "Plik kierunkowości"
+
 #: src/isimpa/data_manager/generic_element/e_directivity.cpp:85
 #: src/isimpa/data_manager/generic_element/e_directivity.cpp:120
 msgid "Open loudspeaker file"
@@ -1145,6 +1152,19 @@ msgstr "Otwórz plik głośnika"
 msgid "TXT files (*.TXT)|*.TXT"
 msgstr "Pliki tekstowe (*.TXT)|*.TXT"
 
+#: src/isimpa/data_manager/generic_element/e_directivity.cpp:93
+#: src/isimpa/data_manager/generic_element/e_directivity.cpp:121
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h:80
+#: src/isimpa/data_manager/tree_scene/e_scene_encombrements_encombrement_proprietes.h:56
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:58
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteur_proprietes.h:58
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_proprietes.h:56
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:62
+#: src/isimpa/data_manager/tree_scene/e_scene_volumes_volume_proprietes.h:63
+#: src/isimpa/data_manager/tree_scene/e_scene_volumes_volume_proprietes.h:71
+msgid "Description"
+msgstr "Opis"
+
 #: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:60
 msgid "Uniform Collision"
 msgstr "Odbicie jednorodne"
@@ -1154,10 +1174,33 @@ msgid "Lambert Collision"
 msgstr "Odbicie Lamberta"
 
 #: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:79
+#: src/isimpa/data_manager/projet_calculation.cpp:961
 #: src/isimpa/Language/additionnal_univ.h:36
 #: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:197
 msgid "Acoustic parameters"
 msgstr "Parametry akustyczne"
+
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:122
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:131
+msgid "Alpha"
+msgstr "α"
+
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:123
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:132
+msgid "Lambda"
+msgstr "λ"
+
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:124
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:133
+#: src/isimpa/data_manager/e_data_row_materiau.h:234
+msgid "Diffusion law"
+msgstr "Prawo rozproszenia"
+
+#: src/isimpa/data_manager/generic_element/e_gammeabsorption.cpp:129
+#: src/isimpa/data_manager/projet_calculation.cpp:903
+#: src/isimpa/data_manager/projet_calculation.cpp:1402
+msgid "Average"
+msgstr "Średnia"
 
 #: src/isimpa/data_manager/generic_element/e_gammefrequence.cpp:158
 #: src/isimpa/data_manager/generic_element/e_property_freq.cpp:190
@@ -1707,10 +1750,9 @@ msgstr ""
 "Następujący plik nie istnieje:\n"
 "%s"
 
-#: src/isimpa/data_manager/projet_calculation.cpp:903
-#: src/isimpa/data_manager/projet_calculation.cpp:1402
-msgid "Average"
-msgstr "Średnia"
+#: src/isimpa/data_manager/projet_calculation.cpp:990
+msgid "Schroeder curves"
+msgstr "Krzywe Schroedera"
 
 #: src/isimpa/data_manager/projet_calculation.cpp:1284
 msgid "Early lateral fraction LF (ms)"
@@ -1726,6 +1768,11 @@ msgstr "Współczynnik odbić bocznych LFC (ms)"
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:84
 msgid " Hz"
 msgstr "Hz"
+
+#: src/isimpa/data_manager/projet_calculation.cpp:1441
+#: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:42
+msgid "Advanced acoustic parameters"
+msgstr "Zaawansowane parametry akustyczne"
 
 #: src/isimpa/data_manager/projet_maillage.cpp:81
 msgid "Reparing 3D scene"
@@ -1974,15 +2021,15 @@ msgstr ""
 msgid "Refresh folder"
 msgstr "Odśwież folder"
 
-#: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:42
-msgid "Advanced acoustic parameters"
-msgstr "Zaawansowane parametry akustyczne"
-
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:53
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recp.cpp:52
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recps.cpp:52
 msgid "Calculate acoustic parameters"
 msgstr "Wyznacz parametry akustyczne"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:75
+msgid "Lateral sound level"
+msgstr "Poziom boczny"
 
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_gap.cpp:83
 msgid " (E*cos theta)"
@@ -1998,6 +2045,7 @@ msgstr " ms"
 
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recp.cpp:41
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recps.cpp:41
+#: src/isimpa/data_manager/tree_core/e_core_core.h:110
 msgid "Sound level"
 msgstr "Poziom dźwięku"
 
@@ -2161,6 +2209,8 @@ msgid "Stop"
 msgstr "Zatrzymaj"
 
 #: src/isimpa/main/i_simpa_main.cpp:230 src/isimpa/main/i_simpa_main.cpp:464
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:49
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:60
 msgid "Meshing"
 msgstr "Siatka"
 
@@ -2614,30 +2664,37 @@ msgstr ""
 "sprawdź statystyki cząstek aby uzyskać więcej informacji."
 
 #: src/spps/input_output/reportmanager.cpp:432
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:96
 msgid "Particles absorbed by the atmosphere"
 msgstr "Cząstki pochłonięte przez atmosferę"
 
 #: src/spps/input_output/reportmanager.cpp:433
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:97
 msgid "Particles absorbed by the materials"
 msgstr "Cząstki pochłonięte przez materiały"
 
 #: src/spps/input_output/reportmanager.cpp:434
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:98
 msgid "Particles absorbed by the fittings"
 msgstr "Cząstki pochłonięte przez strefy dopasowania"
 
 #: src/spps/input_output/reportmanager.cpp:435
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:99
 msgid "Particles lost by infinite loops"
 msgstr "Cząstki stracone w nieskończonych pętlach"
 
 #: src/spps/input_output/reportmanager.cpp:436
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:100
 msgid "Particles lost by meshing problems"
 msgstr "Cząstki stracone w związku z błędami siatki"
 
 #: src/spps/input_output/reportmanager.cpp:437
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:101
 msgid "Particles remaining at the end of the calculation"
 msgstr "Cząstki pozostałe na końcu symulacji"
 
 #: src/spps/input_output/reportmanager.cpp:661
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:90
 msgid "IntensityAnimation"
 msgstr "Animacja natężenia"
 
@@ -2654,6 +2711,7 @@ msgid "Main results"
 msgstr "Główne wyniki"
 
 #: src/theorie_classique/main_tc.cpp:140
+#: src/isimpa/data_manager/tree_core/e_core_core.h:109
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteursp.h:52
 msgid "Punctual receivers"
 msgstr "Odbiorniki punktowe"
@@ -2747,10 +2805,6 @@ msgstr "Pochłanianie"
 msgid "Diffusion"
 msgstr "Rozpraszanie"
 
-#: src/isimpa/data_manager/e_data_row_materiau.h:234
-msgid "Diffusion law"
-msgstr "Prawo rozproszenia"
-
 #: src/isimpa/data_manager/e_data_row_materiau.h:235
 msgid "Loss (dB)"
 msgstr "Izolacyjność (dB)"
@@ -2766,6 +2820,11 @@ msgstr "Określ w widoku 3D"
 #: src/isimpa/data_manager/e_position.h:112
 msgid "Value (m)"
 msgstr "Wartość (m)"
+
+#: src/isimpa/data_manager/generic_element/e_directivity_user.h:51
+#: src/isimpa/data_manager/generic_element/e_directivity_user.h:57
+msgid "User directivity"
+msgstr "Kierunkowość użytkownika"
 
 #: src/isimpa/data_manager/generic_element/e_gammefrequence_app.h:53
 msgid "Reference spectrum"
@@ -2783,9 +2842,22 @@ msgstr "Materiał odniesienia"
 msgid "Calculation code"
 msgstr "Metoda obliczeniowa"
 
+#: src/isimpa/data_manager/tree_core/e_core_core.h:111
+msgid "Advanced sound level"
+msgstr "Zaawansowany poziom ciśnienia akustycznego"
+
+#: src/isimpa/data_manager/tree_core/e_core_core.h:112
+msgid "Total energy"
+msgstr "Całkowita energia"
+
 #: src/isimpa/data_manager/tree_core/e_core_core.h:118
 msgid "Run calculation"
 msgstr "Uruchom obliczenia"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_bfreqselection.h:51
+#: src/isimpa/data_manager/tree_core/e_core_core_bfreqselection.h:81
+msgid "Frequency bands"
+msgstr "Pasma częstotliwości"
 
 #: src/isimpa/data_manager/tree_core/e_core_core_bfreqselection.h:132
 msgid "Unselect all"
@@ -2823,21 +2895,253 @@ msgstr "Tercje"
 msgid "Automatic selection"
 msgstr "Wybór automatyczny"
 
+#: src/isimpa/data_manager/tree_core/e_core_core_config.h:76
+msgid "Simulation length (s)"
+msgstr "Długość symulacji (s)"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_config.h:77
+msgid "Time step (s)"
+msgstr "Krok czasowy (s)"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:96
+msgid "Volume constraint (m3)"
+msgstr "Ograniczenie objętości (m3)"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:97
+msgid "Radius/Edge ratio"
+msgstr "Stosunek promienia/krawędzi"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:98
+msgid "Additional parameters"
+msgstr "Dodatkowe parametry"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:99
+msgid "User-defined parameters"
+msgstr "Parametry zdefiniowane przez użytkownika"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:100
+msgid "Surface receivers constraint (m2)"
+msgstr "Ograniczenie odbiorników powierzchniowych (m2)"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:101
+msgid "Surface receivers constraint"
+msgstr "Ograniczenie odbiorników powierzchniowych"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:102
+msgid "Volume constraint"
+msgstr "Ograniczenie objętości"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:103
+msgid "Scene correction before meshing"
+msgstr "Korekcja modelu przed generacją siatki"
+
+#: src/isimpa/data_manager/tree_core/e_core_core_tetconf.h:104
+msgid "Test mesh topology"
+msgstr "Testuj topologię siatki"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:56
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:55
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:135
+msgid "Limit value of the particle extinction (Energetic method) : ratio 10^n"
+msgstr "Energia wymierania cząstek (metoda energetyczna): stosunek 10^n"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:57
+msgid "Active calculation transmission"
+msgstr "Aktywna transmisja dźwieu"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:58
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:57
+msgid "Receiver radius"
+msgstr "Promień odbiorników"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:64
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:63
+msgid "Soundmap: intensity"
+msgstr "Natężenie dźwięku"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:66
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:65
+msgid "Soundmap: SPL"
+msgstr "SPL"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:68
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:67
+msgid "Surface receiver export"
+msgstr "Parametr odbiorników powierzchniowych"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:75
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:95
+msgid "SPPS"
+msgstr "SPPS"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:77
+msgid "SPPS + Next Event Estimation"
+msgstr "SPPS + NEE"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:79
+msgid "MLT (Kelemen)"
+msgstr "MLT (Kelemen)"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:81
+msgid " CALCULATION CORE"
+msgstr " Kod obliczeniowy"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:88
+msgid "statsSPPS"
+msgstr "Statystyki SPPS"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:89
+msgid "angle_stats"
+msgstr "Statystyki kątów padania energii "
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:91
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:73
+msgid "Intensity vector"
+msgstr "Wektor natężenia"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:95
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:77
+msgid "Punctual receiver intensity"
+msgstr "Natężenie odbiornika punktowego"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:102
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:78
+msgid "Sound level per source"
+msgstr "Poziom dźwięku na źródło"
+
 #: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:107
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:82
 #: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:98
 #: src/isimpa/data_manager/tree_core/e_core_tccore.h:52
 msgid "Export surface receivers for each frequency band"
 msgstr "Eksportuj odbiorniki powierzchniowe dla każdej częstotliwości"
 
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:110
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:85
+msgid "Echogram per source"
+msgstr "Echogram na źródło"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:192
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:163
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:100
+msgid "Number of sound particles per source"
+msgstr "Ilość cząstek na źródło"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:193
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:164
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:101
+msgid "Number of sound particles per source (display)"
+msgstr "Wyświetlana ilość cząstek na źródło"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:194
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:165
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:102
+msgid "Active calculation of atmospheric absorption"
+msgstr "Aktywne pochłanianie atmosferyczne"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:195
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:166
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:103
+msgid "Active calculation of diffusion by fitting objects"
+msgstr "Aktywne pochłanianie przez strefy dopasowania"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:196
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:167
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:104
+msgid "Active calculation of direct field only"
+msgstr "Aktywne obliczanie tylko dźwięku bezpośredniego "
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:197
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:168
+#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:99
+msgid "Calculation method"
+msgstr "Metoda obliczeniowa"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore.h:258
 #: src/isimpa/data_manager/tree_core/e_core_sppscore.h:207
 #, c-format
 msgid ""
 "The size of the particle file, for each frequency band, is around %.2f Mo"
 msgstr "Rozmiar pliku cząstek dla każdej częstotliwości to około %.2f Mo"
 
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:95
-msgid "SPPS"
-msgstr "SPPS"
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:49
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:62
+msgid "Advanced - SPPS"
+msgstr "Zaawansowane - SPPS"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:97
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:166
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:233
+msgid "Random seed"
+msgstr "Ziarno generatora"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:101
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:170
+msgid "Surface incidence angle stats"
+msgstr "Statystyki kątów padania energii na powierzchnię"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:102
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:171
+msgid "Normalize angle stats"
+msgstr "Normalizuj statystyki kątów padania energii"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:103
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:172
+msgid "Min reflection for incidence angle record"
+msgstr "Minimalny rząd odbicia, dla odbiorników powierzchniowych"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:104
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:173
+msgid "Extended angle stats"
+msgstr "Zaawansowane statystyki kąta padania"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:114
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:130
+msgid "Advanced - NEE"
+msgstr "Zaawansowane - NEE"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:176
+msgid "Cast shadow rays to surface receivers"
+msgstr "Generuj promienie pozorne do odbiorników powierzchnowych"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:185
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:198
+msgid "Advanced - MLT"
+msgstr "Zaawansowane - MLT"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:237
+msgid "Large step probability"
+msgstr "Prawdopodobieństwo dużego kroku"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:238
+msgid "Specular reflection probability multiplier"
+msgstr "Mnożnik prawdopodobieństwa odbicia lustrzanego"
+
+#: src/isimpa/data_manager/tree_core/e_core_spps_aghcore_advanced.h:239
+msgid "Mutation number"
+msgstr "Liczba mutacji"
+
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:56
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:136
+msgid "Active calculation of transmission"
+msgstr "Aktywna transmisja dźwięku"
+
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:71
+msgid "SPPS particle statistics"
+msgstr "Statystyki cząstek SPPS"
+
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:72
+msgid "Intensity animation"
+msgstr "Animacja natężenia"
+
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:74
+msgid "Receiver intensity"
+msgstr "Natężenie w odbiorniku"
+
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:88
+#: src/isimpa/data_manager/tree_core/e_core_sppscore.h:137
+msgid "Random initialization number"
+msgstr "Ziarno generatora liczb losowych"
 
 #: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:96
 msgid "Random"
@@ -2846,30 +3150,6 @@ msgstr "Losowa"
 #: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:97
 msgid "Energetic"
 msgstr "Energetyczna"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:99
-msgid "Calculation method"
-msgstr "Metoda obliczeniowa"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:100
-msgid "Number of sound particles per source"
-msgstr "Ilość cząstek na źródło"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:101
-msgid "Number of sound particles per source (display)"
-msgstr "Wyświetlana ilość cząstek na źródło"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:102
-msgid "Active calculation of atmospheric absorption"
-msgstr "Aktywne pochłanianie atmosferyczne"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:103
-msgid "Active calculation of diffusion by fitting objects"
-msgstr "Aktywne pochłanianie przez strefy dopasowania"
-
-#: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:104
-msgid "Active calculation of direct field only"
-msgstr "Aktywne obliczanie tylko dźwięku bezpośredniego "
 
 #: src/isimpa/data_manager/tree_core/e_core_sppsoctreecore.h:105
 msgid "Calculation informations"
@@ -2883,6 +3163,26 @@ msgstr "Promień odbiorników (m)"
 msgid "Atmospheric absorption calculation"
 msgstr "Uwzględnij tłumienie atmosferyczne"
 
+#: src/isimpa/data_manager/tree_core/e_core_tccore.h:65
+msgid "Classical theory of reverberation (TCR)"
+msgstr "Metoda statystyczna"
+
+#: src/isimpa/data_manager/tree_core/e_core_tccore.h:85
+msgid "Classical theory of reverberation"
+msgstr "Metoda statystyczna"
+
+#: src/isimpa/data_manager/tree_core/e_core_tccore.h:95
+msgid "Direct field"
+msgstr "Pole bezpośrednie"
+
+#: src/isimpa/data_manager/tree_core/e_core_tccore.h:96
+msgid "Total field (Sabine)"
+msgstr "Pole całkowite (Sabine)"
+
+#: src/isimpa/data_manager/tree_core/e_core_tccore.h:97
+msgid "Total field (Eyring)"
+msgstr "Pole całkowite (Eyring)"
+
 #: src/isimpa/data_manager/tree_core/e_core_tlmcore.h:53
 msgid "TLM"
 msgstr "TLM"
@@ -2890,6 +3190,10 @@ msgstr "TLM"
 #: src/isimpa/data_manager/tree_rapport/e_report_folder.h:86
 msgid "Open folder"
 msgstr "Otwórz folder"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_partvisualisation.h:60
+msgid "Particles animation"
+msgstr "Animacja czastek"
 
 #: src/isimpa/data_manager/tree_rapport/e_report_partvisualisation.h:86
 msgid "Rays"
@@ -2906,6 +3210,42 @@ msgstr "Wczytaj animacje"
 msgid "Surface receivers"
 msgstr "Odbiorniki powierzchniowe"
 
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:66
+msgid "Face opacity"
+msgstr "Przezroczystość"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:67
+msgid "Display front"
+msgstr "Wyświetl przód"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:68
+msgid "Display back"
+msgstr "Wyświetl tył"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:87
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:111
+msgid "Maximum value (dB)"
+msgstr "Wartość maksymalna (dB)"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:88
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:112
+msgid "Minimum value (dB)"
+msgstr "Wartość minimalna (dB)"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:98
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:113
+msgid "Maximum value (s)"
+msgstr "Wartość maksymalna (s)"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:99
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:114
+msgid "Minimum value (s)"
+msgstr "Wartość minimalna (s)"
+
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:104
+msgid "Smooth colors"
+msgstr "Wygładź kolory"
+
 #: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:109
 msgid "Display recto"
 msgstr "Wyświetl prawą stronę"
@@ -2914,21 +3254,17 @@ msgstr "Wyświetl prawą stronę"
 msgid "Display verso"
 msgstr "Wyświetl lewą stronę"
 
-#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:111
-msgid "Maximum value (dB)"
-msgstr "Wartość maksymalna (dB)"
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:142
+msgid "Show iso-curves"
+msgstr "Pokaż izolinie"
 
-#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:112
-msgid "Minimum value (dB)"
-msgstr "Wartość minimalna (dB)"
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:143
+msgid "Iso level list"
+msgstr "Izolinie"
 
-#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:113
-msgid "Maximum value (s)"
-msgstr "Wartość maksymalna (s)"
-
-#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:114
-msgid "Minimum value (s)"
-msgstr "Wartość minimalna (s)"
+#: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:144
+msgid "Smooth level"
+msgstr "Wygładź poziom"
 
 #: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:175
 msgid "Instantaneous sound level"
@@ -2990,6 +3326,11 @@ msgstr "Animacja natężenia"
 msgid "Project database"
 msgstr "Baza danych projektu"
 
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_directivities.h:48
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_directivities.h:77
+msgid "Directivities"
+msgstr "Kierunkowości"
+
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_directivities_user.h:125
 msgid "New directivity"
 msgstr "Nowy plik kierunkowości"
@@ -2997,6 +3338,11 @@ msgstr "Nowy plik kierunkowości"
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux.h:52
 msgid "Materials"
 msgstr "Materiały"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_app.h:52
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_app.h:82
+msgid "Reference materials"
+msgstr "Materiały odniesienia"
 
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_app_materiau.h:57
 msgid "Application"
@@ -3024,13 +3370,6 @@ msgstr "Opis materiału"
 msgid "Reference"
 msgstr "Wbudowane"
 
-#: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h:80
-#: src/isimpa/data_manager/tree_scene/e_scene_encombrements_encombrement_proprietes.h:56
-#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_proprietes.h:56
-#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:62
-msgid "Description"
-msgstr "Opis"
-
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h:81
 msgid "Mass density (kg/m3)"
 msgstr "Gęstość (kg/m3)"
@@ -3051,6 +3390,7 @@ msgstr "Użytkownika"
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_user.h:144
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_user_group.h:197
 #: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_user_materiau.h:62
+#: src/isimpa/data_manager/tree_scene/e_scene_bdd_materiaux_user_materiau.h:87
 msgid "New material"
 msgstr "Nowy materiał"
 
@@ -3305,6 +3645,51 @@ msgstr "Tłumienie atmosferyczne"
 msgid "Environment"
 msgstr "Środowisko"
 
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:46
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:57
+msgid "Informations"
+msgstr "Informacje"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:68
+msgid "Number of active fitting zones"
+msgstr "Ilość aktywnych stref dopasowania"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:69
+msgid "Number of active sound sources"
+msgstr "Ilość aktywnych źródeł dźwięku"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:76
+msgid "Model face count"
+msgstr "Ilość powierzchni"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:77
+msgid "Number of fitting zones"
+msgstr "Ilość stref dopasowania"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:78
+msgid "Number of punctual receivers"
+msgstr "Ilość odbiorników punktowych"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:79
+msgid "Number of surfaces receivers"
+msgstr "Ilość odbiorników powierzchniowych"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:80
+msgid "Number of sound sources"
+msgstr "Ilość źródeł dźwięku"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:81
+msgid "Number of surface groups"
+msgstr "Ilość grup powierzchni"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:82
+msgid "Scene volume (m3)"
+msgstr "Objętość modelu"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_informations.h:83
+msgid "Scene surface (m2)"
+msgstr "Powierzchnia modelu"
+
 #: src/isimpa/data_manager/tree_scene/e_scene_projet_rendu_origine.h:63
 msgid "Arrow length"
 msgstr "Długość strzałki (z)"
@@ -3342,6 +3727,22 @@ msgstr "Skala siatki"
 msgid "XYZ axis"
 msgstr "Oś XYZ"
 
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_userconfiguration.h:53
+msgid "Project name"
+msgstr "Nazwa projektu"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_userconfiguration.h:54
+msgid "Project description"
+msgstr "Opis projektu"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_userconfiguration.h:55
+msgid "Author"
+msgstr "Autor"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_projet_userconfiguration.h:58
+msgid "Date"
+msgstr "Data"
+
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteursp.h:98
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteursp.h:106
 #: src/isimpa/data_manager/tree_scene/e_scene_sources.h:158
@@ -3377,8 +3778,33 @@ msgid "Background noise"
 msgstr "Tło"
 
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur.h:139
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source.h:99
 msgid "Position"
 msgstr "Pozycja"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:49
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:73
+msgid "Direction X"
+msgstr "Kierunek X"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:50
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:74
+msgid "Direction Y"
+msgstr "Kierunek Y"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:51
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:75
+msgid "Direction Z"
+msgstr "Kierunek Z"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:56
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:65
+msgid "Omnidirectional"
+msgstr "Wszechkierunkowe"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteursp_recepteur_proprietes.h:57
+msgid "Type"
+msgstr "Typ"
 
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteurss.h:139
 msgid "New scene face receiver"
@@ -3387,6 +3813,19 @@ msgstr "Nowy odbiornik na powierzchni modelu"
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteurss.h:140
 msgid "New plane receiver"
 msgstr "Nowy odbiornik powierzchinowy"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteur.h:53
+msgid "Scene receiver"
+msgstr "Odbiornik na powierzchni modelu"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteur_proprietes.h:49
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_proprietes.h:49
+msgid "Enabled"
+msgstr "Aktywny"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteur_proprietes.h:53
+msgid "Calculate angle of incidence stats"
+msgstr "Oblicz statystyki kąta padania energii"
 
 #: src/isimpa/data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe.h:60
 msgid "Plane Receiver"
@@ -3416,10 +3855,52 @@ msgstr "Źródła dźwięku"
 msgid "New source"
 msgstr "Nowe źródło"
 
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source.h:51
+msgid "Source"
+msgstr "Zrodlo"
+
 #: src/isimpa/data_manager/tree_scene/e_scene_sources_source.h:88
 #, c-format
 msgid "Source %i"
 msgstr "Zrodlo %i"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source.h:98
+msgid "Sound power"
+msgstr "Moc akustyczna"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:52
+msgid "Active source"
+msgstr "Źródło aktywne"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:57
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:70
+msgid "Directivity balloon"
+msgstr "Balon kierunkowości"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:66
+msgid "Unidirectional"
+msgstr "Jednokierunkowy"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:67
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:68
+msgid "XY plan"
+msgstr "Płaszczyzna XY"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:69
+msgid "XZ plan"
+msgstr "Płaszczyzna XZ"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:71
+msgid "Directivity"
+msgstr "Kierunkowość"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:76
+msgid "Time delay (s)"
+msgstr "Opóźnienie (s)"
+
+#: src/isimpa/data_manager/tree_scene/e_scene_sources_source_properties.h:98
+msgid "Directivity Balloon"
+msgstr "Balon kierunkowości"
 
 #: src/isimpa/data_manager/tree_scene/e_scene_volumes_volume.h:97
 #, c-format
@@ -3511,243 +3992,8 @@ msgstr "Ikona %s nie istnieje"
 msgid "Iso-levels color"
 msgstr "Grupa kolorów izolinii"
 
-#~ msgid "Active calculation of transmission"
-#~ msgstr "Aktywna transmisja dźwięku"
-
-#~ msgid "Active source"
-#~ msgstr "Źródło aktywne"
-
-#~ msgid "Additional parameters"
-#~ msgstr "Dodatkowe parametry"
-
-#~ msgid "Advanced sound level"
-#~ msgstr "Zaawansowany poziom ciśnienia akustycznego"
-
-#~ msgid "Alpha"
-#~ msgstr "α"
-
-#~ msgid "Author"
-#~ msgstr "Autor"
-
-#~ msgid "Classical theory of reverberation"
-#~ msgstr "Metoda statystyczna"
-
-#~ msgid "Classical theory of reverberation (TCR)"
-#~ msgstr "Metoda statystyczna"
-
-#~ msgid "Date"
-#~ msgstr "Data"
-
-#~ msgid "Direct field"
-#~ msgstr "Pole bezpośrednie"
-
-#~ msgid "Direction X"
-#~ msgstr "Kierunek X"
-
-#~ msgid "Direction Y"
-#~ msgstr "Kierunek Y"
-
-#~ msgid "Direction Z"
-#~ msgstr "Kierunek Z"
-
-#~ msgid "Directivity"
-#~ msgstr "Kierunkowość"
-
-#~ msgid "Directivity Balloon"
-#~ msgstr "Balon kierunkowości"
-
-#~ msgid "Directivity balloon"
-#~ msgstr "Balon kierunkowości"
-
-#~ msgid "Directivity file"
-#~ msgstr "Plik kierunkowości"
-
-#~ msgid "Display back"
-#~ msgstr "Wyświetl tył"
-
-#~ msgid "Display front"
-#~ msgstr "Wyświetl przód"
-
-#~ msgid "Echogram per source"
-#~ msgstr "Echogram na źródło"
-
-#~ msgid "Enabled"
-#~ msgstr "Aktywny"
-
-#~ msgid "Face opacity"
-#~ msgstr "Przezroczystość"
-
-#~ msgid "Frequency bands"
-#~ msgstr "Pasma częstotliwości"
+#~ msgid "Active calculation transmission (limit)"
+#~ msgstr "Energia"
 
 #~ msgid "Information"
 #~ msgstr "Informacje"
-
-#~ msgid "Intensity animation"
-#~ msgstr "Animacja natężenia"
-
-#~ msgid "Intensity vector"
-#~ msgstr "Wektor natężenia"
-
-#~ msgid "Iso level list"
-#~ msgstr "Izolinie"
-
-#~ msgid "Lambda"
-#~ msgstr "λ"
-
-#~ msgid "Lateral sound level"
-#~ msgstr "Poziom boczny"
-
-#~ msgid ""
-#~ "Limit value of the particle extinction (Energetic method) : ratio 10^n"
-#~ msgstr "Energia wymierania cząstek (metoda energetyczna): stosunek 10^n"
-
-#~ msgid "Model face count"
-#~ msgstr "Ilość powierzchni"
-
-#~ msgid "Number of active fitting zones"
-#~ msgstr "Ilość aktywnych stref dopasowania"
-
-#~ msgid "Number of active sound sources"
-#~ msgstr "Ilość aktywnych źródeł dźwięku"
-
-#~ msgid "Number of fitting zones"
-#~ msgstr "Ilość stref dopasowania"
-
-#~ msgid "Number of punctual receivers"
-#~ msgstr "Ilość odbiorników punktowych"
-
-#~ msgid "Number of sound sources"
-#~ msgstr "Ilość źródeł dźwięku"
-
-#~ msgid "Number of surface groups"
-#~ msgstr "Ilość grup powierzchni"
-
-#~ msgid "Number of surfaces receivers"
-#~ msgstr "Ilość odbiorników powierzchniowych"
-
-#~ msgid "Omnidirectional"
-#~ msgstr "Wszechkierunkowe"
-
-#~ msgid "Particles animation"
-#~ msgstr "Animacja czastek"
-
-#~ msgid "Project description"
-#~ msgstr "Opis projektu"
-
-#~ msgid "Project name"
-#~ msgstr "Nazwa projektu"
-
-#~ msgid "Punctual receiver intensity"
-#~ msgstr "Natężenie odbiornika punktowego"
-
-#~ msgid "Radius/Edge ratio"
-#~ msgstr "Stosunek promienia/krawędzi"
-
-#~ msgid "Random initialization number"
-#~ msgstr "Ziarno generatora liczb losowych"
-
-#~ msgid "Receiver intensity"
-#~ msgstr "Natężenie w odbiorniku"
-
-#~ msgid "Receiver radius"
-#~ msgstr "Promień odbiorników"
-
-#~ msgid "Reference materials"
-#~ msgstr "Materiały odniesienia"
-
-#~ msgid "SPPS particle statistics"
-#~ msgstr "Statystyki cząstek SPPS"
-
-#~ msgid "Scene correction before meshing"
-#~ msgstr "Korekcja modelu przed generacją siatki"
-
-#~ msgid "Scene receiver"
-#~ msgstr "Odbiornik na powierzchni modelu"
-
-#~ msgid "Scene surface (m2)"
-#~ msgstr "Powierzchnia modelu"
-
-#~ msgid "Scene volume (m3)"
-#~ msgstr "Objętość modelu"
-
-#~ msgid "Schroeder curves"
-#~ msgstr "Krzywe Schroedera"
-
-#~ msgid "Show iso-curves"
-#~ msgstr "Pokaż izolinie"
-
-#~ msgid "Simulation length (s)"
-#~ msgstr "Długość symulacji (s)"
-
-#~ msgid "Smooth colors"
-#~ msgstr "Wygładź kolory"
-
-#~ msgid "Smooth level"
-#~ msgstr "Wygładź poziom"
-
-#~ msgid "Sound level per source"
-#~ msgstr "Poziom dźwięku na źródło"
-
-#~ msgid "Sound power"
-#~ msgstr "Moc akustyczna"
-
-#~ msgid "Soundmap: SPL"
-#~ msgstr "SPL"
-
-#~ msgid "Soundmap: intensity"
-#~ msgstr "Natężenie dźwięku"
-
-#~ msgid "Source"
-#~ msgstr "Zrodlo"
-
-#~ msgid "Surface receiver export"
-#~ msgstr "Parametr odbiorników powierzchniowych"
-
-#~ msgid "Surface receivers constraint"
-#~ msgstr "Ograniczenie odbiorników powierzchniowych"
-
-#~ msgid "Surface receivers constraint (m2)"
-#~ msgstr "Ograniczenie odbiorników powierzchniowych (m2)"
-
-#~ msgid "Test mesh topology"
-#~ msgstr "Testuj topologię siatki"
-
-#~ msgid "Time delay (s)"
-#~ msgstr "Opóźnienie (s)"
-
-#~ msgid "Time step (s)"
-#~ msgstr "Krok czasowy (s)"
-
-#~ msgid "Total energy"
-#~ msgstr "Całkowita energia"
-
-#~ msgid "Total field (Eyring)"
-#~ msgstr "Pole całkowite (Eyring)"
-
-#~ msgid "Total field (Sabine)"
-#~ msgstr "Pole całkowite (Sabine)"
-
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Unidirectional"
-#~ msgstr "Jednokierunkowy"
-
-#~ msgid "User directivity"
-#~ msgstr "Kierunkowość użytkownika"
-
-#~ msgid "User-defined parameters"
-#~ msgstr "Parametry zdefiniowane przez użytkownika"
-
-#~ msgid "Volume constraint"
-#~ msgstr "Ograniczenie objętości"
-
-#~ msgid "Volume constraint (m3)"
-#~ msgstr "Ograniczenie objętości (m3)"
-
-#~ msgid "XY plan"
-#~ msgstr "Płaszczyzna XY"
-
-#~ msgid "XZ plan"
-#~ msgstr "Płaszczyzna XZ"

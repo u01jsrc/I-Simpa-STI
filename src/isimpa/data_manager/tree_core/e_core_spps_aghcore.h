@@ -53,7 +53,7 @@ class E_Core_Spps_AGH : public E_Core_Core
 protected:
 	void InitTransmission(E_Core_Core_Configuration* confCore)
 	{
-		confCore->AppendPropertyDecimal("trans_epsilon", wxTRANSLATE("Active calculation transmission (limit)"), 5, true, 1, true, true, 10, 0, true);
+		confCore->AppendPropertyDecimal("trans_epsilon", wxTRANSLATE("Limit value of the particle extinction (Energetic method) : ratio 10^n"), 5, true, 1, true, true, 10, 0, true);
 		confCore->AppendPropertyBool("trans_calc", wxTRANSLATE("Active calculation transmission"), true, true);
 		confCore->AppendPropertyDecimal("rayon_recepteurp", wxTRANSLATE("Receiver radius"), .31f, false, 5, false, true, 0, EPSILON, true);
 	}
