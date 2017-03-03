@@ -35,9 +35,9 @@ struct t_sppsThreadParamAGH : public t_sppsThreadParam
 class t_angle_energy
 {
 private:
-	double t, y;
+	//double t, y;
 public:
-	int angle;
+	int angle = 0;
 	bool extended;
 	std::vector<double> energy;
 	std::vector<double> correction;
@@ -55,7 +55,7 @@ public:
 			correction.resize(90 * 360);
 		}
 	}
-	void calc_angle(CONF_PARTICULE& particleInfos, t_cFace face)
+	void calc_angle(const CONF_PARTICULE& particleInfos,const t_cFace& face)
 	{
 		if (!extended) {
 			vec3 normal = face.normal;
@@ -63,8 +63,7 @@ public:
 
 			angle = (int)(acos(normal.dot(dir) / (dir.length()*normal.length()))*180.0 / M_PI);
 
-			if (angle>89) { angle = 89; }	//probably not needed
-			else if (angle<0) { angle = 0; }	//probably not needed
+			if (angle>89) { angle = 89; }	//probably not needed will trigger only when incidence angle is ideally parallel to surface normal - 0 deg
 		}
 		else {
 			vec3 normal(face.normal.x, face.normal.y, face.normal.z);
@@ -74,23 +73,26 @@ public:
 
 			R.calculateRotationMatrix(normal, target);
 			dir = R*dir;
+			vec3 test = R*normal;
 
 			int phi = atan2(dir.y, dir.x) * 180 / M_PI;
 			int theta = acos(dir.z / dir.length()) * 180 / M_PI;
 
-			if (phi>179)
-				phi = 179;
+			//if (phi>179)
+			//	phi = 179;
+			//if (theta > 89)
+			//	theta = 89;
 
 			angle = 90 * (phi + 180) + theta;
 		}
 	}
 	void add_energy(CONF_PARTICULE& particleInfos)
 	{
-		y = particleInfos.energie - correction[angle];
-		t = energy[angle] + y;
-		correction[angle] = (t - energy[angle]) - y;
-		energy[angle] = t;
-		//energy[angle]+=particleInfos.energie;
+		//y = particleInfos.energie - correction[angle];
+		//t = energy[angle] + y;
+		//correction[angle] = (t - energy[angle]) - y;
+		//energy[angle] = t;
+		energy[angle]+=particleInfos.energie;
 	}
 	void calc_energy_density() {
 		if (!extended) {

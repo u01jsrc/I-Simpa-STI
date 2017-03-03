@@ -171,13 +171,6 @@ public:
 		this->x = x;
 	}
 
-	base_vec3 cross_ret(const base_vec3 &v2) {
-		base_t x = this->y * v2.z - this->z * v2.y;
-		base_t y = this->z * v2.x - this->x * v2.z;
-		base_t z = this->x * v2.y - this->y * v2.x;
-		return base_vec3(x, y, z);
-	}
-
 	base_t cosinus(const base_vec3 &ac){
 		return (this->x*ac.x + this->y*ac.y + this->z*ac.z)/(length() * ac.length());
 	}
@@ -1094,8 +1087,8 @@ public:
 	base_Matrix3(void) : x11(0), x12(0), x13(0), x21(0), x22(0), x23(0), x31(0), x32(0), x33(0) { }
 	base_Matrix3(const base_M& _x11, const base_M& _x12, const base_M& _x13, const base_M& _x21, const base_M& _x22, const base_M& _x23, const base_M& _x31, const base_M& _x32, const base_M& _x33) : x11(_x11), x12(_x12), x13(_x13), x21(_x21), x22(_x22), x23(_x23), x31(_x31), x32(_x32), x33(_x33) { }
 
-	int operator==(const base_Matrix3 &_v) { return (fabs(this->x11 - _v.x11) < EPSILON && fabs(this->x12 - _v.x12) < EPSILON && fabs(this->x13 - _v.x13) < EPSILON &&...
-													fabs(this->x21 - _v.x21) < EPSILON && fabs(this->x22 - _v.x22) < EPSILON && fabs(this->x23 - _v.x23) < EPSILON &&...
+	int operator==(const base_Matrix3 &_v) { return (fabs(this->x11 - _v.x11) < EPSILON && fabs(this->x12 - _v.x12) < EPSILON && fabs(this->x13 - _v.x13) < EPSILON &&
+													fabs(this->x21 - _v.x21) < EPSILON && fabs(this->x22 - _v.x22) < EPSILON && fabs(this->x23 - _v.x23) < EPSILON &&
 													fabs(this->x31 - _v.x31) < EPSILON && fabs(this->x32 - _v.x32) < EPSILON && fabs(this->x33 - _v.x33) < EPSILON); }
 	int operator!=(const base_Matrix3 &_v) { return !(*this == _v); }
 
@@ -1143,15 +1136,15 @@ public:
 
 		from.normalize();
 		target.normalize();
-		cross = from.cross_ret(target);
+		cross.cross(from, target);
 
-		if (cross.length()>0.00000001) {
+		if (cross.length()>0.0001) {
 			v.set(0, -cross.z, cross.y,
 				cross.z, 0, -cross.x,
 				-cross.y, cross.x, 0);
 
 
-			this->set(I + v + v*v*(1 - from.dot(target)) / cross.length());
+			this->set(I + v + v*v*(1 / (1 + from.dot(target))));
 		}
 		else {
 			this->set(-1, 0, 0,
