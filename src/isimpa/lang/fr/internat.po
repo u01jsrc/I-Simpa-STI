@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Judicaël PICAUT, 2014
-# Picaut <judicael.picaut@ifsttar.fr>, 2016-2017
+# PICAUT Judicael <judicael.picaut@ifsttar.fr>, 2016-2017
 # Nicolas Fortin <github@nettrader.fr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: I-Simpa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-31 16:00+0000\n"
-"PO-Revision-Date: 2017-01-31 15:15+0000\n"
-"Last-Translator: Travis Lae <travis_lae@noise-planet.org>\n"
+"POT-Creation-Date: 2017-03-02 17:05+0000\n"
+"PO-Revision-Date: 2017-03-03 09:31+0000\n"
+"Last-Translator: Nicolas Fortin <github@nettrader.fr>\n"
 "Language-Team: French (http://www.transifex.com/LAE/i-simpa/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgstr "Vue 3D"
 msgid "3D display"
 msgstr "Rendu 3D"
 
-#: src/isimpa/data_manager/projet.cpp:2343
+#: src/isimpa/data_manager/projet.cpp:2365
 msgid "3drendering"
 msgstr "Rendu 3D"
 
@@ -272,7 +272,7 @@ msgstr "Condition atmosphérique - Pression (Pa)"
 msgid "Attenuation"
 msgstr "Atténuation"
 
-#: src/isimpa/data_manager/projet.cpp:1184
+#: src/isimpa/data_manager/projet.cpp:1206
 msgid "Audiences"
 msgstr "Audiences"
 
@@ -343,7 +343,7 @@ msgstr "Bilatéral"
 msgid "Borders"
 msgstr "Bordures"
 
-#: src/isimpa/data_manager/projet.cpp:2977
+#: src/isimpa/data_manager/projet.cpp:2999
 msgid "Build of a 3D scene.\n"
 msgstr "Changement du modèle de la scène 3D, création d'un nouveau modèle\n"
 
@@ -360,7 +360,7 @@ msgstr "Batiment/Routier [125-4000] Hz"
 msgid "C-%g (dB)"
 msgstr "C-%g (dB)"
 
-#: src/isimpa/data_manager/projet.cpp:934
+#: src/isimpa/data_manager/projet.cpp:956
 msgid "CATT-Acoustic file (*.txt)|*.txt|li8 Odeon file (*.li8)|*.li8"
 msgstr "Fichier CATT-Acoustic (*.txt)|*.txt|Fichier li8 Odeon (*.li8)|*.li8"
 
@@ -386,11 +386,11 @@ msgstr "Code de calcul"
 msgid "Calculation code error:"
 msgstr "Erreur exécutable :"
 
-#: src/isimpa/data_manager/projet.cpp:814
+#: src/isimpa/data_manager/projet.cpp:818
 msgid "Calculation execution"
 msgstr "Exécution du code de calcul"
 
-#: src/isimpa/data_manager/projet.cpp:814
+#: src/isimpa/data_manager/projet.cpp:818
 msgid "Calculation in progress..."
 msgstr "Calcul de la propagation sonore en cours"
 
@@ -403,24 +403,24 @@ msgstr "Statistiques SPPS"
 msgid "Calculation method"
 msgstr "Méthode de calcul"
 
-#: src/isimpa/data_manager/projet.cpp:766
+#: src/isimpa/data_manager/projet.cpp:767
 #: src/isimpa/data_manager/projet_maillage.cpp:112
 msgid "Calculation program file not found."
 msgstr "Le fichier exécutable correspondant au code de calcul est introuvable. "
 
-#: src/isimpa/data_manager/projet.cpp:774
+#: src/isimpa/data_manager/projet.cpp:775
 msgid "Calculation requires a scene meshing"
 msgstr "Impossible d'exécuter le code de calcul sans un maillage de la scène"
 
-#: src/isimpa/data_manager/projet.cpp:717
+#: src/isimpa/data_manager/projet.cpp:718
 msgid "Calculation requires do define a valid frequency band"
 msgstr "Pour exécuter un code de calcul vous devez sélectionner au moins une bande de fréquence !"
 
-#: src/isimpa/data_manager/projet.cpp:678
+#: src/isimpa/data_manager/projet.cpp:679
 msgid "Calculation requires, at least, one active sound source"
 msgstr "Pour exécuter un code de calcul vous devez au moins créer une source sonore !"
 
-#: src/isimpa/data_manager/projet.cpp:828
+#: src/isimpa/data_manager/projet.cpp:850
 #, c-format
 msgid "Calculation time: %lld ms"
 msgstr "Temps de calcul : %lld ms"
@@ -464,12 +464,22 @@ msgstr "Annuler"
 msgid "Cancel loading particles files"
 msgstr "Annulation du chargement de fichier de particules"
 
+#: src/isimpa/manager/sppsString.cpp:59
+#, c-format
+msgid "Cannot convert \"%s\" to decimal value"
+msgstr "Impossible de convertir la valeur %s en nombre à décimal."
+
+#: src/isimpa/data_manager/e_data_float.h:280
+#, c-format
+msgid "Cannot convert string \"%s\" to decimal number"
+msgstr "Impossible de convertir la valeur %s en nombre à décimal."
+
 #: src/isimpa/data_manager/tree_rapport/e_report_file.cpp:91
 #: src/isimpa/data_manager/tree_rapport/e_report_file.cpp:99
 msgid "Cannot remove file/directory"
-msgstr ""
+msgstr "Impossible de supprimer le fichier ou dossier"
 
-#: src/isimpa/data_manager/projet.cpp:1183
+#: src/isimpa/data_manager/projet.cpp:1205
 msgid "Chairs"
 msgstr "Fauteuils"
 
@@ -523,7 +533,7 @@ msgstr "Exécution du code de génération de maillage"
 msgid "Color"
 msgstr "Couleur"
 
-#: src/isimpa/data_manager/projet.cpp:2392
+#: src/isimpa/data_manager/projet.cpp:2414
 msgid "Color of particles"
 msgstr "Couleur des particules"
 
@@ -540,9 +550,9 @@ msgstr "Vue combinée"
 msgid "Compare surface receivers"
 msgstr "Différencier les récepteurs de surfaces"
 
-#: src/isimpa/data_manager/projet.cpp:2223
-#: src/isimpa/data_manager/projet.cpp:2251
-#: src/isimpa/data_manager/projet.cpp:2321
+#: src/isimpa/data_manager/projet.cpp:2245
+#: src/isimpa/data_manager/projet.cpp:2273
+#: src/isimpa/data_manager/projet.cpp:2343
 #, c-format
 msgid ""
 "Compression of file\n"
@@ -595,11 +605,11 @@ msgstr "Copier la vue 3D"
 msgid "Copy of %s"
 msgstr "Copie de %s"
 
-#: src/isimpa/data_manager/projet.cpp:833
+#: src/isimpa/data_manager/projet.cpp:855
 msgid "Copy of calculation parameters"
 msgstr "Copie des paramètres de calcul"
 
-#: src/isimpa/data_manager/projet.cpp:2212
+#: src/isimpa/data_manager/projet.cpp:2234
 #, c-format
 msgid ""
 "Copy of the file\n"
@@ -701,7 +711,7 @@ msgstr "Date"
 msgid "Debug mode mesh, nothing will be done"
 msgstr "Utilisation du mode débuggage, aucun maillage ne sera produit !"
 
-#: src/isimpa/data_manager/projet.cpp:2355
+#: src/isimpa/data_manager/projet.cpp:2377
 msgid "Default color"
 msgstr "Couleur par défaut"
 
@@ -784,7 +794,7 @@ msgstr "Destination volume"
 msgid "Developers >>"
 msgstr "Développeurs >>"
 
-#: src/isimpa/data_manager/projet.cpp:2484
+#: src/isimpa/data_manager/projet.cpp:2506
 #, c-format
 msgid ""
 "Dezip of file\n"
@@ -861,7 +871,7 @@ msgstr "Erreur de rendu inconnue"
 msgid "Display front"
 msgstr "Mettre en avant"
 
-#: src/isimpa/data_manager/projet.cpp:2741
+#: src/isimpa/data_manager/projet.cpp:2763
 msgid "Display mesh"
 msgstr "Prévisualisation du maillage"
 
@@ -877,7 +887,7 @@ msgstr "Afficher recto"
 msgid "Display verso"
 msgstr "Afficher verso"
 
-#: src/isimpa/data_manager/projet.cpp:1657
+#: src/isimpa/data_manager/projet.cpp:1679
 msgid "Do you really want to delete this folder?"
 msgstr "Êtes-vous certain de vouloir supprimer ce dossier définitivement ?"
 
@@ -973,7 +983,7 @@ msgstr "Active/Désactive la possibilité de modifier tous les champs pour l'uti
 msgid "Energetic"
 msgstr "Énergétique"
 
-#: src/isimpa/data_manager/projet.cpp:2292
+#: src/isimpa/data_manager/projet.cpp:2314
 #, c-format
 msgid "Enough memory. %li Mo required, %li Mo free on the corresponding disk"
 msgstr "Espace disque insuffisant. %li Mo requis et seulement %li Mo libre sur le disque spécifié."
@@ -1000,22 +1010,27 @@ msgid "Error during call of Python(TM) script on element update"
 msgstr "Erreur durant l'appel au script Python(TM) (mise à jour d'un élément)"
 
 #: src/lib_interface/coreTypes.cpp:216
-#: src/lib_interface/input_output/importExportMaillage/mbin.cpp:115
+#: src/lib_interface/input_output/importExportMaillage/mbin.cpp:121
 #, c-format
 msgid ""
 "Error in input mesh, a tetrahedra have at least the same two vertices "
 "idTetra:%i vertices:%li %li %li %li"
-msgstr ""
+msgstr "Erreur dans le fichier de maillage, un tétraèdre a au moins deux sommets en communs idTetra:%i vertices:%li %li %li %li"
 
 #: src/isimpa/IHM/MainPropGrid.cpp:276
 msgid "Error in loading properties"
 msgstr "Erreur de chargement des propriétés"
 
+#: src/isimpa/data_manager/projet.cpp:787
+#: src/isimpa/data_manager/projet.cpp:3002
+msgid "Error while saving the 3d model"
+msgstr "Erreur lors de l'enregistrement du modèle 3D"
+
 #: src/isimpa/main/i_simpa_main.h:373
 msgid "Error:"
 msgstr "Erreur : "
 
-#: src/isimpa/data_manager/projet_remesh.cpp:109
+#: src/isimpa/data_manager/projet_remesh.cpp:107
 msgid "Execution of the model remesh."
 msgstr "Exécution du code reconstruction du modèle."
 
@@ -1023,52 +1038,52 @@ msgstr "Exécution du code reconstruction du modèle."
 msgid "Exit"
 msgstr "Quitter"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:277
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:279
 #, c-format
 msgid "Expected face size and dimension got %s"
 msgstr "Expected face size and dimension got %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:227
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:229
 #, c-format
 msgid "Expected idface a b c [marker] got %s"
 msgstr "Attendu idface a b c [marker] mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:292
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:294
 #, c-format
 msgid "Expected idface a b c marker %s"
 msgstr "Attendu idface a b c marker mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:358
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:360
 #, c-format
 msgid "Expected idtetra a b c d got %s"
 msgstr "Attendu idtetra a b c d mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:152
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:154
 #, c-format
 msgid "Expected idtetra a b c d idvolume got %s"
 msgstr "Attendu idtetra a b c d idvolume mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:91
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:92
 #, c-format
 msgid "Expected node id, x, y and z got %s"
 msgstr "Attendu node id, x, y and z mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:345
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:347
 #, c-format
 msgid "Expected node size and dimension got %s"
 msgstr "Attendu 'nombre de nœuds' et 'dimension' mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:76
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:77
 #, c-format
 msgid "Expected node size got %s"
 msgstr "Attendu 'nombre de nœuds' mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:212
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:214
 #, c-format
 msgid "Expected tetra size and marker got %s"
 msgstr "Attendu 'nombre de tétraèdres' et 'marker' mais obtenu %s"
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:137
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:139
 #, c-format
 msgid "Expected tetra size got %s"
 msgstr "Attendu 'nombre de tétraèdres' mais obtenu %s"
@@ -1077,7 +1092,7 @@ msgstr "Attendu 'nombre de tétraèdres' mais obtenu %s"
 msgid "Export"
 msgstr "Exporter"
 
-#: src/isimpa/data_manager/projet.cpp:389
+#: src/isimpa/data_manager/projet.cpp:390
 msgid "Export 3D View"
 msgstr "Capture 3D"
 
@@ -1115,8 +1130,8 @@ msgstr "Copier le contenu vers un fichier"
 msgid "Export to image file"
 msgstr "Vers un fichier image"
 
-#: src/isimpa/data_manager/projet.cpp:370
-#: src/isimpa/data_manager/projet.cpp:400
+#: src/isimpa/data_manager/projet.cpp:371
+#: src/isimpa/data_manager/projet.cpp:401
 msgid "Export view 3D"
 msgstr "Exporter la vue 3D"
 
@@ -1154,7 +1169,7 @@ msgid ""
 "surface receivers display"
 msgstr "Les surfaces du modèle importées seront maillées afin d'obtenir une discrétisation en triangles de forme régulière. Cette option est utile pour un meilleur rendu des récepteurs surafciques."
 
-#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:799
+#: src/isimpa/3dengine/Core/Objet3D_maillage.cpp:804
 msgid "Failed to export meshing"
 msgstr "L'exportation du maillage de la scène n'a pu se faire."
 
@@ -1170,7 +1185,7 @@ msgstr "Favorable"
 msgid "File"
 msgstr "Fichier"
 
-#: src/isimpa/3dengine/Core/ply.cpp:223
+#: src/isimpa/3dengine/Core/ply.cpp:221
 #, c-format
 msgid "File I/O Error:  Cannot open file %s\n"
 msgstr "File I/O Error:  Cannot open file %s.\n"
@@ -1179,8 +1194,8 @@ msgstr "File I/O Error:  Cannot open file %s.\n"
 msgid "File can't be renamed, a file with the same name already exists"
 msgstr "Impossible de renommer le fichier, un fichier du même nom existe !"
 
-#: src/isimpa/data_manager/projet.cpp:968
-#: src/isimpa/data_manager/projet.cpp:1570
+#: src/isimpa/data_manager/projet.cpp:990
+#: src/isimpa/data_manager/projet.cpp:1592
 msgid "File does not exist"
 msgstr "Ce fichier n'existe pas"
 
@@ -1230,7 +1245,7 @@ msgstr "L'encombrement %s est ignoré pour le calcul conformément au choix de l
 msgid "Floating 3D View"
 msgstr "Vue 3D flottante"
 
-#: src/isimpa/data_manager/projet.cpp:1187
+#: src/isimpa/data_manager/projet.cpp:1209
 msgid "Floors"
 msgstr "Sols"
 
@@ -1304,7 +1319,7 @@ msgstr "Sol nu"
 msgid "Group"
 msgstr "Groupe"
 
-#: src/isimpa/data_manager/projet.cpp:391
+#: src/isimpa/data_manager/projet.cpp:392
 msgid "Height"
 msgstr "Hauteur"
 
@@ -1370,16 +1385,16 @@ msgid ""
 "Image PNG (*.png)|*.png|Image JPG (*.jpg)|*.jpg|Image Bitmap (*.bmp)|*.bmp"
 msgstr "Image PNG (*.png)|*.png|Image Jpg (*.jpg)|*.jpg|Image Bitmap (*.bmp)|*.bmp"
 
-#: src/isimpa/data_manager/projet.cpp:377
-#: src/isimpa/data_manager/projet.cpp:407
+#: src/isimpa/data_manager/projet.cpp:378
+#: src/isimpa/data_manager/projet.cpp:408
 msgid "Image saved successfully"
 msgstr "Image enregistrée avec succès"
 
-#: src/isimpa/data_manager/projet.cpp:975
+#: src/isimpa/data_manager/projet.cpp:997
 msgid "Import from CATT-Acoustic file"
 msgstr "Importation d'une liste de matériaux provenant de CATT-Acoustic"
 
-#: src/isimpa/data_manager/projet.cpp:1195
+#: src/isimpa/data_manager/projet.cpp:1217
 msgid "Import from Odeon file"
 msgstr "Importation d'une liste de matériaux provenant d'Odeon"
 
@@ -1387,7 +1402,7 @@ msgstr "Importation d'une liste de matériaux provenant d'Odeon"
 msgid "Import from file"
 msgstr "Importer depuis un fichier"
 
-#: src/isimpa/data_manager/projet.cpp:934
+#: src/isimpa/data_manager/projet.cpp:956
 msgid "Import material from file"
 msgstr "Importer des matériaux depuis un fichier"
 
@@ -1395,8 +1410,8 @@ msgstr "Importer des matériaux depuis un fichier"
 msgid "Import new scene"
 msgstr "Importer une scène"
 
-#: src/isimpa/data_manager/projet.cpp:1168
-#: src/isimpa/data_manager/projet.cpp:1230
+#: src/isimpa/data_manager/projet.cpp:1190
+#: src/isimpa/data_manager/projet.cpp:1252
 #, c-format
 msgid "Importation of material %s"
 msgstr "Importation du matériau %s"
@@ -1493,7 +1508,7 @@ msgstr "Liste des niveaux iso"
 msgid "Iso-levels color"
 msgstr "Palette des niveaux"
 
-#: src/isimpa/data_manager/projet.cpp:2386
+#: src/isimpa/data_manager/projet.cpp:2408
 msgid "Iso-lines color"
 msgstr "Couleur des lignes iso"
 
@@ -1501,8 +1516,8 @@ msgstr "Couleur des lignes iso"
 msgid "Keep existing groups"
 msgstr "Garder les groupes existants"
 
-#: src/isimpa/data_manager/projet.cpp:2404
-#: src/isimpa/data_manager/projet.cpp:2457
+#: src/isimpa/data_manager/projet.cpp:2426
+#: src/isimpa/data_manager/projet.cpp:2479
 msgid "Keep modification history"
 msgstr "Conserver l'historique des modifications"
 
@@ -1520,7 +1535,7 @@ msgstr "LFC%i"
 msgid "LG (dB)"
 msgstr "LG (dB)"
 
-#: src/isimpa/data_manager/projet.cpp:2365
+#: src/isimpa/data_manager/projet.cpp:2387
 msgid "Label color"
 msgstr "Couleur du texte de la légende"
 
@@ -1594,16 +1609,16 @@ msgstr "Charger la simulation"
 msgid "Load image"
 msgstr "Charger une image"
 
-#: src/isimpa/data_manager/projet.cpp:2948
+#: src/isimpa/data_manager/projet.cpp:2970
 msgid "Loading 3D scene"
 msgstr "Chargement d'un modèle"
 
-#: src/isimpa/data_manager/projet.cpp:1900
-#: src/isimpa/data_manager/projet.cpp:2903
+#: src/isimpa/data_manager/projet.cpp:1922
+#: src/isimpa/data_manager/projet.cpp:2925
 msgid "Loading 3D scene ..."
 msgstr "Chargement du modèle 3D"
 
-#: src/isimpa/data_manager/projet.cpp:2919
+#: src/isimpa/data_manager/projet.cpp:2941
 #, c-format
 msgid "Loading 3D scene: %s\n"
 msgstr "Changement du modèle de la scène 3D : %s\n"
@@ -1613,7 +1628,7 @@ msgstr "Changement du modèle de la scène 3D : %s\n"
 msgid "Loading ASCII files from mesh generator complete"
 msgstr "Chargement des fichiers ASCII du générateur tétraédrique terminé."
 
-#: src/isimpa/data_manager/projet.cpp:1850
+#: src/isimpa/data_manager/projet.cpp:1872
 msgid "Loading XML file"
 msgstr "Chargement du fichier XML"
 
@@ -1626,7 +1641,7 @@ msgstr "Chargement de la face %i/%i"
 msgid "Loading faces"
 msgstr "Chargement des faces"
 
-#: src/isimpa/data_manager/projet.cpp:2918
+#: src/isimpa/data_manager/projet.cpp:2940
 #: src/isimpa/data_manager/tree_scene/e_scene_groupesurfaces_groupe.cpp:494
 msgid "Loading faces of 3D scene"
 msgstr "Chargement des faces du modèle 3D"
@@ -1650,11 +1665,11 @@ msgstr "Chargement du fichier de récepteur surfacique"
 msgid "Loading particles file"
 msgstr "Chargement du fichier de particules"
 
-#: src/isimpa/data_manager/projet.cpp:1850
+#: src/isimpa/data_manager/projet.cpp:1872
 msgid "Loading project"
 msgstr "Chargement du projet"
 
-#: src/isimpa/data_manager/projet.cpp:2527
+#: src/isimpa/data_manager/projet.cpp:2549
 #, c-format
 msgid "Loading project: %s"
 msgstr "Ouverture du projet : %s"
@@ -1918,8 +1933,8 @@ msgstr "Pas d'erreur."
 msgid "Nom de la démo"
 msgstr "Nom de la démo"
 
-#: src/isimpa/data_manager/projet.cpp:382
-#: src/isimpa/data_manager/projet.cpp:412
+#: src/isimpa/data_manager/projet.cpp:383
+#: src/isimpa/data_manager/projet.cpp:413
 msgid "Non-allowed image. Exportation cancelled"
 msgstr "Image non valide : exportation annulée"
 
@@ -2050,8 +2065,8 @@ msgstr "Contour :"
 msgid "Outside"
 msgstr "Extérieur"
 
-#: src/isimpa/data_manager/projet.cpp:370
-#: src/isimpa/data_manager/projet.cpp:400
+#: src/isimpa/data_manager/projet.cpp:371
+#: src/isimpa/data_manager/projet.cpp:401
 msgid ""
 "PNG file (*.png)|*.png|JPG file (*.jpg)|*.jpg|Bitmap file (*.bmp)|*.bmp"
 msgstr "Fichiers Png (*.png)|*.png|Fichiers Jpeg (*.jpg)|*.jpg|Fichiers Bitmap (*.bmp)|*.bmp"
@@ -2078,7 +2093,7 @@ msgstr "Particules absorbées par les matériaux"
 msgid "Particles animation"
 msgstr "Animation des particules"
 
-#: src/isimpa/data_manager/projet.cpp:2367
+#: src/isimpa/data_manager/projet.cpp:2389
 #: src/isimpa/data_manager/tree_rapport/e_report_partvisualisation.h:75
 msgid "Particles display"
 msgstr "Visualisation des particules"
@@ -2088,7 +2103,7 @@ msgstr "Visualisation des particules"
 msgid "Particles file contains %i particles and %i time step"
 msgstr "Le fichier de particule contient %i particules et %i pas de temps."
 
-#: src/isimpa/data_manager/projet.cpp:1626
+#: src/isimpa/data_manager/projet.cpp:1648
 msgid "Particles file does not exist for the corresponding frequency"
 msgstr "Le fichier de particule correspondant à cette fréquence n'existe pas."
 
@@ -2147,11 +2162,11 @@ msgstr "Veuillez choisir la langue :"
 msgid "Please choose the application instance"
 msgstr "Veuillez choisir l'instance à charger"
 
-#: src/isimpa/data_manager/projet.cpp:2741
+#: src/isimpa/data_manager/projet.cpp:2763
 msgid "Please chose a calculation code"
 msgstr "Veuillez choisir le moteur de calcul associé au mailleur"
 
-#: src/isimpa/data_manager/projet.cpp:1809
+#: src/isimpa/data_manager/projet.cpp:1831
 msgid "Please click on the 3D view to update the coordinates"
 msgstr "Veuillez cliquer sur la vue 3D pour affecter les coordonnées"
 
@@ -2165,7 +2180,7 @@ msgstr "Pour l'encombrement de scène nommé %s veuillez définir le point au ce
 msgid "Please enter scene dimensions (m)"
 msgstr "Veuillez entrer les dimensions de la scène (m)"
 
-#: src/isimpa/data_manager/projet.cpp:389
+#: src/isimpa/data_manager/projet.cpp:390
 msgid "Please give the size of the exported picture."
 msgstr "Veuillez saisir la taille de capture de l'image"
 
@@ -2195,7 +2210,7 @@ msgstr "Veuillez entrer les paramètres acoustiques à calculer.\nLe caractère 
 msgid "Please, refresh root folder of the data tree"
 msgstr "Veuillez actualiser le dossier racine de l'arbre de résultat."
 
-#: src/isimpa/data_manager/projet.cpp:2948
+#: src/isimpa/data_manager/projet.cpp:2970
 msgid "Please, select 3D scene importation options"
 msgstr "Veuillez spécifier les options d'importation d'un modèle 3D."
 
@@ -2215,7 +2230,7 @@ msgstr "Point"
 msgid "Pointer toolbar"
 msgstr "Barre d'outils Pointeur"
 
-#: src/isimpa/data_manager/projet.cpp:2377
+#: src/isimpa/data_manager/projet.cpp:2399
 msgid "Police font"
 msgstr "Police"
 
@@ -2269,7 +2284,7 @@ msgstr "Projet"
 msgid "Project (*.proj)|*.proj"
 msgstr "Projet (*.proj)|*.proj"
 
-#: src/isimpa/data_manager/projet.cpp:2302
+#: src/isimpa/data_manager/projet.cpp:2324
 msgid "Project compression"
 msgstr "Compression du projet"
 
@@ -2277,7 +2292,7 @@ msgstr "Compression du projet"
 msgid "Project database"
 msgstr "Base de données du projet"
 
-#: src/isimpa/data_manager/projet.cpp:2462
+#: src/isimpa/data_manager/projet.cpp:2484
 msgid "Project decompression"
 msgstr "Décompression du projet"
 
@@ -2285,11 +2300,11 @@ msgstr "Décompression du projet"
 msgid "Project description"
 msgstr "Description du projet"
 
-#: src/isimpa/data_manager/projet.cpp:2302
+#: src/isimpa/data_manager/projet.cpp:2324
 msgid "Project files compression in progress ..."
 msgstr "Compression des fichiers du projet en cours..."
 
-#: src/isimpa/data_manager/projet.cpp:2462
+#: src/isimpa/data_manager/projet.cpp:2484
 msgid "Project files decompression in progress ..."
 msgstr "Décompression des fichiers du projet en cours..."
 
@@ -2327,7 +2342,7 @@ msgstr "Projet"
 msgid "Properties"
 msgstr "Propriétés"
 
-#: src/isimpa/data_manager/projet.cpp:1532
+#: src/isimpa/data_manager/projet.cpp:1554
 msgid "Properties - "
 msgstr "Propriétés - "
 
@@ -2414,7 +2429,7 @@ msgstr "Rayon des récepteurs ponctuels"
 msgid "Recent projects"
 msgstr "Projets récents"
 
-#: src/isimpa/data_manager/projet_remesh.cpp:169
+#: src/isimpa/data_manager/projet_remesh.cpp:167
 msgid "Reconstruction of input model."
 msgstr "Reconstruction approximée du modèle en entrée."
 
@@ -2448,7 +2463,7 @@ msgstr "Spectre application"
 msgid "Refresh folder"
 msgstr "Actualiser le dossier"
 
-#: src/isimpa/data_manager/projet.cpp:840
+#: src/isimpa/data_manager/projet.cpp:862
 msgid "Refreshing onglet 'Report'"
 msgstr "Rafraîchir l'onglet 'Rapport'"
 
@@ -2476,7 +2491,7 @@ msgstr "Méthode d'adaptation au modèle d'origine"
 msgid "Rename"
 msgstr "Renommer"
 
-#: src/isimpa/data_manager/projet.cpp:2364
+#: src/isimpa/data_manager/projet.cpp:2386
 msgid "Render frequency (Hz)"
 msgstr "Fréquence d'affichage (Hz)"
 
@@ -2579,7 +2594,7 @@ msgstr "Sauvegarder les données sous..."
 msgid "Save document"
 msgstr "Enregistrer le document"
 
-#: src/isimpa/data_manager/projet.cpp:2604
+#: src/isimpa/data_manager/projet.cpp:2626
 msgid "Save finished"
 msgstr "Sauvegarde terminée"
 
@@ -2595,12 +2610,12 @@ msgstr "Enregistrer le projet\tCtrl+S"
 msgid "Save project as ..."
 msgstr "Enregistrer le projet sous..."
 
-#: src/isimpa/data_manager/projet.cpp:2925
+#: src/isimpa/data_manager/projet.cpp:2947
 msgid "Saving 3D scene"
 msgstr "Sauvegarde du modèle 3D"
 
-#: src/isimpa/data_manager/projet.cpp:2160
-#: src/isimpa/data_manager/projet.cpp:2589
+#: src/isimpa/data_manager/projet.cpp:2182
+#: src/isimpa/data_manager/projet.cpp:2611
 msgid "Saving project"
 msgstr "Sauvegarde du projet"
 
@@ -2641,7 +2656,7 @@ msgstr "Nuage de marqueurs"
 msgid "Scene"
 msgstr "Scène"
 
-#: src/isimpa/data_manager/projet.cpp:2354
+#: src/isimpa/data_manager/projet.cpp:2376
 msgid "Scene background"
 msgstr "Fond de la scène"
 
@@ -2649,7 +2664,7 @@ msgstr "Fond de la scène"
 msgid "Scene correction before meshing"
 msgstr "Correction du modèle avant maillage"
 
-#: src/isimpa/data_manager/projet.cpp:1912
+#: src/isimpa/data_manager/projet.cpp:1934
 msgid "Scene does not exist!"
 msgstr "Modèle non existant !"
 
@@ -2657,7 +2672,7 @@ msgstr "Modèle non existant !"
 msgid "Scene file"
 msgstr "Fichier de modèle"
 
-#: src/isimpa/data_manager/projet.cpp:2352
+#: src/isimpa/data_manager/projet.cpp:2374
 msgid "Scene lines"
 msgstr "Lignes de la scène"
 
@@ -2689,8 +2704,8 @@ msgstr "Décroissances lissées"
 msgid "Schroeder's curve"
 msgstr "Décroissance lissée"
 
-#: src/isimpa/data_manager/projet_remesh.cpp:109
-#: src/isimpa/data_manager/projet_remesh.cpp:169
+#: src/isimpa/data_manager/projet_remesh.cpp:107
+#: src/isimpa/data_manager/projet_remesh.cpp:167
 msgid "Searching model volumes ..."
 msgstr "Recherche des volumes du modèle en cours..."
 
@@ -2698,13 +2713,13 @@ msgstr "Recherche des volumes du modèle en cours..."
 msgid "Select all"
 msgstr "Tout sélectionner"
 
-#: src/isimpa/data_manager/projet.cpp:2767
+#: src/isimpa/data_manager/projet.cpp:2789
 msgid ""
 "Select face: Left Click on the 3D view 3D to select a face; Double left "
 "Click+Ctrl to select a face entirely"
 msgstr "Outil de sélection des faces. Click gauche sur la vue 3D pour sélectionner une face. Ctrl+ double Click gauche pour sélectionner toute la surface."
 
-#: src/isimpa/data_manager/projet.cpp:2353
+#: src/isimpa/data_manager/projet.cpp:2375
 msgid "Selection"
 msgstr "Sélection"
 
@@ -2885,7 +2900,7 @@ msgid "Spline"
 msgstr "Courbe arrondi (méthode des splines)"
 
 #: src/isimpa/IHM/GabeDataGrid.cpp:309 src/isimpa/IHM/MainPropGrid.cpp:167
-#: src/isimpa/data_manager/projet.cpp:3172
+#: src/isimpa/data_manager/projet.cpp:3196
 msgid "Spreadsheet"
 msgstr "Feuille de données"
 
@@ -2956,12 +2971,12 @@ msgstr "Contrainte d'aire des récepteurs surfaciques"
 msgid "Surface receivers constraint (m2)"
 msgstr "Contrainte d'aire des récepteurs surfaciques (m²)"
 
-#: src/isimpa/data_manager/projet.cpp:2368
+#: src/isimpa/data_manager/projet.cpp:2390
 #: src/isimpa/data_manager/tree_rapport/e_report_recepteurssvisualisation.h:127
 msgid "Surface receivers display"
 msgstr "Visualisation récepteurs surfaciques"
 
-#: src/isimpa/data_manager/projet.cpp:1597
+#: src/isimpa/data_manager/projet.cpp:1619
 msgid "Surface receivers file does not exist for the corresponding frequency"
 msgstr "Le fichier de récepteur surfacique correspondant à cette fréquence n'existe pas."
 
@@ -3006,11 +3021,11 @@ msgstr "Paramètres du mailleur"
 msgid "Tetrahedron file is empty, the calculation can't be done !"
 msgstr "Le fichier de maillage est vide : le calcul ne peut être réalisé."
 
-#: src/isimpa/data_manager/projet.cpp:2379
+#: src/isimpa/data_manager/projet.cpp:2401
 msgid "Text background color"
 msgstr "Couleur de fond du texte"
 
-#: src/isimpa/data_manager/projet.cpp:2378
+#: src/isimpa/data_manager/projet.cpp:2400
 msgid "Text color"
 msgstr "Couleur du texte"
 
@@ -3219,7 +3234,7 @@ msgstr "Champ total (Sabine)"
 msgid "Total sound level"
 msgstr "Niveau sonore cumulé"
 
-#: src/isimpa/data_manager/projet.cpp:856
+#: src/isimpa/data_manager/projet.cpp:878
 #, c-format
 msgid "Total time calculation: %lld ms"
 msgstr "Temps de calcul total : %lld ms"
@@ -3239,7 +3254,7 @@ msgstr "Transmission"
 msgid "Transparent"
 msgstr "Transparent"
 
-#: src/isimpa/data_manager/projet.cpp:2380
+#: src/isimpa/data_manager/projet.cpp:2402
 msgid "Transparent text background"
 msgstr "Fond du texte transparent"
 
@@ -3260,18 +3275,18 @@ msgstr "Type"
 msgid "Unable to init the Python(TM) element %s of the %s module"
 msgstr "Impossible d'initialiser l'élément Python utilisateur %s du module %s"
 
-#: src/isimpa/data_manager/projet.cpp:2939
+#: src/isimpa/data_manager/projet.cpp:2961
 msgid "Unable to load the 3D model"
 msgstr "Impossible de charger le modèle 3D !"
 
-#: src/isimpa/data_manager/projet_remesh.cpp:116
+#: src/isimpa/data_manager/projet_remesh.cpp:114
 #, c-format
 msgid ""
 "Unable to load the stats file:\n"
 "%s"
 msgstr "Impossible de lire le fichier de statistiques :\n%s"
 
-#: src/isimpa/3dengine/Core/Objet3D.cpp:1191
+#: src/isimpa/3dengine/Core/Objet3D.cpp:1190
 msgid "Unable to load this format"
 msgstr "Impossible de charger ce format"
 
@@ -3279,7 +3294,7 @@ msgstr "Impossible de charger ce format"
 msgid "Unable to read the epsilon value"
 msgstr "Impossible de lire la valeur epsilon"
 
-#: src/isimpa/data_manager/projet_remesh.cpp:187
+#: src/isimpa/data_manager/projet_remesh.cpp:185
 msgid "Unable to save the file under the PLY format"
 msgstr "Impossible de sauvegarder le modèle au format PLY."
 
@@ -3350,7 +3365,7 @@ msgstr "Erreur d'exportation OpenGL Inconnue, tentez de diminuer la résolution 
 msgid "Unknown error when reading particles file"
 msgstr "Erreur inconnue dans la lecture du fichier de particule"
 
-#: src/isimpa/data_manager/projet.cpp:965
+#: src/isimpa/data_manager/projet.cpp:987
 msgid "Unknown file format"
 msgstr "Format de fichier inconnu"
 
@@ -3362,11 +3377,11 @@ msgstr "Retour du processus inconnu"
 msgid "Unselect all"
 msgstr "Tout désélectionner"
 
-#: src/isimpa/data_manager/projet.cpp:2589
+#: src/isimpa/data_manager/projet.cpp:2611
 msgid "Updating XML file"
 msgstr "Mise à jour du fichier XML"
 
-#: src/isimpa/data_manager/projet.cpp:2160
+#: src/isimpa/data_manager/projet.cpp:2182
 msgid "Updating project backup"
 msgstr "Mise à jour du fichier de sauvegarde du projet"
 
@@ -3470,8 +3485,8 @@ msgstr "Contrainte de volume (m3)"
 msgid "Volumes"
 msgstr "Volumes"
 
-#: src/isimpa/data_manager/projet_remesh.cpp:110
-#: src/isimpa/data_manager/projet_remesh.cpp:170
+#: src/isimpa/data_manager/projet_remesh.cpp:108
+#: src/isimpa/data_manager/projet_remesh.cpp:168
 msgid "VolumetricMeshRepair: "
 msgstr "VolumetricMeshRepair: "
 
@@ -3487,7 +3502,7 @@ msgstr "W3"
 msgid "W4"
 msgstr "W4"
 
-#: src/isimpa/data_manager/projet.cpp:1185
+#: src/isimpa/data_manager/projet.cpp:1207
 msgid "Walls"
 msgstr "Murs"
 
@@ -3515,7 +3530,7 @@ msgstr "Site Web"
 msgid "Wheat (1m height)"
 msgstr "Blé (1m de haut)"
 
-#: src/isimpa/data_manager/projet.cpp:390
+#: src/isimpa/data_manager/projet.cpp:391
 msgid "Width"
 msgstr "Largeur"
 
@@ -3523,7 +3538,7 @@ msgstr "Largeur"
 msgid "Width (x)"
 msgstr "Largeur (m)"
 
-#: src/isimpa/data_manager/projet.cpp:1186
+#: src/isimpa/data_manager/projet.cpp:1208
 #: src/isimpa/main/i_simpa_main.cpp:331
 msgid "Window"
 msgstr "Fenêtre"
@@ -3550,7 +3565,7 @@ msgstr "Axes X, bordure"
 msgid "XML configuration file is currently loading..."
 msgstr "Chargement du fichier XML..."
 
-#: src/isimpa/data_manager/projet.cpp:1894
+#: src/isimpa/data_manager/projet.cpp:1916
 msgid "XML file corrupted. File can't be loaded"
 msgstr "Fichier Xml du projet endommagé, impossible de charger le projet"
 
@@ -3616,11 +3631,11 @@ msgstr "Vous devez effectuer un maillage avant d'exécuter cette opération."
 msgid "You must select a surface receiver data file to continue"
 msgstr "Vous devez sélectionner un fichier de résultat du type récepteur de surface pour pouvoir continuer."
 
-#: src/isimpa/data_manager/projet.cpp:684
+#: src/isimpa/data_manager/projet.cpp:685
 msgid "Your model doesn't have any face. Please create or import a model."
 msgstr "Votre modèle ne comporte aucune face. Veuillez créer ou importer une scène."
 
-#: src/isimpa/data_manager/projet.cpp:2359
+#: src/isimpa/data_manager/projet.cpp:2381
 msgid "animations"
 msgstr "Animations"
 
@@ -3634,25 +3649,25 @@ msgstr "dB"
 msgid "dB(A)"
 msgstr "dB(A)"
 
-#: src/isimpa/data_manager/projet.cpp:2347
+#: src/isimpa/data_manager/projet.cpp:2369
 msgid "general"
 msgstr "Général"
 
-#: src/isimpa/data_manager/projet.cpp:2402
-#: src/isimpa/data_manager/projet.cpp:2455
+#: src/isimpa/data_manager/projet.cpp:2424
+#: src/isimpa/data_manager/projet.cpp:2477
 msgid "history"
 msgstr "Historique"
 
-#: src/isimpa/data_manager/projet.cpp:2372
+#: src/isimpa/data_manager/projet.cpp:2394
 msgid "legend"
 msgstr "Légende"
 
-#: src/isimpa/data_manager/projet.cpp:2398
-#: src/isimpa/data_manager/projet.cpp:2451
+#: src/isimpa/data_manager/projet.cpp:2420
+#: src/isimpa/data_manager/projet.cpp:2473
 msgid "mainpref"
 msgstr "Préférences"
 
-#: src/isimpa/data_manager/projet.cpp:2393
+#: src/isimpa/data_manager/projet.cpp:2415
 msgid "particle"
 msgstr "Particule"
 
@@ -3672,7 +3687,7 @@ msgstr "Récepteurs surfaciques"
 msgid "s"
 msgstr "s"
 
-#: src/isimpa/data_manager/projet.cpp:2387
+#: src/isimpa/data_manager/projet.cpp:2409
 msgid "soundmap"
 msgstr "Carte des niveaux sonores"
 
