@@ -69,8 +69,7 @@ struct tFace {
 	bool internalFace;  /**< Si cette face est une face interne du modèle */
 	short materialID;	/**< Numéro de matériau associé à la face */  
 	ivec3 vertexTex;	/**< Coordonnées de textures*/
-	bool Rec_angle;
-	tFace() { internalFace=false; Rec_angle=false;}
+	tFace() { internalFace=false;}
 };
 
 /*! 
@@ -186,7 +185,6 @@ struct binaryFace100 {
 	bBool ab;			/**< En mode filaire contour indique si ce coté doit être dessiné */
 	bBool bc;			/**< En mode filaire contour indique si ce coté doit être dessiné */
 	bBool ca;			/**< En mode filaire contour indique si ce coté doit être dessiné */
-	//bBool Rec_angle;
 };
 
 /*! 
@@ -201,12 +199,11 @@ struct binaryFace110 {
 	bBool bc;			/**< En mode filaire contour indique si ce coté doit être dessiné */
 	bBool ca;			/**< En mode filaire contour indique si ce coté doit être dessiné */
 	bsLong coordtex[3];		/**< Coordonnées de textures au sommet */
-	//bBool Rec_angle;
 };
 /*! 
 	\brief Cette structure définit une section de données du fichier Binaire
 */
-struct binaryFace120 {
+struct binaryFace {
 	bLong a;			/**< Indice du vertex d'un des points composant le triangle */
 	bLong b;			/**< Indice du vertex d'un des points composant le triangle */
 	bLong c;			/**< Indice du vertex d'un des points composant le triangle */
@@ -218,18 +215,6 @@ struct binaryFace120 {
 	bsLong coordtex[3];	/**< Coordonnées de textures au sommet */
 };
 
-struct binaryFace {
-	bLong a;			/**< Indice du vertex d'un des points composant le triangle */
-	bLong b;			/**< Indice du vertex d'un des points composant le triangle */
-	bLong c;			/**< Indice du vertex d'un des points composant le triangle */
-	bShort idMaterial;	/**< Indice du matériau de rendu 3D du triangle binaryMaterial */
-	bBool ab;			/**< En mode filaire contour indique si ce coté doit être dessiné */
-	bBool bc;			/**< En mode filaire contour indique si ce coté doit être dessiné */
-	bBool ca;			/**< En mode filaire contour indique si ce coté doit être dessiné */
-	bBool internalFace;	/**< Si cette face est une face interne du modèle */
-	bsLong coordtex[3];	/**< Coordonnées de textures au sommet */
-	bBool Rec_angle;
-};
 
 /*! 
 	\brief Cette structure définit une section de données du fichier Binaire
@@ -357,10 +342,6 @@ private:
 	 */
 	bool ProcessNodeGroupV110(std::fstream &binFile,t3DModel *pModel); 
 
-	/**
-	 * Lecture d'un noeud Binaire version 1.20
-	 */
-	bool ProcessNodeGroupV120(std::fstream &binFile,t3DModel *pModel); 
 	/**
 	 * Ecriture d'un noeud Binaire
 	 */

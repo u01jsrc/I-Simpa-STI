@@ -228,19 +228,6 @@ void E_Scene_Groupesurfaces_Groupe::InitProp()
 				this->SetDrawable();
 			}
 
-			if(!this->IsPropertyExist("Rec_angle"))
-			{
-				this->AppendPropertyBool("Rec_angle","Record angle",false,true);
-				_("Record angle");
-			}
-
-			if(!this->IsPropertyExist("angle_group"))
-			{
-				this->AppendPropertyInteger("angle_group","Angle group",1,true,false,true,0,1);
-				_("Angle group");
-				this->SetReadOnlyConfig("angle_group");
-			}
-
 			ignoreModification=false;
 		}
 	}
@@ -261,8 +248,6 @@ void E_Scene_Groupesurfaces_Groupe::PushFace(std::vector<std::vector<Application
 	if(!isPointerGroup)
 	{
 		vectorToFeed[faceIndex.group][faceIndex.face].idMaterial=this->GetIntegerConfig("idmat");
-		vectorToFeed[faceIndex.group][faceIndex.face].Rec_angle=this->GetBoolConfig("Rec_angle");
-		vectorToFeed[faceIndex.group][faceIndex.face].angle_group=this->GetIntegerConfig("angle_group");
 	}
 	else
 	{
@@ -709,25 +694,6 @@ void E_Scene_Groupesurfaces_Groupe::Modified(Element* eModif)
 
 		if(!(elInfo.typeElement==ELEMENT_TYPE_FLOAT && elInfo.libelleElement=="aire")) //On ignore l'ajout ou la mise à jour de la propriété d'aire
 			Element::Modified(eModif);
-
-		if(elInfo.typeElement==ELEMENT_TYPE_BOOL && elInfo.libelleElement=="Rec_angle")
-		{	
-			E_Data_Bool* ElementBool=dynamic_cast<E_Data_Bool*>(eModif);
-			if(ElementBool)
-			{
-				this->UpdateBoolConfig("Rec_angle",ElementBool->GetValue());
-				this->SetReadOnlyConfig("angle_group",!ElementBool->GetValue());
-			}
-		}
-
-		if(elInfo.typeElement==ELEMENT_TYPE_INTEGER && elInfo.libelleElement=="angle_group")
-		{	
-			E_Data_Integer* ElementEntier=dynamic_cast<E_Data_Integer*>(eModif);
-			if(ElementEntier)
-			{
-				this->UpdateEntierConfig("angle_group",ElementEntier->GetValue());
-			}
-		}
 	}
 }
 

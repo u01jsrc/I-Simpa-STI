@@ -1,5 +1,6 @@
 #include "reportmanagerAGH.h"
 #include "tools/collision.h"
+#include <algorithm>
 
 
 using namespace std;
@@ -15,8 +16,27 @@ inline bool ContainsRP(t_Recepteur_P* recepteurTest, std::vector<t_Recepteur_P*>
 }
 
 ReportManagerAGH::ReportManagerAGH(t_ParamReport& _paramReport)
-:ReportManager(_paramReport)
+	:ReportManager(_paramReport)
 {
+	this->surfIncidenceAngleEnergy.resize(_paramReport.configManager->recepteur_s_List.size());
+	for (int i = 0; i<_paramReport.configManager->recepteur_s_List.size(); i++)
+		this->surfIncidenceAngleEnergy[i].fill_empty_data(*(static_cast<Core_ConfigurationAGH*>(paramReport.configManager))->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS));
+
+	for (int i = 0; i < _paramReport.sceneModel->pface_size; i++)
+	{
+		t_cFace& face = _paramReport.sceneModel->pfaces[i];
+		auto it = std::find_if(paramReport.configManager->recepteur_s_List.begin(), paramReport.configManager->recepteur_s_List.end(), [face](const r_Surf* surfRec) {return surfRec->idRecepteurS == face.idRecepteurS; });
+		if (it != paramReport.configManager->recepteur_s_List.end())
+		{
+			int key = (*it)->idRecepteurS;
+			CoreString name = (*it)->name;
+			int idx = std::distance(paramReport.configManager->recepteur_s_List.begin(), it);
+			surfReceiverIDIdxMap.insert(std::make_pair(key, idx));
+			surfIncidenceAngleEnergy[idx].receiverName = name;
+		}
+		if (surfReceiverIDIdxMap.size() == paramReport.configManager->recepteur_s_List.size())
+			break;
+	}
 }
 
 ReportManagerAGH::~ReportManagerAGH()
@@ -118,16 +138,13 @@ void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE & particleIn
 
 	t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
 	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (face->face_scene != NULL && face->face_scene->Rec_angle == true && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	if (face->face_scene != NULL && face->recepteurS && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
 	{
-		if (this->surfIncidenceAngleEnergy.size() < face->face_scene->angle_group) {
-			int tmp = surfIncidenceAngleEnergy.size();
-			this->surfIncidenceAngleEnergy.resize(face->face_scene->angle_group);
-			for (int i = tmp; i<face->face_scene->angle_group; i++)
-				this->surfIncidenceAngleEnergy[i].fill_empty_data(*(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS)));
+		int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
+		if (configManager->recepteur_s_List[idx]->recordAngle) {
+			this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
+			this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
 		}
-		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].calc_angle(particleInfos, *face->face_scene);
-		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].add_energy(particleInfos);
 	}
 
 }
@@ -138,16 +155,13 @@ void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE_AGH & partic
 
 	t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
 	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (face->face_scene != NULL && face->face_scene->Rec_angle == true && particleInfos.reflectionOrder > *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	if (face->face_scene != NULL && face->recepteurS && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
 	{
-		if (this->surfIncidenceAngleEnergy.size() < face->face_scene->angle_group) {
-			int tmp = surfIncidenceAngleEnergy.size();
-			this->surfIncidenceAngleEnergy.resize(face->face_scene->angle_group);
-			for (int i = tmp; i<face->face_scene->angle_group; i++)
-				this->surfIncidenceAngleEnergy[i].fill_empty_data(*(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS)));
+		int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
+		if (configManager->recepteur_s_List[idx]->recordAngle) {
+			this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
+			this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
 		}
-		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].calc_angle(particleInfos, *face->face_scene);
-		this->surfIncidenceAngleEnergy[face->face_scene->angle_group - 1].add_energy(particleInfos);
 	}
 
 }
@@ -230,7 +244,7 @@ bool ReportManagerAGH::GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeA
 
 			GABE_Data_Float* statValues = new GABE_Data_Float(surfIncidenceAngleEnergy[i].energy.size());
 			statValues->headerData.numOfDigits = 22;
-			statValues->SetLabel((CoreString::FromInt(paramReport.freqValue) + " Hz, group " + CoreString::FromInt(i + 1)).c_str());
+			statValues->SetLabel((CoreString::FromInt(paramReport.freqValue) + " Hz, " + surfIncidenceAngleEnergy[i].receiverName).c_str());
 
 			for (int j = 0; j<surfIncidenceAngleEnergy[i].energy.size(); j++) {
 				statValues->Set(j, surfIncidenceAngleEnergy[i].energy[j]);

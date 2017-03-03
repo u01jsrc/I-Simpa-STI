@@ -283,6 +283,7 @@ bool Base_Core_Configuration::LoadCfgFile( CXml& fichierXml, bool verbose_mode)
 					r_Surf *nvRecepteurs=new r_Surf();
 					(*nvRecepteurs).idRecepteurS=(*iterateurNoeuds)->GetProperty("id").ToInt();
 					(*nvRecepteurs).name=(*iterateurNoeuds)->GetProperty("name");
+					(*nvRecepteurs).recordAngle = (*iterateurNoeuds)->GetProperty("calc_incidence_angle_stats").ToInt();
 					recepteur_s_List.push_back(nvRecepteurs);
 				}else if((*iterateurNoeuds)->GetName()=="recepteur_surfacique_coupe")
 				{

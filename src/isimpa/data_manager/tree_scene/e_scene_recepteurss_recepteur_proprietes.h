@@ -48,10 +48,16 @@ private:
     {
         this->AppendPropertyBool("enabled", wxTRANSLATE("Enabled"), true, false);
     }
+
+	void InitCalculateIncidenceAngle() {
+		this->AppendPropertyBool("calc_incidence_angle_stats", wxTRANSLATE("Calculate angle of incidence stats"), false, false);
+	}
+
 	void InitProperties()
 	{
 		this->AppendPropertyText("description",wxTRANSLATE("Description"),"");
         AddActiveProp();
+		InitCalculateIncidenceAngle();
 	}
 public:
 	E_Scene_Recepteurss_Recepteur_Proprietes( wxXmlNode* noeudCourant ,  Element* parent)
@@ -62,6 +68,8 @@ public:
         if(!IsPropertyExist("enabled")) {
             AddActiveProp();
         }
+		if (!IsPropertyExist("calc_incidence_angle_stats"))
+			InitCalculateIncidenceAngle();
 	}
 
 	E_Scene_Recepteurss_Recepteur_Proprietes( Element* parent)

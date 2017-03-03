@@ -57,6 +57,7 @@ public:
 		this->AllowMultipleSelection();
 		this->elementInfo.userDestroyable=true;
 		ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS.quant_RecepteurS++;
+
 		if(noeudCourant!=NULL)
 		{
 			wxXmlNode* currentChild;
@@ -118,8 +119,10 @@ public:
 	{
 		wxXmlNode* thisNode = new wxXmlNode(NoeudParent,wxXML_ELEMENT_NODE,"recepteur_surfacique");
 		thisNode->AddAttribute("id",Convertor::ToString(elementInfo.xmlIdElement));
-		
 		thisNode->AddAttribute("name",elementInfo.libelleElement);
+
+		Element* el = this->GetElementByType(ELEMENT_TYPE_SCENE_RECEPTEURSS_RECEPTEUR_PROPRIETES);
+		thisNode->AddAttribute("calc_incidence_angle_stats", Convertor::ToString(el->GetBoolConfig("calc_incidence_angle_stats")));
 		return thisNode;
 	}
 

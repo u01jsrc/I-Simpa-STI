@@ -1,5 +1,6 @@
 ﻿#include <input_output/reportmanager.h>
 #include <sppsNeeAGHTypes.h>
+#include <unordered_map>
 #include <data_manager/Core_ConfigurationAGH.h>
 
 /**
@@ -40,6 +41,7 @@ public:
 	bool extended;
 	std::vector<double> energy;
 	std::vector<double> correction;
+	CoreString receiverName;
 	t_angle_energy() {}
 	void fill_empty_data(bool mode)
 	{
@@ -133,7 +135,7 @@ protected:
 	std::vector <t_angle_energy> surfIncidenceAngleEnergy;
 public:
 	t_StatsAGH statReport;
-
+	std::unordered_map<int, int> surfReceiverIDIdxMap;
 	/**
 	 * Constructeur de la classe
 	 *

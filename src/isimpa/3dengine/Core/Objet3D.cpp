@@ -380,8 +380,6 @@ void CObjet3D::LoadPolyWithoutLostCurrentModelGroupAndMaterials(const std::strin
 			ivec3 sommetsTri=modelpoly.modelFaces[base_f].indicesSommets;
 			nouvFace.FaceNormals=FaceNormal(this->_pVertices[sommetsTri.a],this->_pVertices[sommetsTri.b],this->_pVertices[sommetsTri.c]);
 			nouvFace.idMaterial=this->_pGroups[corrFace.g].pFaces[corrFace.f].idMaterial;
-			nouvFace.Rec_angle=this->_pGroups[corrFace.g].pFaces[corrFace.f].Rec_angle;
-			nouvFace.angle_group=this->_pGroups[corrFace.g].pFaces[corrFace.f].angle_group;
 			//Todo, corriger les coordonnées de textures
 			nouvFace.TexCoords=this->_pGroups[corrFace.g].pFaces[corrFace.f].TexCoords;
 
@@ -1231,7 +1229,6 @@ bool CObjet3D::_LoadBIN(const std::string& filename)
 			(*itfacedest).idMaterial=(*itgroup).pFaces[f].materialID;
 			(*itfacedest).TexCoords=(*itgroup).pFaces[f].vertexTex;
 			(*itfacedest).internalFace=(*itgroup).pFaces[f].internalFace;
-			(*itfacedest).Rec_angle=(*itgroup).pFaces[f].Rec_angle;
 			itfacedest++;
 		}
 		itgroupdest++;

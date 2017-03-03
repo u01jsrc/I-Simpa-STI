@@ -186,6 +186,7 @@ public:
 	entier idRecepteurS; /*!< Indice du récepteur surfacique (externe) */
 	uentier nbFaces;
 	r_Surf_Face* faces; /*!< La taille du tableau correspond au nombre de sous-élément composant le récepteur surfacique*/
+	bool recordAngle;
 	void InitFaces(uentier _nbFaces, uentier _nbfreq);
 	r_Surf();
 	r_Surf(r_Surf& copyFrom);
@@ -358,8 +359,6 @@ struct t_Encombrement
  */
 struct t_cFace
 {
-	entier angle_group;
-	bool Rec_angle;							/*!< Sets if energy in funciton of angle is recorded for this face */
 	ivec3 sommets;							/*!< Indice des sommets */
 	vec3 normal;							/*!< Vecteur de normal */
 	t_Material* faceMaterial;				/*!< Pointeur vers le matériau associé (NULL si aucun) */

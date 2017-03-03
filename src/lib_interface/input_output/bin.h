@@ -80,8 +80,6 @@ struct ioFace {
 	: a(_a), b(_b), c(_c), idMat(_idMat), idRs(_idRs), idEn(_idEn) {
 		
 	}
-	bool Rec_angle; /*!< Sets if energy in funciton of angle is recorded for this face */
-	int angle_group; /*!< Sets if energy in funciton of angle is recorded for this face */
 	indiceV a;/*!<  Indice du sommet */
 	indiceV b;/*!<  Indice du sommet */
 	indiceV c; /*!<  Indice du sommet */
