@@ -31,7 +31,7 @@
 
 
 
-#define SPPSNEE_AGH_VERSION "Spps NEE AGH 0.3 (07.03.2017). Based on SPPS Nantes 2.2.0 version march 2017"
+#define SPPSNEE_AGH_VERSION "SPPS-AGH 0.3 (07.03.2017). Based on SPPS Nantes 2.2.0 version march 2017"
 #define __USE_BOOST_RANDOM_GENERATOR__
 #define UTILISER_MAILLAGE_OPTIMISATION
 
