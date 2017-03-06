@@ -160,7 +160,6 @@ public:
 	* L'appel doit se faire avant la recherche de la prochaine collision
 	*/
 	void ParticuleCollideWithSceneMesh(CONF_PARTICULE& particleInfos) override;
-	void ParticuleCollideWithSceneMesh(CONF_PARTICULE_AGH& particleInfos);
 
 	/**
 	 * Sauvegarde le tableau de statistique des états de particules et les données de niveaux sonores globaux

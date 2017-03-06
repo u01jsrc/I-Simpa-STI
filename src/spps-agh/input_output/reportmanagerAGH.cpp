@@ -134,42 +134,37 @@ formatGABE::GABE_Object* ReportManagerAGH::GetColStats()
 
 void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE & particleInfos)
 {
-	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
-	{
-		ReportManager::ParticuleCollideWithSceneMesh(particleInfos);
-		t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
-
-		if (face->face_scene != NULL && face->recepteurS)
-		{
-			int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
-			if (configManager->recepteur_s_List[idx]->recordAngle) {
-				this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
-				this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
-			}
-		}
+	if (particleInfos.nextModelIntersection.idface == -1)
 		return;
+	t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
+	if (face->face_scene == NULL)
+		return;
+
+	if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION)))
+	{
+		//Add intersection to history
+		this->collisionHistory.push_back(t_collision_history(face->face_scene->normal, particleInfos.reflectionOrder, particleInfos.nextModelIntersection.collisionPosition, particleInfos.direction, particleInfos.energie));
 	}
-	particleInfos.reflectionOrder++;
-}
 
-void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE_AGH & particleInfos)
-{
 	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	if (face->recepteurS && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
 	{
-		ReportManager::ParticuleCollideWithSceneMesh(particleInfos);
-		t_Tetra_Faces* face = &particleInfos.currentTetra->faces[particleInfos.nextModelIntersection.idface];
+		vec3& normal = face->face_scene->normal;
+		if (particleInfos.direction.dot(normal)<0) //If the receiver surface is on the other side then revert the normal
+			normal *= -1;
+		//Add particle energy to receiver
+		if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SURFACE_RECEIVER_MODE)) == 0)
+			face->recepteurS->energieRecu[particleInfos.frequenceIndex][particleInfos.pasCourant] += particleInfos.energie*cosf(normal.angle(particleInfos.direction));
+		else
+			face->recepteurS->energieRecu[particleInfos.frequenceIndex][particleInfos.pasCourant] += particleInfos.energie;
 
-		if (face->face_scene != NULL && face->recepteurS)
+		//Calc angle stats
+		int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
+		if (configManager->recepteur_s_List[idx]->recordAngle) 
 		{
-			int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
-			if (configManager->recepteur_s_List[idx]->recordAngle) {
-				this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
-				this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
-			}
+			this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
+			this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
 		}
-		return;
 	}
 	particleInfos.reflectionOrder++;
 }
