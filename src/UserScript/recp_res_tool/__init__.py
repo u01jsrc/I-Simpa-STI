@@ -44,14 +44,14 @@ def SaveLevel(tab,path):
     gabewriter=Gabe_rw(len(tab))
     labelcol=stringarray()
     for cell in tab[0][1:]:
-        labelcol.append(cell.encode('cp1252'))
+        labelcol.append(cell.encode('utf8'))
     gabewriter.AppendStrCol(labelcol,"TR-30")
     for col in tab[1:]:
         datacol=floatarray()
         for cell in col[1:]:
             datacol.append(float(cell))
-        gabewriter.AppendFloatCol(datacol,str(col[0]))
-    gabewriter.Save(path.encode('cp1252'))
+        gabewriter.AppendFloatCol(datacol,str(col[0].encode('utf8', 'replace')))
+    gabewriter.Save(path.encode('utf8'))
     
 def dofusion(folderwxid, path,param):
     arraydata=GetMixedLevel(folderwxid,param)
@@ -72,7 +72,7 @@ class manager:
     def getmenu(self,typeel,idel,menu):
         el=ui.element(idel)
         infos=el.getinfos()
-        if infos["name"]==u"Récepteurs_Ponctuels" or infos["name"]==u"Punctual receivers":
+        if infos["name"]==u"Punctual receivers":
 			submenu=[]
 			submenu.append(((u"Calculate All"),self.GetMixedLevelid_all))
 			submenu.append(())

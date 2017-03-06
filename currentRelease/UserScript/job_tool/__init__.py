@@ -6,8 +6,6 @@ import os
 ScriptFolder=ui.application.getapplicationpath()["userscript"]+"job_tool"+os.sep
 _=uilocale.InstallUiModule(ScriptFolder,ui.application.getlocale())
 
-def _(msg):
-    return msg
 def GetCurrentProjectPath():
     projconfel=ui.element(ui.element(ui.application.getrootscene()).getelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_PROJET_CONFIGURATION))
     return projconfel.getstringconfig("urlsave")
@@ -151,3 +149,4 @@ menu_manager=manager()
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPS,menu_manager )
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_TC,menu_manager )
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_CORE,menu_manager )
+ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPSAGH,menu_manager )

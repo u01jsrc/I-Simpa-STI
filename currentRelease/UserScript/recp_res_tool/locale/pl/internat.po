@@ -1,0 +1,68 @@
+# English translations for PACKAGE package.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2017.
+#
+# Translators:
+# Wojciech Binek <wojciech.binek@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-06 17:43+0100\n"
+"PO-Revision-Date: 2017-03-06 18:53+0100\n"
+"Last-Translator: Wojciech Binek <wojciech.binek@gmail.com>, 2017\n"
+"Language-Team: Polish (https://www.transifex.com/LAE/teams/23470/pl/)\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: __init__.py:77
+msgid "Calculate All"
+msgstr "Wyznacz wszystkie"
+
+#: __init__.py:79
+msgid "Calculate T20"
+msgstr "Wyznacz T20"
+
+#: __init__.py:80
+msgid "Calculate T30"
+msgstr "Wyznacz T30"
+
+#: __init__.py:81
+msgid "Calculate EDT"
+msgstr "Wyznacz EDT"
+
+#: __init__.py:83
+msgid "Calculate C50"
+msgstr "Wyznacz C50"
+
+#: __init__.py:84
+msgid "Calculate C80"
+msgstr "Wyznacz C80"
+
+#: __init__.py:85
+msgid "Calculate D50"
+msgstr "Wyznacz D50"
+
+#: __init__.py:86
+msgid "Calculate STI, NC25"
+msgstr "Wyznacz STI, NC25"
+
+#: __init__.py:88
+msgid "Combine receivers"
+msgstr "Połącz wyniki"
+
+#: __init__.py:94 __init__.py:95 __init__.py:96 __init__.py:97 __init__.py:98
+#: __init__.py:99 __init__.py:100 __init__.py:103 __init__.py:106
+#: __init__.py:109 __init__.py:112 __init__.py:115 __init__.py:118
+#: __init__.py:121
+msgid "Combined "
+msgstr "Połączone "

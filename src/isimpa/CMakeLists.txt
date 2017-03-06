@@ -435,6 +435,7 @@ IF(GETTEXT_FOUND )
   ADDMULTIPLE_LANG(${PROJECT_SOURCE_DIR}/currentRelease/UserScript/preceiv_sourceTracker/locale ${CMAKE_BINARY_DIR}/src/preceiv_sourceTracker)
   ADDMULTIPLE_LANG(${PROJECT_SOURCE_DIR}/currentRelease/UserScript/SppsReportSample/locale ${CMAKE_BINARY_DIR}/src/SppsReportSample)
   ADDMULTIPLE_LANG(${PROJECT_SOURCE_DIR}/currentRelease/UserScript/gabe2csv/locale ${CMAKE_BINARY_DIR}/src/gabe2csv)
+  ADDMULTIPLE_LANG(${PROJECT_SOURCE_DIR}/currentRelease/UserScript/recp_res_tool/locale ${CMAKE_BINARY_DIR}/src/recp_res_tool)
   # Building isimpa require building pofiles
   add_dependencies(isimpa pofiles)
 ENDIF()

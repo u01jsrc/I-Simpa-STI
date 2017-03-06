@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: I-Simpa\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-03 16:35+0100\n"
-"PO-Revision-Date: 2017-03-03 16:37+0100\n"
+"PO-Revision-Date: 2017-03-06 14:56+0100\n"
 "Last-Translator: Travis Lae <travis_lae@noise-planet.org>\n"
 "Language-Team: Polish (http://www.transifex.com/LAE/i-simpa/language/pl/)\n"
 "Language: pl\n"
@@ -1210,7 +1210,7 @@ msgstr "Średnia"
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recp.cpp:64
 #: src/isimpa/data_manager/tree_rapport/e_report_gabe_recps.cpp:64
 msgid "Global"
-msgstr "Średnia"
+msgstr "Całkowity"
 
 #: src/isimpa/data_manager/generic_element/e_materiau.cpp:41
 msgid "Material spectrum"
