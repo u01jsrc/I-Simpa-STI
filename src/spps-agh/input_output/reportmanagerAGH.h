@@ -38,7 +38,7 @@ private:
 	//double t, y;
 public:
 	int angle = 0;
-	bool extended;
+	bool extended = false;
 	std::vector<double> energy;
 	std::vector<double> correction;
 	CoreString receiverName;
@@ -61,7 +61,13 @@ public:
 			vec3 normal = face.normal;
 			vec3 dir = particleInfos.direction;
 
-			angle = (int)(acos(normal.dot(dir) / (dir.length()*normal.length()))*180.0 / M_PI);
+			double arg = normal.dot(dir) / (dir.length()*normal.length());
+			if (arg > 1)
+				arg = 1;
+			else if (arg < -1)
+				arg = -1;
+
+			angle = (int)(acos(arg)*180.0 / M_PI);
 
 			if (angle>89) { angle = 89; }	//probably not needed will trigger only when incidence angle is ideally parallel to surface normal - 0 deg
 		}
@@ -73,15 +79,9 @@ public:
 
 			R.calculateRotationMatrix(normal, target);
 			dir = R*dir;
-			vec3 test = R*normal;
 
 			int phi = atan2(dir.y, dir.x) * 180 / M_PI;
 			int theta = acos(dir.z / dir.length()) * 180 / M_PI;
-
-			//if (phi>179)
-			//	phi = 179;
-			//if (theta > 89)
-			//	theta = 89;
 
 			angle = 90 * (phi + 180) + theta;
 		}
@@ -151,7 +151,7 @@ public:
 	 */
 	void ShadowRayFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition);
 
-	bool GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats);
+	void GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats);
 
 	formatGABE::GABE_Object* GetColStats();
 

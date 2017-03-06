@@ -98,8 +98,6 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 	confPartFrame.stateParticule=PARTICULE_STATE_ALIVE;
 	if((*applicationTools.configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_QUANT_TIMESTEP))>confPartFrame.pasCourant)
 	{
-		int lastmill=-1;
-
 		if(applicationTools.calculationTool->doDirectSoundCalculation)
 			applicationTools.calculationTool->CalculateDirectSound(confPartFrame, sourceInfo, nomVecVitesse, freq);
 
@@ -135,7 +133,6 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 				}
 			}
 
-			float lenPart=confPart.direction.length();
 			confPart.position=sourceInfo.Position;
 			currentRapport+=rapportPartOutput;
 			if(currentRapport>=1)

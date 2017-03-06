@@ -109,9 +109,6 @@ void MLTCore::DoMutations(CONF_PARTICULE_MLT& inputParticle, int totalParticleNu
 
 bool MLTCore::RunInitialSeed(CONF_PARTICULE_MLT& inputParticle)
 {
-	decimal densite_proba_absorption_atmospherique = configurationTool->freqList[inputParticle.frequenceIndex]->densite_proba_absorption_atmospherique;
-	decimal absorption_atmospheric = configurationTool->freqList[inputParticle.frequenceIndex]->absorption_atmospherique;
-
 	SetNextParticleCollision(inputParticle); //1er test de collision
 	SetNextParticleCollisionWithObstructionElement(inputParticle); // Test de collision avec objet virtuel encombrant
 	//Au premier pas de temps il faut enregistrer l'energie de la particule dans la maille courante

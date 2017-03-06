@@ -230,33 +230,30 @@ void ReportManagerAGH::SaveThreadsStats(const CoreString& filename,const CoreStr
 	exportdBLevelTab.Save(filenamedBLvl.c_str());
 }
 
-bool ReportManagerAGH::GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats)
+void ReportManagerAGH::GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats)
 {
-	if (surfIncidenceAngleEnergy.size() == 0) {
-		return 1;
-	}
-	else {
-		using namespace formatGABE;
-		data.GabeAngleData.reserve(surfIncidenceAngleEnergy.size());
+	if (surfIncidenceAngleEnergy.size() == 0) 
+		return;
 
-		for (short i = 0; i<surfIncidenceAngleEnergy.size(); i++) {
-			surfIncidenceAngleEnergy[i].calc_energy_density();
-			if (NormalizeAngleStats) {
-				surfIncidenceAngleEnergy[i].normalize_energy_density();
-			}
+	using namespace formatGABE;
+	data.GabeAngleData.reserve(surfIncidenceAngleEnergy.size());
 
-			GABE_Data_Float* statValues = new GABE_Data_Float(surfIncidenceAngleEnergy[i].energy.size());
-			statValues->headerData.numOfDigits = 22;
-			statValues->SetLabel((CoreString::FromInt(paramReport.freqValue) + " Hz, " + surfIncidenceAngleEnergy[i].receiverName).c_str());
-
-			for (int j = 0; j<surfIncidenceAngleEnergy[i].energy.size(); j++) {
-				statValues->Set(j, surfIncidenceAngleEnergy[i].energy[j]);
-			}
-
-			data.GabeAngleData.push_back(statValues);
+	for (short i = 0; i < surfIncidenceAngleEnergy.size(); i++) {
+		surfIncidenceAngleEnergy[i].calc_energy_density();
+		if (NormalizeAngleStats) {
+			surfIncidenceAngleEnergy[i].normalize_energy_density();
 		}
+
+		GABE_Data_Float* statValues = new GABE_Data_Float(surfIncidenceAngleEnergy[i].energy.size());
+		statValues->headerData.numOfDigits = 22;
+		statValues->SetLabel((CoreString::FromInt(paramReport.freqValue) + " Hz, " + surfIncidenceAngleEnergy[i].receiverName).c_str());
+
+		for (int j = 0; j < surfIncidenceAngleEnergy[i].energy.size(); j++) {
+			statValues->Set(j, surfIncidenceAngleEnergy[i].energy[j]);
+		}
+
+		data.GabeAngleData.push_back(statValues);
 	}
-	return 0;
 }
 
 void ReportManagerAGH::SaveAngleStats(const CoreString& filename, const CoreString& filenamedBLvl, std::vector<t_sppsThreadParamAGH>& cols, const t_ParamReport& params, bool extended)

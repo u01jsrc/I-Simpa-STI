@@ -20,8 +20,8 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 	decimal faceDirection;
 	bool collisionResolution = true; //On test de nouveau la collision dans le pas de temps courant si cette valeur est à vrai
 	int iteration = 0;
-	decimal distanceCollision = 0.f;
-	decimal distanceToTravel = 0.f;
+	decimal distanceCollision;
+	decimal distanceToTravel;
 	while (collisionResolution && configurationP.stateParticule == PARTICULE_STATE_ALIVE)
 	{
 		iteration++;
@@ -100,7 +100,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 			FreeParticleTranslation(configurationP, vecTranslation);
 
 			// Récuperation de l'information de la face
-			t_cFace* faceInfo = NULL;
+			t_cFace* faceInfo;
 
 #ifdef UTILISER_MAILLAGE_OPTIMISATION
 			faceInfo = configurationP.currentTetra->faces[configurationP.nextModelIntersection.idface].face_scene;

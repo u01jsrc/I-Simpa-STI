@@ -8,7 +8,7 @@ class MLTCore : public  NextEventEstimationCore
 public:
 	MLTCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool);
 	bool RunInitialSeed(CONF_PARTICULE_MLT &inputParticle);
-	virtual bool Run(CONF_PARTICULE_AGH configurationP);
+	bool Run(CONF_PARTICULE_AGH configurationP) override;
 	bool SeedIsEmpty();
 	void RunMutation();
 	

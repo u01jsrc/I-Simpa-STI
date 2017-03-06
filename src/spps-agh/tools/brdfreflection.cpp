@@ -78,7 +78,6 @@ vec3 BRDFs::SolveSpecularReflection(const vec3 &incomingDirection, const vec3 &f
 float BRDFs::SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
-	vec3 toReceiver = targetPoint - shadowRay.position;
 	double specularEnergy = 0;
 	l_decimal mu1, mu2;
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
