@@ -18,23 +18,28 @@ inline bool ContainsRP(t_Recepteur_P* recepteurTest, std::vector<t_Recepteur_P*>
 ReportManagerAGH::ReportManagerAGH(t_ParamReport& _paramReport)
 	:ReportManager(_paramReport)
 {
-	this->surfIncidenceAngleEnergy.resize(_paramReport.configManager->recepteur_s_List.size());
-	for (int i = 0; i<_paramReport.configManager->recepteur_s_List.size(); i++)
-		this->surfIncidenceAngleEnergy[i].fill_empty_data(*(static_cast<Core_ConfigurationAGH*>(paramReport.configManager))->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS));
+	for (int i = 0; i < _paramReport.configManager->recepteur_s_List.size(); i++)
+		if (_paramReport.configManager->recepteur_s_List[i]->recordAngle)
+		{
+			t_angle_energy dataSet;
+			dataSet.fill_empty_data(*(static_cast<Core_ConfigurationAGH*>(paramReport.configManager))->FastGetConfigValue(Core_ConfigurationAGH::IPROP_EXTENDED_ANGLE_STATS));
+			this->surfIncidenceAngleEnergy.push_back(dataSet);
+		}
 
 	for (int i = 0; i < _paramReport.sceneModel->pface_size; i++)
 	{
 		t_cFace& face = _paramReport.sceneModel->pfaces[i];
 		auto it = std::find_if(paramReport.configManager->recepteur_s_List.begin(), paramReport.configManager->recepteur_s_List.end(), [face](const r_Surf* surfRec) {return surfRec->idRecepteurS == face.idRecepteurS; });
-		if (it != paramReport.configManager->recepteur_s_List.end())
+		if (it != paramReport.configManager->recepteur_s_List.end() && (*it)->recordAngle)
 		{
 			int key = (*it)->idRecepteurS;
 			CoreString name = (*it)->name;
-			int idx = std::distance(paramReport.configManager->recepteur_s_List.begin(), it);
-			surfReceiverIDIdxMap.insert(std::make_pair(key, idx));
-			surfIncidenceAngleEnergy[idx].receiverName = name;
+			int idx_surf = std::distance(paramReport.configManager->recepteur_s_List.begin(), it);
+			int idx_angle = surfReceiverIDIdxMap.size();
+			if(surfReceiverIDIdxMap.insert(std::make_pair(key, std::make_pair(idx_surf, idx_angle) )).second)
+				surfIncidenceAngleEnergy[idx_angle].receiverName = name;
 		}
-		if (surfReceiverIDIdxMap.size() == paramReport.configManager->recepteur_s_List.size())
+		if (surfReceiverIDIdxMap.size() == surfIncidenceAngleEnergy.size())
 			break;
 	}
 }
@@ -159,11 +164,11 @@ void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE & particleIn
 			face->recepteurS->energieRecu[particleInfos.frequenceIndex][particleInfos.pasCourant] += particleInfos.energie;
 
 		//Calc angle stats
-		int idx = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
-		if (configManager->recepteur_s_List[idx]->recordAngle) 
+		std::pair<int,int>& indexes = surfReceiverIDIdxMap[face->face_scene->idRecepteurS];
+		if (configManager->recepteur_s_List[indexes.first]->recordAngle)
 		{
-			this->surfIncidenceAngleEnergy[idx].calc_angle(particleInfos, *face->face_scene);
-			this->surfIncidenceAngleEnergy[idx].add_energy(particleInfos);
+			this->surfIncidenceAngleEnergy[indexes.second].calc_angle(particleInfos, *face->face_scene);
+			this->surfIncidenceAngleEnergy[indexes.second].add_energy(particleInfos);
 		}
 	}
 	particleInfos.reflectionOrder++;

@@ -137,7 +137,7 @@ protected:
 	std::vector <t_angle_energy> surfIncidenceAngleEnergy;
 public:
 	t_StatsAGH statReport;
-	std::unordered_map<int, int> surfReceiverIDIdxMap;
+	std::unordered_map<int, std::pair<int,int> > surfReceiverIDIdxMap;
 	/**
 	 * Constructeur de la classe
 	 *
