@@ -83,7 +83,7 @@ void MLTCore::DoMutations(CONF_PARTICULE_MLT& inputParticle, int totalParticleNu
 		Follow(mutatedParticle);
 
 		ratio = std::min(mutatedParticle.totalProbability / inputParticle.totalProbability, 1.);
-
+		
 		inputParticle.weight += (1 - ratio) / ((inputParticle.totalProbability / b + pLarge)*(mutation_number));
 		mutatedParticle.weight += (ratio + mutatedParticle.largeStep) / ((mutatedParticle.totalProbability / b + pLarge)*(mutation_number));
 
@@ -253,7 +253,7 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 	if (materialInfo->diffusion == 1 || pSpecular*((1 - rndMatAbsorbtion) / materialInfo->absorption) < materialInfo->diffusion)
 	{
 		nouvDirection = ReflectionLawsMLT::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal, configurationP, rndDir1, rndDir2, dirProbability);
-		dirProbability *= (1 - pSpecular);
+		dirProbability /= pSpecular;
 	}
 	else
 	{
