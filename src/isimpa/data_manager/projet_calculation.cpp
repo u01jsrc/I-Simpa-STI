@@ -776,10 +776,12 @@ formatGABE::GABE_Data_Float* Compute_STI_Param(bool surf,wxFloat32 te,wxFloat32 
 		delete NC_data;
 	}
 	//Pour chaque bande de fréquence
+	int* stiResultIndex;
 	for(int idFreq=0;idFreq<tab_wj.size();idFreq++)
 	{
-		if(std::find(idx_l,idx_l+7,idFreq)!=idx_l+7){
-			newParameter->Set(idFreq,MTIk[idFreq]);
+		stiResultIndex = std::find(idx_l, idx_l + 7, idFreq);
+		if(stiResultIndex !=idx_l+7){
+			newParameter->Set(idFreq,MTIk[std::distance(idx_l, stiResultIndex)]);
 		}else{
 			newParameter->Set(idFreq,0);
 		}
