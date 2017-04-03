@@ -87,6 +87,8 @@ void MLTCore::DoMutations(CONF_PARTICULE_MLT& inputParticle, int totalParticleNu
 		inputParticle.weight += (1 - ratio) / ((inputParticle.totalProbability / b + pLarge)*(mutation_number));
 		mutatedParticle.weight += (ratio + mutatedParticle.largeStep) / ((mutatedParticle.totalProbability / b + pLarge)*(mutation_number));
 
+		//Cosnider if weight schould be different for each reflectio order!
+
 		if(mutatedParticle.largeStep==1)
 		{
 			CastShadowRays(inputParticle);
