@@ -1,16 +1,13 @@
-#I-Simpa
+| Travis Linux build status| AppVeyor Windows build status |
+|--------------------------|-------------------------------|
+|[ | [![Build Status](https://ci.appveyor.com/api/projects/status/wwbeuje6ddc1wx01?svg=true)](https://ci.appveyor.com/project/d-cooper/i-simpa-d0onn)](https://ci.appveyor.com/project/d-cooper/I-Simpa)|
 
-Travis Linux build status:
+<IMG SRC="https://github.com/Ifsttar/I-Simpa/blob/master/Docs/images/I-Simpa-logo.jpg" WIDTH=400 ALT="I-Simpa logo" TITLE="I-Simpa logo">
 
-
-AppVeyor Windows build status:
-[![Build status](https://ci.appveyor.com/api/projects/status/wwbeuje6ddc1wx01?svg=true)](https://ci.appveyor.com/project/d-cooper/i-simpa-d0onn)
-
-<IMG SRC="http://i-simpa.ifsttar.fr/typo3temp/pics/b06522ab44.jpg" WIDTH=500 ALT="I-Simpa logo" TITLE="I-Simpa logo">
-
-* **For more information**, [visit the offical I-Simpa website](http://i-simpa.ifsttar.fr).
+* **For general information**, [visit the offical I-Simpa website](http://i-simpa.ifsttar.fr)
+* **For using I-Simpa**, see [the User Guide](http://i-simpa-wiki.readthedocs.io/en/latest/)
 * **For build instructions**, see [the instructions](https://github.com/Ifsttar/I-Simpa/blob/master/Docs/Building.md)
-* **For using I-Simpa**, see [the wiki](http://i-simpa-wiki.readthedocs.io/en/latest/).
+* **For contributing to I-Simpa**, see [the wiki](http://i-simpa-wiki.readthedocs.io/en/latest/)
 
 <IMG ALIGN="right" SRC="https://raw.githubusercontent.com/Ifsttar/I-Simpa/master/Docs/images/wiki%20pictures/illustration_i_simpa_room-Home_page.png" WIDTH=350 ALT="Room illustration" TITLE="Room illustration">
 
@@ -34,8 +31,10 @@ for its own applications… All have been done in order you can extend I-Simpa e
 
 I-Simpa has been initially developed as a research tool (i.e. for research laboratories), but can also be a very efficient tool for a professional or commercial use.
 
-**IMPORTANT NOTE:** although the source code is available, it is not ready to fork. Works are in progress to correct minor bugs and to propose a first stable release. We suggest to contributors to wait this first release before contributtting to the development of I-Simpa.
-
-## **License**
+## **License for users**
 
 I-Simpa is an application developped by Ifsttar under the GENERAL PUBLIC LICENSE Version 3, please refere to [GPLv3](https://github.com/Ifsttar/I-Simpa/blob/master/LICENSE.md) for more details about it and [here](https://github.com/Ifsttar/I-Simpa/blob/master/Docs/License.txt) for Ifsttar information.
+
+## **License Agreement for contributors**
+
+For legal reasons, contributors are asked to agree with a Contributor License Agreement (for Individual or for Entity). Contributors will be added in the 'About' dialog box of I-Simpa. For more information visit the following page: http://i-simpa.ifsttar.fr/community/contribute/contribute-to-the-code/
