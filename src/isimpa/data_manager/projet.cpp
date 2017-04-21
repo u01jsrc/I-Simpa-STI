@@ -658,7 +658,7 @@ void ProjectManager::CloseApp()
 
 
 	ApplicationConfiguration::SetRootScene(NULL);
-	Element::SetCompteur(InstanceManager::GetElementCount()+1);
+	Element::SetElementCount(InstanceManager::GetElementCount()+1);
 
 
 	ApplicationConfiguration::GLOBAL_CURRENT_APPLICATION_INFORMATIONS=ApplicationConfiguration::t_App_Info();
@@ -859,29 +859,19 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	wxDateTime timeDebCalculation=wxDateTime::UNow();
 
 	if(ext=="py" || ext=="pyc") {
-#ifdef USE_PYTHON
-        const std::string arg = (workingDir + xmlCoreFileName).ToStdString();
-        char** args = new char*[1];
-        args[0] = new char[arg.length() + 1];
-        memcpy(&args[0], arg.c_str(), arg.length() + 1);
-        PySys_SetArgv(1, args);
-        boost::python::exec_file((rootCorePath + exeName).ToStdString().c_str());
-        delete args[0];
-        delete args;
-    } else {
-        cmd = rootCorePath + exeName + " \"" + workingDir + xmlCoreFileName + "\"";
-        uiRunExe(mainFrame, cmd, labelOutput, &progDialog);
-    }
 
-#else
-        cmd = "python -u \"" + rootCorePath + exeName + "\" \"" + workingDir + xmlCoreFileName + "\"";
+	#ifdef _WIN32
+		cmd = ApplicationConfiguration::getResourcesFolder() + "python.exe -u \"" + rootCorePath + exeName + "\" \"" + workingDir + xmlCoreFileName + "\"";
+	#else
+		cmd = "python -u \"" + rootCorePath + exeName + "\" \"" + workingDir + xmlCoreFileName + "\"";
+	#endif // _WIN32
+
     }
     else {
         cmd = rootCorePath + exeName + " \"" + workingDir + xmlCoreFileName + "\"";
     }
 
     bool result = uiRunExe(mainFrame, cmd, labelOutput, &progDialog);
-#endif // USE_PYTHON
 	wxLongLong durationCalculation=wxDateTime::UNow().GetValue()-timeDebCalculation.GetValue();
 
 	wxLogMessage(_("Calculation time: %lld ms"),durationCalculation.GetValue());
@@ -1982,7 +1972,7 @@ bool ProjectManager::BuildEmptyProject(wxXmlNode* noeudRacine)
 {
 	if(noeudRacine!=NULL)
 	{
-		Element::SetCompteur(InstanceManager::GetElementCount()+1);
+		Element::SetElementCount(InstanceManager::GetElementCount()+1);
 
 		//On va créer les trois racines du projet Scene,Core,Report
 		E_Core elementCore;
@@ -2757,6 +2747,7 @@ void ProjectManager::OnModeWireFrameFull(wxCommandEvent& event)
 
 void ProjectManager::OnModeWireFrameShape(wxCommandEvent& event)
 {
+	DoShapeComputation();
 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelLinesAndConstruction,false);
 	this->GlFrame->ChangeRenderMode(OpenGLApp::renderModelLines,true);
 }
