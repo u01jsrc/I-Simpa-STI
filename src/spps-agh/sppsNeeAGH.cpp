@@ -354,7 +354,7 @@ int MainProcess(int argc, char* argv[])
 	if(!initTetraMesh(workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_TETRAHEDRALIZATION_FILE_PATH),sceneMesh,configManager.freqList.size(),sceneTetraMesh,configManager, verbose_mode))
 		return 1;
 
-	ExpandRecepteurPTetraLocalisation(&sceneTetraMesh,&configManager.recepteur_p_List,configManager); //Etend la zone d'influance des récepteurs ponctuels en fonction de leurs rayons
+	ExpandPunctualReceiverTetrahedronLocalisation(&sceneTetraMesh,&configManager.recepteur_p_List,configManager); //Etend la zone d'influance des récepteurs ponctuels en fonction de leurs rayons
 	TranslateSourceAtTetrahedronVertex(configManager.srcList,&sceneTetraMesh);
 	//**************************************************
 	// 5: Instancier paramètre gestionnaire de sortie de données
