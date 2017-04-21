@@ -354,8 +354,13 @@ int MainProcess(int argc, char* argv[])
 	if(!initTetraMesh(workingDir+*configManager.FastGetConfigValue(Core_ConfigurationAGH::SPROP_TETRAHEDRALIZATION_FILE_PATH),sceneMesh,configManager.freqList.size(),sceneTetraMesh,configManager, verbose_mode))
 		return 1;
 
-	ExpandPunctualReceiverTetrahedronLocalisation(&sceneTetraMesh,&configManager.recepteur_p_List,configManager); //Etend la zone d'influance des récepteurs ponctuels en fonction de leurs rayons
-	TranslateSourceAtTetrahedronVertex(configManager.srcList,&sceneTetraMesh);
+	// Attach the neighboring tetrahedron with all punctual receivers depending of punctual receiver radius.
+	ExpandPunctualReceiverTetrahedronLocalisation(&sceneTetraMesh, &configManager.recepteur_p_List, configManager);
+	TranslateSourceAtTetrahedronVertex(configManager.srcList, &sceneTetraMesh);
+	if (!CheckSourcePosition(configManager.srcList, &sceneMesh)) {
+		std::cerr << _("A sound source position is intersecting with the 3D model, move the sound source inside the room") << std::endl;
+		return 1;
+	}
 	//**************************************************
 	// 5: Instancier paramètre gestionnaire de sortie de données
 	ReportManagerAGH::t_ParamReport reportParameter;
@@ -447,7 +452,7 @@ int MainProcess(int argc, char* argv[])
 	if (verbose_mode) { cout << "End of save of Ponctual Receiver intensity." << endl; }
 
 	if (verbose_mode) { cout << "Saving sound level for each Ponctual Receiver per source..." << endl; }
-	ReportManagerAGH::SaveSoundLevelBySource("Sound level per source.recp", threadDataCast,reportParameter);
+	ReportManagerAGH::SaveSoundLevelBySource("Sound level per source.recps", threadDataCast,reportParameter);
 	if (verbose_mode) { cout << "End of save sound level for each Ponctual Receiver per source." << endl; }
 	st_mkdir(workingDir + *configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH));
 	stringClass globalRecSurfPath = workingDir + *configManager.FastGetConfigValue(Core_Configuration::SPROP_RECEPTEUR_SURFACIQUE_FOLDER_PATH) + "Global" + st_path_separator();
