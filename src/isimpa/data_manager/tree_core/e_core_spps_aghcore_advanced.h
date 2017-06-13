@@ -48,7 +48,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_SPPS(wxXmlNode* noeudCourant, Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS, noeudCourant)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		//Add debug mode parameter v<1.21
 		if (!this->IsPropertyExist("random_seed")) {
 			InitRandomSeed(this);
@@ -61,7 +61,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_SPPS(Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - SPPS"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		InitProperties();
 	}
 
@@ -113,7 +113,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_NEE(wxXmlNode* noeudCourant, Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE, noeudCourant)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		//Add debug mode parameter v<1.21
 		if (!this->IsPropertyExist("random_seed")) {
 			InitRandomSeed(this);
@@ -129,7 +129,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_NEE(Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - NEE"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		InitProperties();
 	}
 
@@ -184,7 +184,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_MLT(wxXmlNode* noeudCourant, Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT, noeudCourant)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		//Add debug mode parameter v<1.21
 		if (!this->IsPropertyExist("random_seed")) {
 			InitRandomSeed(this);
@@ -197,7 +197,7 @@ public:
 	E_Core_SppsNee_AGH_advanced_MLT(Element* parent)
 		:Element(parent, wxTRANSLATE("Advanced - MLT"), Element::ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT)
 	{
-		SetIcon(GRAPH_STATE_ALL, GRAPH_ADVANCED_PARAMETERS);
+		SetIcon(GRAPH_STATE_ALL, GRAPH_EL_CONFIGURATION);
 		InitProperties();
 	}
 
