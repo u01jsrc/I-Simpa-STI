@@ -21,6 +21,7 @@
 #include "CalculationCore.h"
 #include "tools/dotdistribution.h"
 #include "sppsInitialisation.h"
+#include "sppsVersion.h"
 
 #if __USE_MULTITHREAD__
 	#include <boost/thread/thread.hpp>
@@ -243,7 +244,7 @@ int MainProcess(int argc, char* argv[])
 
 	using namespace std;
 
-	cout<<SPPS_VERSION<<endl;
+	cout<<"SPPS version "<<SPPS_VERSION_MAJOR<<"."<<SPPS_VERSION_MINOR<<"."<<SPPS_VERSION_REVISION<<endl;
 	//**************************************************
 	//Initialisation
 	t_ToolBox applicationToolBox;
@@ -319,7 +320,7 @@ int MainProcess(int argc, char* argv[])
     ExpandPunctualReceiverTetrahedronLocalisation(&sceneTetraMesh, &configManager.recepteur_p_List, configManager);
 	TranslateSourceAtTetrahedronVertex(configManager.srcList,&sceneTetraMesh);
 	if(!CheckSourcePosition(configManager.srcList, &sceneMesh)) {
-		std::cerr << _("A sound source position is intersecting with the 3D model, move the sound source inside the room") << std::endl;
+		std::cerr << _("A sound source position is intersecting with the 3D model. Move the sound source inside the 3D model") << std::endl;
 		return 1;
 	}
 	//**************************************************

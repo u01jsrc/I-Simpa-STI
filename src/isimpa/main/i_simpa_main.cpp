@@ -40,6 +40,7 @@
 #include "IHM/languageSelection.hpp"
 #include <wx/ffile.h>
 #include <wx/evtloop.h>
+#include <IHM/AboutDialog.hpp>
 #include "last_cpp_include.hpp"
 
 
@@ -57,6 +58,7 @@ BEGIN_EVENT_TABLE(MainUiFrame, wxFrame)
 	EVT_MENU(ID_ouvrir, MainUiFrame::OnOpenProject)
 
 	EVT_MENU(ID_preferences_lang, MainUiFrame::OnChangeLanguage)
+    EVT_MENU(ID_preferences_appdata, MainUiFrame::OnChangeAppData)
 	EVT_MENU(ID_preferences_options, MainUiFrame::OnShowPreferenceTree)
 
 	EVT_MENU(ID_Dock3Dwindow, MainUiFrame::OnSetDockStatus)
@@ -125,7 +127,6 @@ BEGIN_EVENT_TABLE(MainUiFrame, wxFrame)
 	//EVT_MENU(ID_Help_Forum, MainUiFrame::OnLinkWebForum)
 	EVT_MENU(ID_Help_Web, MainUiFrame::OnLinkWebIsimpa)
 	EVT_MENU(ID_Help_Doc, MainUiFrame::OnLinkWebDoc)
-	EVT_MENU(ID_Help_Licence, MainUiFrame::OnFileLicence)
 	EVT_MENU(ID_Help_Doc_Isimpa_Pdf, MainUiFrame::OnFileIsimpaDoc)
 	EVT_MENU(ID_Help_Doc_Spps_Pdf, MainUiFrame::OnFileSppsDoc)
 	//VT_MENU(ID_changeLanguage, MainUiFrame::OnChangeLanguage)
@@ -160,15 +161,6 @@ void OnUserConfigElementEvent(wxCommandEvent& eventElement)
 	projetCourant->ElementEvent(eventElement,ProjectManager::EVENT_CTRL_USERCONFIG);
 }
 
-
-wxString GetLicenseText()
-{
-	wxFFile licenseFile("license.txt");
-	wxString fileContent;
-	licenseFile.ReadAll(&fileContent);
-	return fileContent;
-}
-
 MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APPLICATION_NAME,
 									wxDefaultPosition, FromDIP(wxSize(1024,768)),
 									wxDEFAULT_FRAME_STYLE),m_locale(lang)
@@ -197,7 +189,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	file_menu->Append(ID_generer, _("New scene"));
 	file_menu->AppendSeparator();
 	file_menu->Append(ID_enregistrer, _("Save project\tCtrl+S"));
-	file_menu->Append(ID_enregistrer_sous, _("Save project as ..."));
+	file_menu->Append(ID_enregistrer_sous, _("Save project as..."));
 	file_menu->Append(ID_enregistrer_copie, _("Save copy of project"));
 	file_menu->AppendSeparator();
 	wxMenu* recent_projet_menu = new wxMenu;
@@ -212,6 +204,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	wxMenu* file_preferences_menu = new wxMenu;
 	file_preferences_menu->Append(ID_preferences_options, _("Options"));
 	file_preferences_menu->Append(ID_preferences_lang, _("Language"));
+    file_preferences_menu->Append(ID_preferences_appdata, _("Change application data folder"));
 	file_menu->Append(ID_preferences, _("Settings"),file_preferences_menu);
 
 	file_menu->AppendSeparator();
@@ -322,7 +315,6 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	aide_menu->Append(ID_Help_Doc_Isimpa_Pdf, _("I-Simpa documentation (PDF in French)"));
 	aide_menu->Append(ID_Help_Doc_Spps_Pdf, _("SPPS documentation (PDF in French)"));
 	aide_menu->AppendSeparator();
-	aide_menu->Append(ID_Help_Licence, _("License"));
 	aide_menu->Append(ID_Help_About, _("About ")+APPLICATION_NAME);
 
 
@@ -436,7 +428,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	tbProjet->AddTool(ID_ouvrir, _("Open project"), wxImage(ressourceFolder+"/Bitmaps/toolbar_openproject.png", wxBITMAP_TYPE_PNG), _("Open project"));
 	tbProjet->AddSeparator();
 	tbProjet->AddTool(ID_enregistrer, _("Save project"), wxImage(ressourceFolder+"/Bitmaps/toolbar_saveproject.png", wxBITMAP_TYPE_PNG), _("Save project"));
-	tbProjet->AddTool(ID_enregistrer_sous, _("Save project as ..."), wxImage(ressourceFolder+"/Bitmaps/toolbar_saveprojectas.png", wxBITMAP_TYPE_PNG), _("Save project as ..."));
+	tbProjet->AddTool(ID_enregistrer_sous, _("Save project as..."), wxImage(ressourceFolder+"/Bitmaps/toolbar_saveprojectas.png", wxBITMAP_TYPE_PNG), _("Save project as..."));
 
 	simulation->AddTool(ID_previous_step_simulation, _("Previous time step"), wxImage(ressourceFolder+"/Bitmaps/toolbar_animation_previousstep.png", wxBITMAP_TYPE_PNG), _("Previous time step"));
 	simulation->AddTool(ID_start_simulation, _("Play"), wxImage(ressourceFolder+"/Bitmaps/toolbar_animation_start.png", wxBITMAP_TYPE_PNG), _("Play"));
@@ -859,6 +851,13 @@ void MainUiFrame::OnChangeLanguage(wxCommandEvent& event)
 	wxLogMessage(_("Language will be changed after restarting I-Simpa"));
 }
 
+void MainUiFrame::OnChangeAppData(wxCommandEvent& event)
+{
+    MainUiFrame::AskApplicationDataDir(ApplicationConfiguration::GLOBAL_VAR.appDataFolderPath);
+    ApplicationConfiguration::GetFileConfig()->Write("interface/appdata", ApplicationConfiguration::GLOBAL_VAR.appDataFolderPath);
+    wxLogMessage(_("Application data folder will be changed after restarting I-Simpa"));
+}
+
 void MainUiFrame::OnShowPreferenceTree(wxCommandEvent& event)
 {
 	wxAuiPaneInfo& optionPane=m_mgr.GetPane("userpref");
@@ -870,29 +869,9 @@ void MainUiFrame::OnShowPreferenceTree(wxCommandEvent& event)
 }
 void MainUiFrame::OnShowAboutDialog(wxCommandEvent& event)
 {
-	wxAboutDialogInfo aboutDlg;
-	aboutDlg.SetVersion(wxString::Format("[%i.%i.%i]",ApplicationConfiguration::SPPS_UI_VERSION_MAJOR,ApplicationConfiguration::SPPS_UI_VERSION_MINOR,ApplicationConfiguration::SPPS_UI_VERSION_REVISION));
-	aboutDlg.SetName(APPLICATION_NAME);
-	aboutDlg.SetWebSite(wxT("http://i-simpa.ifsttar.fr"));
-	//aboutDlg.SetLicence(GetLicenseText());
-	aboutDlg.SetLicence(_("I-Simpa is an open source software (GPL v3)."));
-	aboutDlg.AddDeveloper("Nicolas Fortin (Ifsttar)");
-	aboutDlg.AddDeveloper("Judicaël Picaut (Ifsttar)");
-	aboutDlg.AddDeveloper("Contributor - Wojciech Binek (AGH)");
-	aboutDlg.AddTranslator("Wojciech Binek (AGH)");
-	aboutDlg.SetCopyright("(c) Ifsttar <i-simpa@ifsttar.fr>");
-
-	//wxArraySting devs;
-	//devs.
-	_("License >>");
-	_("Developers >>");
-	//aboutDlg.SetDescription(_("Outil de prévision acoustique pour l'habitat et le milieu urbain."));
-	wxAboutBox(aboutDlg);
-}
-
-void MainUiFrame::OnLinkWebForum(wxCommandEvent& event)
-{
-	wxLaunchDefaultBrowser("http://i-simpa.ifsttar.fr/community/mailing-lists-and-forum/");
+    AboutDialog aboutDialog;
+    aboutDialog.CreateAboutDialog(this);
+	aboutDialog.ShowModal();
 }
 
 void MainUiFrame::OnLinkWebIsimpa(wxCommandEvent& event)
@@ -902,11 +881,6 @@ void MainUiFrame::OnLinkWebIsimpa(wxCommandEvent& event)
 void MainUiFrame::OnLinkWebDoc(wxCommandEvent& event)
 {
 	wxLaunchDefaultBrowser("http://i-simpa-wiki.readthedocs.io");
-}
-
-void MainUiFrame::OnFileLicence(wxCommandEvent& event)
-{
-	wxLaunchDefaultApplication("licence.rtf");
 }
 
 void MainUiFrame::OnFileIsimpaDoc(wxCommandEvent& event)
@@ -1018,10 +992,30 @@ void MainUiFrame::OnSaveToProject(wxCommandEvent& event)
 		projetCourant->SaveTo(FileName);
 	}
 }
+wxString MainUiFrame::AskApplicationDataDir(wxString defaultApplicationDirectory) {
+
+
+    wxMessageDialog dialog( NULL, wxString::Format(
+                                    _("Do you accept to write the projects into this directory:\n%s"), defaultApplicationDirectory),
+                            _("Application data directory"), wxYES_DEFAULT|wxYES_NO|wxICON_INFORMATION);
+
+	if(dialog.ShowModal()== wxID_YES) {
+		return defaultApplicationDirectory;
+	} else {
+		// User want to select a folder
+		wxDirDialog folderChooser(NULL, _("Select an empty folder that will contain your projects"), defaultApplicationDirectory,  wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+		if(folderChooser.ShowModal() == wxID_OK) {
+			return folderChooser.GetPath();
+		} else {
+			return defaultApplicationDirectory;
+		}
+	}
+}
+
 int MainUiFrame::AskApplicationLanguage(int defaultLanguage)
 {
 	int choosenLanguage=defaultLanguage;
-	LanguageSelector langSelection(NULL,_("Please choose language:"),_("Language"),ApplicationConfiguration::getResourcesFolder()+wxString("locale")+wxFileName::GetPathSeparator(),ApplicationConfiguration::getResourcesFolder()+ApplicationConfiguration::CONST_RESOURCE_BITMAP_FOLDER+wxString("flags")+wxFileName::GetPathSeparator());
+	LanguageSelector langSelection(NULL, _("Please choose language:"),_("Language"),ApplicationConfiguration::getResourcesFolder()+wxString("locale")+wxFileName::GetPathSeparator(),ApplicationConfiguration::getResourcesFolder()+ApplicationConfiguration::CONST_RESOURCE_BITMAP_FOLDER+wxString("flags")+wxFileName::GetPathSeparator());
 	wxInt32 choice=langSelection.ShowModal();
 	if(choice==wxID_OK)
 	{

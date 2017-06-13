@@ -207,6 +207,13 @@ public:
 	static const int SPPS_UI_VERSION_MAJOR;
 	static const int SPPS_UI_VERSION_MINOR;
 	static const int SPPS_UI_VERSION_REVISION;
+	static const int SPPS_VERSION_MAJOR;
+	static const int SPPS_VERSION_MINOR;
+	static const int SPPS_VERSION_REVISION;
+	static const int CTR_VERSION_MAJOR;
+	static const int CTR_VERSION_MINOR;
+	static const int CTR_VERSION_REVISION;
+	static const wxString BUILD_DATE;
 	static const wxString CONST_USER_PREFERENCE_FILE_NAME;
 
 	/** @} */
@@ -232,6 +239,7 @@ public:
 
 	struct t_GLOBAL_VAR
 	{
+        wxString appDataFolderPath;
 		wxString cacheFolderPath;
 		wxString workingFolderPath;
 		bool drawMaterialColors;

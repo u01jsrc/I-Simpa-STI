@@ -2,6 +2,8 @@ include_directories (./ "${PROJECT_SOURCE_DIR}/src/lib_interface")
 set(CMAKE_INSTALL_MFC_LIBRARIES ON)
 include( InstallRequiredSystemLibraries )
 
+string(TIMESTAMP BUILD_DATE "%Y-%m-%dT%H:%M:%S")
+
 MACRO(ADDMULTIPLE_LANG curdir bindir)
   FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
   FOREACH(child ${children})
@@ -109,9 +111,7 @@ set(IHM_SOURCES
     IHM/RecepteurSOperationDialog.h
     IHM/WizardRemeshModel.cpp
     IHM/WizardRemeshModel.hpp
-    IHM/applicationPreferences.cpp
-    IHM/applicationPreferences.hpp
-    IHM/base64.cpp
+        IHM/base64.cpp
     IHM/base64.h
 
     IHM/customItem/uimenuitem.cpp
@@ -137,7 +137,9 @@ set(IHM_SOURCES
     IHM/simpleGraphManager.cpp
     IHM/simpleGraphManager.h
     IHM/uiTreeCtrl.cpp
-    IHM/uiTreeCtrl.h)
+    IHM/uiTreeCtrl.h
+        IHM/AboutDialog.cpp
+        IHM/AboutDialog.hpp)
 
 set(LANGUAGE_SOURCES
     Language/additionnal_univ.h)
@@ -450,7 +452,7 @@ ELSE()
     MESSAGE(STATUS "Using dynamic wxWidgets library  lib:${wxWidgets_LIB_DIR} include:${wxWidgets_ROOT_DIR}")
 ENDIF()
 
-find_package(wxWidgets COMPONENTS core base xml gl aui adv REQUIRED)
+find_package(wxWidgets COMPONENTS core base xml gl aui adv html REQUIRED)
 include(${wxWidgets_USE_FILE})
 # Find package for building
 FIND_PACKAGE(PythonLibs)
@@ -474,6 +476,8 @@ add_definitions(-DUSE_PYTHON=${PYTHONLIBS_FOUND})
 if(WIN32) # Check if we are on Windows
   if(MSVC) # Check if we are using the Visual Studio compiler
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	# Source files are encoded in UTF-8
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8")
     set_target_properties(isimpa PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
     set_target_properties(isimpa PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
   elseif(CMAKE_COMPILER_IS_GNUCXX)
@@ -495,8 +499,7 @@ set(ISIMPA_RESSOURCES ${PROJECT_SOURCE_DIR}/currentRelease)
 
 install (FILES
 ${ISIMPA_RESSOURCES}/appconst.xml
-${ISIMPA_RESSOURCES}/Licence.pdf
-${ISIMPA_RESSOURCES}/Licence.rtf
+${ISIMPA_RESSOURCES}/license.html
 isimpa.ico
         DESTINATION .)
 

@@ -1,7 +1,9 @@
 #include "reportmanager.h"
 #include "tools/collision.h"
-//#include "Core/mathlib.h"
 #include <cmath>
+#ifdef WIN32
+#include "input_output/pugixml/src/pugixml.hpp"
+#endif // WIN32
 
 const l_decimal p_0=1/pow((float)(20*pow(10.f,(int)-6)),(int)2);
 
@@ -38,7 +40,7 @@ ReportManager::ReportManager(t_ParamReport& _paramReport)
 
 	particleFile = NULL;
 	particleSurfaceCSVFile = NULL;
-	particleReceiverCSVFile = NULL;
+    particleReceiverCSVFile = NULL;
 	lastParticuleFileHeaderInfo=0;
 
 	if(paramReport.nbParticles!=0)
@@ -52,8 +54,8 @@ void ReportManager::writeParticleFile()
 		delete particleFile;
 	if(particleSurfaceCSVFile)
 		delete particleSurfaceCSVFile;
-	if (particleReceiverCSVFile)
-		delete particleReceiverCSVFile;
+    if (particleReceiverCSVFile)
+        delete particleReceiverCSVFile;
     // Create particules folder
 	st_mkdir(paramReport._particlePath);
 	stringClass freqFolder;
@@ -61,15 +63,32 @@ void ReportManager::writeParticleFile()
 
 	st_mkdir(freqFolder);
 	stringClass fileNamePath=freqFolder+paramReport._particleFileName;
-	particleFile = new fstream(fileNamePath.c_str() , ios::out | ios::binary);
+	
+	#ifdef WIN32
+		particleFile = new fstream(pugi::as_wide(fileNamePath), ios::out | ios::binary);
+	#else
+		particleFile = new fstream(fileNamePath.c_str(), ios::out | ios::binary);
+	#endif // WIN
+
+
 	stringClass fileCSVNamePath=freqFolder+"particle_surface_collision_statistics.csv";
-	stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
-	if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
-		particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str() , ios::out);
-	}
-	if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
+    stringClass fileReceiversCSVNamePath = freqFolder + "particle_receivers_collision_statistics.csv";
+    if(*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_SURFACE_INTERSECTION))) {
+
+		#ifdef WIN32
+		particleSurfaceCSVFile = new fstream(pugi::as_wide(fileCSVNamePath), ios::out);
+		#else
+		particleSurfaceCSVFile = new fstream(fileCSVNamePath.c_str(), ios::out);
+		#endif // WIN
+    }
+    if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION))) {
+
+		#ifdef WIN32
+		particleReceiverCSVFile = new fstream(pugi::as_wide(fileReceiversCSVNamePath), ios::out);
+		#else
 		particleReceiverCSVFile = new fstream(fileReceiversCSVNamePath.c_str(), ios::out);
-	}
+		#endif // WIN
+    }
 
 	enteteSortie.nbParticles=paramReport.nbParticles;
 	enteteSortie.nbTimeStepMax=paramReport.nbTimeStep;
@@ -82,7 +101,7 @@ void ReportManager::writeParticleFile()
 	lastParticuleFileHeaderInfo=particleFile->tellp();
 	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 	*particleSurfaceCSVFile<<"id,collision coordinate,face normal,reflection order,incident vector,energy"<<std::endl;
-	*particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
+    *particleReceiverCSVFile << "time(s),receiver name,incident vector x,incident vector y,incident vector z,energy * dist" << std::endl;
 	realNbParticle=0;
 
 }
@@ -175,12 +194,12 @@ void ReportManager::ParticuleFreeTranslation(CONF_PARTICULE& particleInfos, cons
 						} else {
 							lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.sourceid]+=energy;
 						}
-						if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
-						{
-							//Add intersection to history
-							decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
-							this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
-						}
+                        if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SAVE_RECEIVER_INTERSECTION)))
+                        {
+                            //Add intersection to history
+                            decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
+                            this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
+                        }
 					}
 				}
 			}
@@ -260,28 +279,28 @@ void ReportManager::CloseLastParticleHeader()
 			}
 		}
 	}
-	if (!this->receiverCollisionHistory.empty())
-	{
-		//Update CSV file
-		if (this->particleReceiverCSVFile != NULL)
-		{
-			while (!this->receiverCollisionHistory.empty())
-			{
-				t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
-				*this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
-					<< std::endl;
-				this->receiverCollisionHistory.pop_front();
-			}
-		}
-	}
+    if (!this->receiverCollisionHistory.empty())
+    {
+        //Update CSV file
+        if (this->particleReceiverCSVFile != NULL)
+        {
+            while (!this->receiverCollisionHistory.empty())
+            {
+                t_receiver_collision_history& part_event = this->receiverCollisionHistory.front();
+                *this->particleReceiverCSVFile << part_event.time << "," << this->paramReport.configManager->recepteur_p_List.at(part_event.idrp)->lblRp << "," << part_event.incidentVector.x << "," << part_event.incidentVector.y << "," << part_event.incidentVector.z << "," << part_event.energy
+                    << std::endl;
+                this->receiverCollisionHistory.pop_front();
+            }
+        }
+    }
 }
 
 void ReportManager::CloseLastParticleFileHeader()
 {
 
-	particleFile->seekp(lastParticuleFileHeaderInfo);
-	enteteSortie.nbParticles=realNbParticle;
-	particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
+    particleFile->seekp(lastParticuleFileHeaderInfo);
+    enteteSortie.nbParticles=realNbParticle;
+    particleFile->write((char*)&enteteSortie,sizeof(binaryFHeader));
 }
 
 formatGABE::GABE_Object* ReportManager::GetColStats()
@@ -400,13 +419,13 @@ void ReportManager::SaveAndCloseParticleFile()
 		particleSurfaceCSVFile=NULL;
 		delete tmp;
 	}
-	if (particleReceiverCSVFile != NULL)
-	{
-		particleReceiverCSVFile->close();
-		fstream* tmp = particleReceiverCSVFile;
-		particleReceiverCSVFile = NULL;
-		delete tmp;
-	}
+    if (particleReceiverCSVFile != NULL)
+    {
+        particleReceiverCSVFile->close();
+        fstream* tmp = particleReceiverCSVFile;
+        particleReceiverCSVFile = NULL;
+        delete tmp;
+    }
 }
 
 void ReportManager::NewParticule(CONF_PARTICULE& particleInfos)
@@ -658,7 +677,7 @@ void ReportManager::SaveRecpIntensity(const CoreString& filename,std::vector<t_s
 	serie_int_parameter.Set(3,gabe_cols.size());						    	//Num�ro de la colonne du premier r�cepteur ponctuel
 	serie_float_parameter.Set(0,params.timeStep);								//Pas de temps (s)
 
-	CoreString workpath=params.working_Path+_("IntensityAnimation")+"/";
+	CoreString workpath=params.working_Path+_("Intensity animation")+"/";
 	st_mkdir(workpath);
 	//For each frequency band
 

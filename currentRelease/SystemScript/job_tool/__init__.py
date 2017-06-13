@@ -3,8 +3,8 @@ import uictrl as ui
 import operator
 import uilocale
 import os
-ScriptFolder=ui.application.getapplicationpath()["userscript"]+"job_tool"+os.sep
-_=uilocale.InstallUiModule(ScriptFolder,ui.application.getlocale())
+
+_=uilocale.InstallUiModule(ui.application.getapplicationpath()["systemscript"]+"job_tool"+os.sep,ui.application.getlocale())
 
 def GetCurrentProjectPath():
     projconfel=ui.element(ui.element(ui.application.getrootscene()).getelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_PROJET_CONFIGURATION))
@@ -149,4 +149,3 @@ menu_manager=manager()
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPS,menu_manager )
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_TC,menu_manager )
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_CORE,menu_manager )
-ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_CORE_SPPSAGH,menu_manager )
