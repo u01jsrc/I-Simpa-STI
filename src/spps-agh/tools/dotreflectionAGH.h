@@ -65,15 +65,18 @@ private:
 
 		vec3 target = BaseWnReflection(vectorDirection, faceNormal, n);
 		target = rotationMatrix*target;
+		target.normalize();
+
+		double test = target.dot(faceNormal);
 
 		//test if reflected ray is pointing into ground
-		if(target.dot(faceNormal) >= M_PI/2)
+		if(target.dot(faceNormal) <= 0)
 		{
 			//if it is get new random direction
 			target = PhongSpecularPart(vectorDirection, faceNormal, material);
 		}
 
-		return target/target.length();
+		return target;
 	}
 };
 
@@ -145,7 +148,7 @@ private:
 		target = rotationMatrix*target;
 
 		//test if reflected ray is pointing into ground
-		if (target.dot(faceNormal) >= M_PI / 2)
+		if (target.dot(faceNormal) <= 0)
 		{
 			//if it is get new random direction
 			target = PhongSpecularPart(vectorDirection, faceNormal, particuleInfo, material, rnd1, rnd2, probability);

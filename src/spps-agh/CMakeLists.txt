@@ -1,6 +1,6 @@
 include_directories (./ "${PROJECT_SOURCE_DIR}/src/lib_interface")
 include_directories (./ "${PROJECT_SOURCE_DIR}/src/spps")
-set(CMAKE_INSTALL_MFC_LIBRARIES ON) 
+set(CMAKE_INSTALL_MFC_LIBRARIES ON)
 include( InstallRequiredSystemLibraries )
 message(STATUS " Boost path - $ENV{BOOST_INCLUDEDIR}")
 message(STATUS " Boost lib path - $ENV{BOOST_LIBRARYDIR}")
@@ -24,7 +24,6 @@ set(TOOLS_SOURCES
     tools/brdfreflection.h)
 
 set(SPPS_SOURCES
-    sppsNeeAGH.cpp
     sppsNeeAGHTypes.h
     sppsNeeAGHTypes.cpp)
 	
@@ -36,12 +35,15 @@ set(CALCULATION_CORES
 	calculation_cores/MLTCore.cpp 
 	calculation_cores/MLTCore.h)
 
+set(SPPS_MAIN_SOURCES
+	    sppsNeeAGH.cpp)
+
 # Sources groups (folders)
 source_group("data_manager" FILES ${DATA_MANAGER_SOURCES})
 source_group("input_output" FILES ${IO_SOURCES})
 source_group("tools" FILES ${TOOLS_SOURCES})
 source_group("calculation_cores" FILES ${CALCULATION_CORES})
-source_group("" FILES ${SPPS_SOURCES})
+source_group("" FILES ${SPPS_SOURCES} ${SPPS_MAIN_SOURCES})
 
 #---------------------------------------#
 #    DEPENDENCY & EXECUTABLE (OR LIB)
@@ -76,7 +78,8 @@ add_executable(spps-agh
     ${IO_SOURCES}
     ${TOOLS_SOURCES}
 	${CALCULATION_CORES}
-    ${SPPS_SOURCES})
+    ${SPPS_SOURCES}
+	${SPPS_MAIN_SOURCES})
 
 # Creates a folder "executables" and adds target project (spps.vcproj) under it
 set_property(TARGET spps-agh PROPERTY FOLDER "executables")
@@ -129,7 +132,42 @@ endif()
 if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
     install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION core/spps-agh	COMPONENT System )
 endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+
 #------------#
 #    TEST
 #------------#
+# Data files
+set(TEST_DATA_DIR "${PROJECT_BINARY_DIR}/Testing")
+set(SPPS_TEST_DIR "${TEST_DATA_DIR}/")
+#configure_file(tests/config.xml ${SPPS_TEST_DIR}/config.xml)
+#file(COPY
+#    tests/speaker-test3.txt
+#    DESTINATION ${TEST_DATA_DIR})
+	
 
+# Test executable and folder
+set(SPPS_AGH_TESTS
+    tests/spps_agh_core_test.cpp)
+	
+set(Boost_USE_STATIC_LIBS   ON)
+find_package(Boost COMPONENTS filesystem regex unit_test_framework timer chrono REQUIRED)
+
+add_executable(TEST_spps_agh ${SPPS_AGH_TESTS}
+    ${DATA_MANAGER_SOURCES}
+    ${IO_SOURCES}
+    ${TOOLS_SOURCES}
+    ${SPPS_SOURCES}
+	${CALCULATION_CORES})
+
+target_link_libraries (TEST_spps_agh
+    lib_interface
+	spps-lib
+    ${Boost_LIBRARIES})
+set_property(TARGET TEST_spps_agh PROPERTY FOLDER "tests")
+
+# Add to test suite
+enable_testing()
+
+add_test( NAME spps_agh_core_test
+    WORKING_DIRECTORY ${TEST_DATA_DIR}
+    COMMAND TEST_spps_agh )
