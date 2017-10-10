@@ -239,17 +239,23 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 
 	//******************************* SHADOW RAY GENERATION ***************************************//
 
-	GenerateShadowRays(configurationP, materialInfo, faceInfo, deltaT, distanceToTravel, configurationP.shadowRays, &configurationP.totalProbability);
+	vec3 nouvDirection;
+	vec3 faceNormal;
+	bool doInvertNormal = (configurationP.direction.dot(faceInfo->normal) <= -BARELY_EPSILON);
+
+	if (!doInvertNormal)
+		faceNormal = -faceInfo->normal;
+	else
+		faceNormal = faceInfo->normal;
+
+
+	GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, configurationP.shadowRays, &configurationP.totalProbability);
 
 	//******************************* REFLECTION ***************************************//
 
 	// Choix de la méthode de reflexion en fonction de la valeur de diffusion
 
-	vec3 nouvDirection;
-	vec3 faceNormal;
 	double dirProbability;
-
-	faceNormal = -faceInfo->normal;
 
 	//Get direction for diffuse or specular part based on material info
 	if (materialInfo->diffusion == 1 || pSpecular*((1 - rndMatAbsorbtion) / materialInfo->absorption) < materialInfo->diffusion)
