@@ -157,6 +157,7 @@ public:
 	 * @param path Chemin du fichier à créer
 	 */
 	static bool importscene(const std::wstring& path,bool keepexistingfacegroup=true,bool docorrection=true,bool domeshsurface=false,const std::wstring& paramTetgen=L"");
+	static void exportscene(const std::wstring & path);
 	/**
 	 * \~english Send an event to the interface.
 	 * @param pyel Corresponding tree item node.

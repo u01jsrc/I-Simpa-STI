@@ -88,6 +88,7 @@ void export_application_class()
 								args("modelpath","keepexistinglinkwithgroup","domodelcorrection","domeshsurface","paramTetgen")
 							)
 		)
+	 .def("exportscene", &application::exportscene, "Export scene to file.", arg("path"))
 	 .def("getlocale", &application::getlocale, "Return the user selected language corresponding to the canonical form of current locale name. Canonical form is the one that is used on UNIX systems: it is a two- or five-letter string in xx or xx_YY format, where xx is ISO 639 code of language and YY is ISO 3166 code of the country. Examples are \"en\", \"en_GB\", \"en_US\" or \"fr_FR\".")
 	 .def("reloadgroupsfrommodel",&application::reloadgroupsfrommodel,"Destroy old group then make new group as specified in the 3D model.")
 	 .def("getapplicationpath",&application::getapplicationpath,"Return a dictionnary with main application paths.")
@@ -99,6 +100,7 @@ void export_application_class()
 	 .staticmethod("clearlogdata")
 	 .staticmethod("newproject")
 	 .staticmethod("importscene")
+	 .staticmethod("exportscene")
 	 .staticmethod("getrootscene")
 	 .staticmethod("getrootcore")
 	 .staticmethod("getrootpreference")
@@ -262,6 +264,13 @@ namespace uictrl
 		paramLoading.glueSurfaces=true;
 		paramLoading.paramTetgen=paramTetgen;
 		return self->LoadScene(paramLoading);
+	}
+
+	void application::exportscene(const std::wstring& path)
+	{
+		ProjectManager* self = GetManager();
+		wxString wPath = wxString(path);
+		self->OnExportModel(wPath);
 	}
 
 	int application::getrootscene()
