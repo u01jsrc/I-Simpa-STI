@@ -38,7 +38,7 @@ function [wi_saved]= Euler_implicite(wi,mat,MATinsta,itmax,dt,tol,maxint)
 #	- maxint : maximum number of iterations (bicgstab function)
 #
 # Out:
-#	- wi_saved : sound energy decay afetr the steady state
+#	- wi_saved : sound energy decay after the steady state
   
   mat2=dt*mat+ MATinsta; # Euler Implicite 1
   wi_saved=zeros(max(size(wi)),itmax+1 );
@@ -48,7 +48,8 @@ function [wi_saved]= Euler_implicite(wi,mat,MATinsta,itmax,dt,tol,maxint)
 
   for it=2:itmax+1
     RHS=MATinsta*wi; # Euler Implicite 2
-    [wi,flag]=bicgstab (mat2,RHS,tol,maxint,L,U,wi);
+    #[wi,flag]=bicgstab (mat2,RHS,tol,maxint,L,U,wi);
+	wi=mat2\RHS;
     wi_saved(:,it)=wi;
   end
 

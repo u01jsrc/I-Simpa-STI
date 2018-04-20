@@ -27,6 +27,7 @@ import math
 import codecs
 from sound_level_layer import SoundLevelLayer
 import xml.dom.minidom  as xmlWriter
+from build_recsurf import GetRecepteurSurfList
 
 try:
     import h5py
@@ -93,13 +94,6 @@ def runTC(xmlPathTc, coreconf):
     # One configuration file per source with different output path
     doc = xmlWriter.parse(xmlPathTc)
     simunode=doc.getElementsByTagName('simulation')[0]
-    freqnode = doc.createElement("freq_enum")
-    for freq in coreconf.const["allfrequencies"]:
-        bfreq = doc.createElement("bfreq")
-        bfreq.setAttribute("freq", str(freq))
-        bfreq.setAttribute("docalc", "1" if 100 <= freq <= 5000 else "0")
-        freqnode.appendChild(bfreq)
-    simunode.appendChild(freqnode)
     srclstnode=doc.getElementsByTagName('sources')[0]
     sources=srclstnode.getElementsByTagName('source')
     sub_tc=[]
@@ -166,7 +160,7 @@ def write_input_files(cbinpath, cmbinpath, materials, sources_lst, outfolder):
         for node in mesh_import.nodes:
             f.write('{0:>15} {1:>15} {2:>15}'.format(*(node[0], node[1], node[2])) + "\n")
 
-    ret["model"] = mesh_import
+    ret["model"] = modelImport
     ret["mesh"] = mesh_import
     # Write elements file
     with open(os.path.join(outfolder, "scene_elements.txt"), "w") as f:
@@ -311,9 +305,13 @@ def process_output_files(outfolder, coreconf, import_data, resultsModificationLa
         receivers_index.rebalance()
 
         # Open data files
-        result_matrix = [numpy.array(h5py.File(os.path.join(outfolder, "scene_WInstaFields" + str(freq) + ".hdf5"))["xx"]["value"]["b"]["value"]) for freq in
+        if coreconf.const["stationary"]:
+            result_matrix = [numpy.array(h5py.File(os.path.join(outfolder, "scene_WStaFields" + str(freq) + ".hdf5"))["xx"]["value"]["b"]["value"]) for freq in
                          coreconf.const["frequencies"]]
-        coreconf.time_step = float(h5py.File(os.path.join(outfolder, "scene_WInstaFields" + str(coreconf.const["frequencies"][0]) + ".hdf5"))["xx"]["value"]["a"]["value"].value)
+        else:
+            result_matrix = [numpy.array(h5py.File(os.path.join(outfolder, "scene_WInstaFields" + str(freq) + ".hdf5"))["xx"]["value"]["b"]["value"]) for freq in
+                         coreconf.const["frequencies"]]
+            coreconf.time_step = float(h5py.File(os.path.join(outfolder, "scene_WInstaFields" + str(coreconf.const["frequencies"][0]) + ".hdf5"))["xx"]["value"]["a"]["value"].value)
         last_perc = 0
         for idTetra in range(0, len(tetrahedrons)):
             verts = [tetrahedrons[idTetra][idvert] - 1 for idvert in range(4)]
@@ -328,9 +326,14 @@ def process_output_files(outfolder, coreconf, import_data, resultsModificationLa
             nearest_receivers = receivers_index.search_nn_dist([p[0], p[1], p[2]], rmax)
             tetra_values = [[numpy.ones(4) for idvert in range(4)] for idfreq in range(len(coreconf.const["frequencies"]))]
             if len(nearest_receivers) > 0:
-                tetra_values = [
-                    [schroeder_to_impulse(result_matrix[idfreq][:, verts[idvert]]) for idvert in range(4)] for
-                    idfreq in range(len(coreconf.const["frequencies"]))]
+                if not coreconf.const["stationary"]:
+                    tetra_values = [
+                        [schroeder_to_impulse(result_matrix[idfreq][:, verts[idvert]]) for idvert in range(4)] for
+                        idfreq in range(len(coreconf.const["frequencies"]))]
+                else:
+                    tetra_values = [
+                        [result_matrix[idfreq][:, verts[idvert]] for idvert in range(4)] for
+                        idfreq in range(len(coreconf.const["frequencies"]))]
             # nearest_receivers = [receiver for receiver in res if square_dist(receiver, p) <= rmax]
             new_perc = int((idTetra / float(len(tetrahedrons))) * 100)
             if new_perc != last_perc:
@@ -339,7 +342,7 @@ def process_output_files(outfolder, coreconf, import_data, resultsModificationLa
             # Compute coefficient of the receiver point into the tetrahedron
             for receiver in nearest_receivers:
                 coefficient = get_a_coefficients(to_array(receiver), nodes[verts[0]], nodes[verts[1]], nodes[verts[2]], nodes[verts[3]])
-                if coefficient.min() > 0:
+                if coefficient.min() > -1e-6:
                     # Point is inside tetrahedron
                     for id_freq in range(len(coreconf.const["frequencies"])):
                         # closest freq id using all frequencies
@@ -359,8 +362,10 @@ def process_output_files(outfolder, coreconf, import_data, resultsModificationLa
                                 for source_id in steps.keys():
                                     if source_id in resultsModificationLayers and receiver.idrs in resultsModificationLayers[source_id].recsurf and len(resultsModificationLayers[source_id].recsurf[receiver.idrs][current_frequency_id]) > receiver.faceid:
                                         power = resultsModificationLayers[source_id].recsurf[receiver.idrs][current_frequency_id][receiver.faceid]
-                                        if power > 0:
+                                        if power > 0 and not coreconf.const["stationary"]:
                                             interpolated_value[steps[source_id]] += power / (rhoco2 * 2.5e-3)
+                                        else:
+                                            interpolated_value += power / (rhoco2 * 2.5e-3)
                             coreconf.recsurf[receiver.idrs].face_power[receiver.faceid].append(
                                 interpolated_value * rhoco2 * 2.5e-3)
                         else:
@@ -370,8 +375,10 @@ def process_output_files(outfolder, coreconf, import_data, resultsModificationLa
                                 for source_id in steps.keys():
                                     if source_id in resultsModificationLayers and receiver.idrp in resultsModificationLayers[source_id].recp:
                                         power = resultsModificationLayers[source_id].recp[receiver.idrp][current_frequency_id]
-                                        if power > 0:
+                                        if power > 0 and not coreconf.const["stationary"]:
                                             interpolated_value[steps[source_id]] += power / rhoco2
+                                        else:
+                                            interpolated_value += power / rhoco2
 
                             coreconf.recepteursponct[receiver.idrp]["power_insta"].append(
                                 interpolated_value * rhoco2)
@@ -404,16 +411,14 @@ def GetNumStepBySource(pos, coreconf):
     if coreconf.const["with_direct_sound"]:
         for src in coreconf.sources_lst:
             dist = (pos - src.pos).length()
-            ret_tab[src.id] = int(math.floor(dist / (coreconf.const["cel"] * coreconf.time_step)))
+            ret_tab[src.id] = int(math.floor(dist / (coreconf.const["cel"] * coreconf.const['timestep'])))
     return ret_tab
 
 
 def write_config_file(coreConf, outputdir):
     with open(os.path.join(outputdir, "Input_parameters.m"), "w") as f:
-        f.write("TOB=[50, 63, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2000, 2500,"
-                " 3200, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000];\n")
-        f.write("BdOct1=4;\n")
-        f.write("BdOctend=21;\n")
+        f.write("TOB=%s;\n" % coreConf.const["allfrequencies"])
+        f.write("SelectedFrequency=%s;\n" % [coreConf.const["allfrequencies"].index(freq) + 1 for freq in coreConf.const["frequencies"]])
         f.write("Temperature=%f;\n" % coreConf.const["temperature_celsius"])
         f.write("Humidity=%f;\n" % coreConf.const["humidite"])
         f.write("Pressure=%f;\n" % coreConf.const["pression"])
@@ -421,7 +426,8 @@ def write_config_file(coreConf, outputdir):
         f.write("maxint=%d;\n" % coreConf.const["maxint"])
         f.write("dt=%f;\n" % coreConf.const["timestep"])
         f.write("duration=%f;\n" % coreConf.const["duration"])
-        f.write("atmos_absorption_calculation = %s;\n" % "1" if coreConf.const["do_abs_atmo"] else "0")
+        f.write("atmos_absorption_calculation = %s;\n" % ("1" if coreConf.const["do_abs_atmo"] else "0"))
+        f.write("state = %s;\n" % ("0" if coreConf.const["stationary"] else "1"))
 
 
 def main(call_octave=True):
@@ -437,6 +443,8 @@ def main(call_octave=True):
     # Translation CBIN 3D model and 3D tetrahedra mesh into Octave input files
     import_data = write_input_files(os.path.join(coreconf.paths["workingdirectory"], coreconf.paths["modelName"]), os.path.join(coreconf.paths["workingdirectory"], coreconf.paths["tetrameshFileName"]),
                       coreconf.materials, coreconf.sources_lst, outputdir)
+
+    coreconf.recsurf = GetRecepteurSurfList(coreconf, import_data["model"], import_data["mesh"])
     # Copy octave script to working dir
     matscript_folder = os.path.join(os.path.abspath(os.path.join(os.path.realpath(__file__), os.pardir)), "script")
     files = glob.iglob(os.path.join(matscript_folder, "*.m"))

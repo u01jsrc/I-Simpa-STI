@@ -1640,7 +1640,6 @@ void ProjectManager::OnMenuLoadParticleSimulation(uiTreeCtrl* fromCtrl,Element* 
 	}
 
 	//Demmarage de la simulation
-	this->rootUserConfig->GetElementByLibelle("3d Rendering")->GetElementByLibelle("Animations")->UpdateBoolConfig("showparticle",true);
 	this->GlFrame->RunSimulation();
 }
 void ProjectManager::OnMenuCreateFGroupFromSelection()
@@ -3169,7 +3168,7 @@ void ProjectManager::OpenNewDataWindow(Element* linkedElement)
 			if(!wxFile::Exists(fileFullPath)) {
 				// Check if file exists
 				// Error if not exists
-				wxLogError(_("The following file does not exists, please update the folder: %s"), fileFullPath);
+				wxLogError(_("The following file does not exist, please update the folder: %s"), fileFullPath);
 				return;
 			}
 

@@ -4,7 +4,6 @@ import xmlreader
 import libsimpa
 from libsimpa import vec3
 import math
-from build_recsurf import GetRecepteurSurfList
 
 ##
 # @file coreConfig.py
@@ -83,10 +82,10 @@ class coreConfig(object):
         self.const["temperature_celsius"] = condition_atmospherique_node.getpropertyfloat("temperature")
         self.const["temperature_kelvin"] = condition_atmospherique_node.getpropertyfloat("temperature") + 273.15
         self.const["humidite"] = condition_atmospherique_node.getpropertyfloat("humidite")
-        self.const["frequencies"] = [100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2000, 2500,
-                                     3200, 4000, 5000]
-        self.const["allfrequencies"] = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000,
-         5000, 6300, 8000, 10000, 12500, 16000, 20000]
+        self.const["frequencies"] = [int(freq.getproperty("freq")) for freq in self.rootnode["simulation"]["freq_enum"].lstnodesenum("bfreq") if freq.getproperty("docalc") == "1"]
+        self.const["frequencies"].sort()
+        self.const["allfrequencies"] = [int(freq.getproperty("freq")) for freq in self.rootnode["simulation"]["freq_enum"].lstnodesenum("bfreq")]
+        self.const["allfrequencies"].sort()
         self.const["pression"] = condition_atmospherique_node.getpropertyfloat("pression")
         self.const["with_direct_sound"] = bool(int(simunode.getproperty("with_direct_sound", "1")))
         self.const['timestep'] = simunode.getpropertyfloat('pasdetemps', 0.01)
@@ -94,8 +93,11 @@ class coreConfig(object):
         self.const['maxint'] = simunode.getpropertyint('maxint', 200)
         self.const['duration'] = simunode.getpropertyfloat('duree_simulation', 2)
         self.const['do_abs_atmo'] = bool(int(simunode.getproperty("do_abs_atmo", "1")))
+        self.const['stationary'] = bool(int(simunode.getproperty("stationary", "0")))
 
         # Load surface receiver
+        for recsurf in self.rootnode["recepteurss"].lstnodesenum("recepteur_surfacique"):
+            self.recepteurssurf[int(recsurf.getproperty("id"))]={ "name": recsurf.getproperty("name"), "id": int(recsurf.getproperty("id"))}
         for recsurf in self.rootnode["recepteurss"].lstnodesenum("recepteur_surfacique_coupe"):
             self.recepteurssurf[int(recsurf.getproperty("id"))]={ "name": recsurf.getproperty("name"), "a" : vec3(float(recsurf.getpropertyfloat("ax")),float(recsurf.getpropertyfloat("ay")),float(recsurf.getpropertyfloat("az"))), "b" :vec3(float(recsurf.getpropertyfloat("bx")),float(recsurf.getpropertyfloat("by")),float(recsurf.getpropertyfloat("bz"))) , "c" : vec3(float(recsurf.getpropertyfloat("cx")),float(recsurf.getpropertyfloat("cy")),float(recsurf.getpropertyfloat("cz"))), "resolution" : recsurf.getpropertyfloat("resolution") }
         for recponct in self.rootnode["recepteursp"].lstnodesenum("recepteur_ponctuel"):
@@ -109,7 +111,6 @@ class coreConfig(object):
         self.load_materials()
         self.load_sources(self.rootnode["sources"])
         self.load_fittings()
-        self.recsurf=GetRecepteurSurfList(self)
     ##
     # \~english 
     # Feed the following list : 
@@ -173,7 +174,7 @@ class coreConfig(object):
                 if chnode.hasproperty("affaiblissement"):
                     g_param.append(chnode.getpropertyfloat("affaiblissement"))
                 else:
-                    g_param.append(0);
+                    g_param.append(float("inf"))
             mat["diff"]=diff_param
             mat["q"]=q_param
             mat["g"]=g_param
