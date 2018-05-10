@@ -46,7 +46,7 @@ configuration: Release
 before_build:
   - ps: git rev-parse HEAD
   # msbuild will use x64 visual studio compiler
-  - '"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   # Copy x64 dll from system32 to python27 x64
   - cmd: copy c:\windows\system32\PYTHON27.DLL C:\Python27-x64\python27.dll
   # sent environment variables for wxWidgets
