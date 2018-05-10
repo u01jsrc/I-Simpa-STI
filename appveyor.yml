@@ -8,8 +8,8 @@ environment:
       vcvarsall_platform: "x64"
   global:
     MSVC_DEFAULT_OPTIONS: ON
-    BOOST_ROOT: C:\Libraries\boost_1_60_0
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
+    BOOST_ROOT: C:\Libraries\boost_1_66_0
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.0
     PYTHON_LIBRARY: C:\Python27-x64\libs\python27.lib
     PYTHON_INCLUDE_DIR: C:\Python27-x64\include
     WXWIN: C:\wxWidgets-3.1.0\
