@@ -267,6 +267,8 @@ set(DATA_MANAGER_TREESCENE_SOURCES
     data_manager/tree_scene/e_scene_bdd_materiaux_app_group.h
     data_manager/tree_scene/e_scene_bdd_materiaux_app_materiau.h
     data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h
+	data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau_adv.h
+	data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau_adv.cpp
     data_manager/tree_scene/e_scene_bdd_materiaux_rendermateriau.h
     data_manager/tree_scene/e_scene_bdd_materiaux_user.h
     data_manager/tree_scene/e_scene_bdd_materiaux_user_group.h
@@ -307,7 +309,7 @@ set(DATA_MANAGER_TREESCENE_SOURCES
     data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_rendu.h
     data_manager/tree_scene/e_scene_sources.h
     data_manager/tree_scene/e_scene_sources_source.h
-        data_manager/tree_scene/e_scene_sources_source_properties.h
+    data_manager/tree_scene/e_scene_sources_source_properties.h
     data_manager/tree_scene/e_scene_sources_source_rendu.h
     data_manager/tree_scene/e_scene_volumes.cpp
     data_manager/tree_scene/e_scene_volumes.h
