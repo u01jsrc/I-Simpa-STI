@@ -101,6 +101,17 @@ public:
 		return thisNode;
 	}
 
+	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent)
+	{
+		if (exportToCore)
+		{
+			NoeudParent->DeleteAttribute(this->elementInfo.libelleElement);
+			NoeudParent->AddAttribute(this->elementInfo.libelleElement, this->GetFile().GetPath());
+
+		}
+		return NoeudParent;
+	}
+
 	virtual void FillWxGrid(wxGrid* gridToFeed, int col = 0)
 	{
 		E_Data::FillWxGrid(gridToFeed, col);
