@@ -50,6 +50,31 @@ ReportManagerAGH::~ReportManagerAGH()
 	//+delete[] tabEnergyByTimeStep;
 }
 
+void ReportManagerAGH::ParticuleFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition)
+{
+	vec3 direction(nextPosition - particleInfos.position);
+
+	if (particleInfos.currentTetra->linkedCutMap)
+	{
+		for (std::vector<r_SurfCut*>::iterator itrs = particleInfos.currentTetra->linkedCutMap->begin(); itrs != particleInfos.currentTetra->linkedCutMap->end(); itrs++)
+		{
+			float t, u, v;
+			if (collision_manager::intersect_parallelogram(particleInfos.position, direction, (*itrs)->Bvert, (*itrs)->Cvert, (*itrs)->Avert, &t, &u, &v) && t >= 0 && t <= 1)
+			{
+				uentier CellRow = (uentier)floorf(u*(*itrs)->NbCellU);
+				uentier CellCol = (uentier)floorf(v*(*itrs)->NbCellV);
+				vec3 normal = (*itrs)->planeNormal;
+				if (particleInfos.direction.dot(normal) < 0)
+					normal *= -1;
+				if (*(this->paramReport.configManager->FastGetConfigValue(Core_Configuration::I_PROP_SURFACE_RECEIVER_MODE)) == 0)
+					(*itrs)->data[particleInfos.frequenceIndex][CellRow][CellCol][particleInfos.pasCourant] += particleInfos.energie*cosf(normal.angle(particleInfos.direction));
+				else
+					(*itrs)->data[particleInfos.frequenceIndex][CellRow][CellCol][particleInfos.pasCourant] += particleInfos.energie;
+			}
+		}
+	}
+}
+
 void ReportManagerAGH::ShadowRayFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition)
 {
 	vec3 direction(nextPosition - particleInfos.position);

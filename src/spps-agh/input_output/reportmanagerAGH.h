@@ -149,6 +149,7 @@ public:
 	/**
 	 * A appeler avant la translation d'une particule
 	 */
+	void ParticuleFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition);
 	void ShadowRayFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition);
 
 	void GetAngleStats(t_sppsThreadParamAGH& data, bool NormalizeAngleStats);
