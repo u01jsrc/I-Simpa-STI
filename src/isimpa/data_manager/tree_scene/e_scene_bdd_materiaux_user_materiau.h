@@ -85,6 +85,8 @@ public:
 				currentChild = currentChild->GetNext();
 			}
 		}
+		if (this->GetElementByType(ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED) == nullptr)
+			this->AppendFils(new E_Scene_Bdd_Materiaux_PropertyMaterial_Adv(this));
 	}
 	
 	E_Scene_Bdd_Materiaux_User_Materiau( Element* parent, wxString name=wxTRANSLATE("New material"))

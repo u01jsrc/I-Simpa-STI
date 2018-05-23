@@ -79,12 +79,12 @@ Element* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AppendFilsByType(ELEMENT_TY
 	return Element::AppendFilsByType(etypefils,libelle);
 }
 
-wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLCoreDoc(wxXmlNode* NoeudParent)
-{
-	wxXmlNode* thisNode = new wxXmlNode(NoeudParent,wxXML_ELEMENT_NODE,"advanced_properties");
-	Element::SaveXMLCoreDoc(thisNode);
-	return thisNode;
-}
+//wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLCoreDoc(wxXmlNode* NoeudParent)
+//{
+//	wxXmlNode* thisNode = new wxXmlNode(NoeudParent,wxXML_ELEMENT_NODE,"advanced_properties");
+//	Element::SaveXMLCoreDoc(thisNode);
+//	return thisNode;
+//}
 
 wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLDoc(wxXmlNode* NoeudParent)
 {

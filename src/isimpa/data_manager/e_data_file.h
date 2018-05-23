@@ -106,8 +106,7 @@ public:
 		if (exportToCore)
 		{
 			NoeudParent->DeleteAttribute(this->elementInfo.libelleElement);
-			NoeudParent->AddAttribute(this->elementInfo.libelleElement, this->GetFile().GetPath());
-
+			NoeudParent->AddAttribute(this->elementInfo.libelleElement, this->GetFile().GetFullPath());
 		}
 		return NoeudParent;
 	}
