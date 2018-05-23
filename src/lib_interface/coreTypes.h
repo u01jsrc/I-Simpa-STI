@@ -31,6 +31,7 @@
 #include "Core/mathlib.h"
 #include "coreString.h"
 #include "input_output/directivity/directivityBalloon.h"
+#include "input_output/brdfs/brdfBalloon.h"
 #include <vector>
 
 #ifndef CORE_TYPES
@@ -146,6 +147,8 @@ struct t_Material
 	t_Material_BFreq* matSpectrumProperty; /*!< Tableau C contenant les propriétés d'un matériau */
 	uentier outsideMaterialIndice;		   /*!< Indice associé au matériau XML */
 	bool doubleSidedMaterialEffect;		   /*!< Prise en compte du matériau de la surface des deux cotés de la propagation */
+	bool use_custom_BRDF = false;		   /*!< Added property for custom BRDF usage */
+	t_BrdfBalloon* customBrdf;			   /*!<  Custom BRDF object */
 	~t_Material(){ if(matSpectrumProperty) delete[] matSpectrumProperty; }
 	t_Material(){ matSpectrumProperty=NULL;doubleSidedMaterialEffect=true; }
 };
