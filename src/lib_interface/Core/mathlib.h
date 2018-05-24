@@ -1147,6 +1147,11 @@ public:
 
 			this->set(I + v + v*v*(1 / (1 + from.dot(target))));
 		}
+		else if (from.dot(target)>=0) {
+			this->set(1, 0, 0,
+				0, 1, 0,
+				0, 0, 1);
+		}
 		else {
 			this->set(-1, 0, 0,
 				0, -1, 0,
