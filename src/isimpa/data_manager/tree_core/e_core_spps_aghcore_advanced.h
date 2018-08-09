@@ -121,6 +121,9 @@ public:
 		if (!this->IsPropertyExist("angle_filename")) {
 			InitAngleStatsCalc(this);
 		}
+		if (!this->IsPropertyExist("shadowray_prob")) {
+			InitShadowRayProbability(this);
+		}
 		//if (!this->IsPropertyExist("SR_to_surface_reciver")) {
 		//	InitCastShadowRaysToSurfRec(this);
 		//}
@@ -159,6 +162,7 @@ protected:
 	{
 		InitRandomSeed(this);
 		InitAngleStatsCalc(this);
+		InitShadowRayProbability(this);
 		//InitCastShadowRaysToSurfRec(this);
 	}
 
@@ -174,6 +178,9 @@ protected:
 	}
 	void InitCastShadowRaysToSurfRec(Element* confCore) {
 		confCore->AppendPropertyBool("SR_to_surface_reciver", wxTRANSLATE("Cast shadow rays to surface receivers"), false, true);
+	}
+	void InitShadowRayProbability(Element* confCore) {
+		confCore->AppendPropertyDecimal("shadowray_prob", wxTRANSLATE("Shadowray probability"), 1.0f, false, 3, true, true, 1.0f, 0, true);
 	}
 };
 

@@ -44,8 +44,9 @@
 struct CONF_PARTICULE_AGH : public CONF_PARTICULE
 {
 	bool isShadowRay;							/*!< Defines if the particle is main ray or shadow ray	*/
+	bool record;								/*!< Sets if particle should be recorded by reportmanager (shadow rays are allways recorded) */
 	t_Recepteur_P* targetReceiver;
-	CONF_PARTICULE_AGH() { targetReceiver = NULL; isShadowRay = false; sourceid = 0; currentTetra = NULL; distanceToNextEncombrementEle = 0.f; stateParticule = PARTICULE_STATE_ALIVE; elapsedTime = 0.; reflectionOrder = 0; }
+	CONF_PARTICULE_AGH() { targetReceiver = NULL; isShadowRay = false; record = false; sourceid = 0; currentTetra = NULL; distanceToNextEncombrementEle = 0.f; stateParticule = PARTICULE_STATE_ALIVE; elapsedTime = 0.; reflectionOrder = 0; }
 };
 
 /**

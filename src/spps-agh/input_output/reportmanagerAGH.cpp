@@ -74,6 +74,60 @@ void ReportManagerAGH::ParticuleFreeTranslation(CONF_PARTICULE_AGH& particleInfo
 			}
 		}
 	}
+	if (particleInfos.record == true) {
+		if (particleInfos.currentTetra->linkedRecepteurP)
+		{
+
+			for (std::size_t idrecp = 0; idrecp < particleInfos.currentTetra->linkedRecepteurP->size(); idrecp++)
+			{
+				t_Recepteur_P* currentRecp = particleInfos.currentTetra->linkedRecepteurP->at(idrecp);
+				vec3 closestPointDuringPropagation = currentRecp->position.closestPointOnSegment(particleInfos.position, nextPosition);
+				if (closestPointDuringPropagation.distance(currentRecp->position) < *paramReport.configManager->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP))
+				{
+					//Calcul de la longueur de croisement
+					l_decimal mu1, mu2;
+
+					if (RaySphere(particleInfos.position, nextPosition, currentRecp->position, *paramReport.configManager->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP), &mu1, &mu2))
+					{
+						if (mu2 < 0)
+							mu2 = 0;
+						else if (mu2 > 1)
+							mu2 = 1;
+						if (mu1 < 0)
+							mu1 = 0;
+						else if (mu1 > 1)
+							mu1 = 1;
+						float norm_dir = (direction).length();
+						l_decimal Lintersect = abs(mu2 - mu1)*norm_dir;
+						if (Lintersect > 0)
+						{
+							l_decimal cosphi = cos(M_PIDIV2 - direction.angle(currentRecp->orientation));
+							const l_decimal energy = particleInfos.energie*Lintersect;
+							currentRecp->energy_sum[particleInfos.frequenceIndex][particleInfos.pasCourant] += energy;
+
+							lst_rp_lef[currentRecp->idrp].Lf[particleInfos.pasCourant] += energy * pow(cosphi, 2);
+							lst_rp_lef[currentRecp->idrp].Lfc[particleInfos.pasCourant] += energy * fabs(cosphi);
+
+							vec3 particleIntensity((particleInfos.direction / particleInfos.direction.length())*energy);
+							lst_rp_lef[currentRecp->idrp].intensity[particleInfos.pasCourant] += veci_t(particleIntensity.x, particleIntensity.y, particleIntensity.z);
+							if (timeStepInSourceOutput) {
+								lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.pasCourant*nbSource + particleInfos.sourceid] += energy;
+							}
+							else {
+								lst_rp_lef[currentRecp->idrp].SrcContrib[particleInfos.sourceid] += energy;
+							}
+							if (particleInfos.outputToParticleFile && *(this->paramReport.configManager->FastGetConfigValue(Core_ConfigurationAGH::I_PROP_SAVE_RECEIVER_INTERSECTION)))
+							{
+								//Add intersection to history
+								decimal time = particleInfos.pasCourant * *this->paramReport.configManager->FastGetConfigValue(Base_Core_Configuration::FPROP_TIME_STEP) + particleInfos.elapsedTime;
+								this->receiverCollisionHistory.push_back(t_receiver_collision_history(time, particleInfos.direction, energy * currentRecp->cdt_vol, currentRecp->idrp));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void ReportManagerAGH::ShadowRayFreeTranslation(CONF_PARTICULE_AGH& particleInfos, const vec3& nextPosition)

@@ -195,7 +195,13 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 					faceNormal = faceInfo->normal;
 
 				//Calculate and cast shadow rays
-				GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, confEnv.duplicatedParticles);
+				if (GetRandValue() < (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_NEE_SHADOWRAY_PROB))) {
+					configurationP.record = false;
+					GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, confEnv.duplicatedParticles);
+				}
+				else {
+					configurationP.record = true;
+				}
 
 				if (faceInfo->faceMaterial->use_custom_BRDF) {
 					materialInfo->reflectionLaw = REFLECTION_LAW_UNIFORM;
@@ -252,8 +258,10 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 
 void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector)
 {
-	if(configurationP.isShadowRay) reportTool->ShadowRayFreeTranslation(configurationP, configurationP.position + translationVector);
-	else reportTool->ParticuleFreeTranslation(configurationP, configurationP.position + translationVector);
+	if(configurationP.isShadowRay) 
+		reportTool->ShadowRayFreeTranslation(configurationP, configurationP.position + translationVector);
+	else 
+		reportTool->ParticuleFreeTranslation(configurationP, configurationP.position + translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel
 	if (configurationP.currentTetra->volumeEncombrement)
 		configurationP.distanceToNextEncombrementEle -= translationVector.length();
