@@ -33,7 +33,7 @@ def GetSurfReceiverStd(filepath, time_start=0, time_end=0.1):
 
     for rs in range(rs_count):
         name = data.GetRsName(rs)
-        print name
+        print(name)
 
         faces_no = data.GetRsFaceCount(rs)
         timestep = data.GetTimeStep()

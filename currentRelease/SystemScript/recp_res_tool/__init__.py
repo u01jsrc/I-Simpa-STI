@@ -11,35 +11,35 @@ _=uilocale.InstallUiModule(ScriptFolder,ui.application.getlocale())
 
 def GetMixedLevel(folderwxid,param):
     """
-     Retourne un tableau contenant le niveau sonore global et toute bande des récepteurs ponctuels d'un dossier
-     folderwxid identifiant wxid de l'élément dossier contenant les récepteurs ponctuels.
+     Retourne un tableau contenant le niveau sonore global et toute bande des rï¿½cepteurs ponctuels d'un dossier
+     folderwxid identifiant wxid de l'ï¿½lï¿½ment dossier contenant les rï¿½cepteurs ponctuels.
     """
     cols=[]
     #folder devient l'objet dossier
     folder=ui.element(folderwxid)
-    #dans un tableau on place les indices des fichiers de données des récepteurs ponctuels
+    #dans un tableau on place les indices des fichiers de donnï¿½es des rï¿½cepteurs ponctuels
     recplist=folder.getallelementbytype(ui.element_type.ELEMENT_TYPE_REPORT_GABE_RECP)
-    #Pour chaque récepteur on demande à l'application les données traitées du fichier (niveau sonore et cumuls)
+    #Pour chaque rï¿½cepteur on demande ï¿½ l'application les donnï¿½es traitï¿½es du fichier (niveau sonore et cumuls)
     for idrecp in recplist:
         #recp devient l'objet ayant comme indice idrecp (entier)
         recp=ui.element(idrecp)
         if (recp.getinfos()["name"]=="soundpressure" or recp.getinfos()["name"]=="Sound level"):
-            #on demande le calcul des paramètres sonores
+            #on demande le calcul des paramï¿½tres sonores
             ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"20;30", "EDT":"", "D":"50","C":"50;80","NC":"25"})
-            #on recupere l'element parent (le dossier de récepteur ponctuel)
+            #on recupere l'element parent (le dossier de rï¿½cepteur ponctuel)
             pere=ui.element(recp.getinfos()["parentid"])
             #application.sendevent(pere,idevent.IDEVENT_RELOAD_FOLDER)
             nomrecp=pere.getinfos()["label"]
-            #on recupere les données calculées
+            #on recupere les donnï¿½es calculï¿½es
             params=ui.element(pere.getelementbylibelle('Acoustic parameters'))
             #on stocke dans gridspl le tableau des niveaux de pression
             gridparam=ui.application.getdataarray(params)
             #on ajoute la colonne
-            if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-                cols.append(list(zip(*gridparam)[0])) #libellé Freq et Global
-            idcol=gridparam[0].index(param) #Changer le paramètre par celui pour lequel on veut la fusion
-            cols.append([nomrecp.encode('cp1250')]+list(zip(*gridparam)[idcol][1:])) #1ere colonne, (0 etant le libellé des lignes) et [1:] pour sauter la premiere ligne
-	
+            if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+                cols.append(list(zip(*gridparam)[0])) #libellï¿½ Freq et Global
+            idcol=gridparam[0].index(param) #Changer le paramï¿½tre par celui pour lequel on veut la fusion
+            cols.append([nomrecp.encode('cp1250')]+list(zip(*gridparam)[idcol][1:])) #1ere colonne, (0 etant le libellï¿½ des lignes) et [1:] pour sauter la premiere ligne
+    
     cols2=zip(*cols[1:])
     cols.append(['Average']+[float(sum(l))/len(l) for l in cols2[1:]])
     return cols
@@ -78,20 +78,20 @@ class manager:
         el=ui.element(idel)
         infos=el.getinfos()
         if infos["name"]==u"Punctual receivers":
-			submenu=[]
-			submenu.append((_(u"Calculate All"),self.GetMixedLevelid_all))
-			submenu.append(())
-			submenu.append((_(u"Calculate T20"),self.GetMixedLevelid_t20))
-			submenu.append((_(u"Calculate T30"),self.GetMixedLevelid_t30))
-			submenu.append((_(u"Calculate EDT"),self.GetMixedLevelid_edt))
-			submenu.append(())
-			submenu.append((_(u"Calculate C50"),self.GetMixedLevelid_c50))
-			submenu.append((_(u"Calculate C80"),self.GetMixedLevelid_c80))
-			submenu.append((_(u"Calculate D50"),self.GetMixedLevelid_d50))
-			submenu.append((_(u"Calculate STI, NC25"),self.GetMixedLevelid_sti))
-			menu.insert(0,())
-			menu.insert(0,(_(u"Combine receivers"),submenu))
-			return True
+            submenu=[]
+            submenu.append((_(u"Calculate All"),self.GetMixedLevelid_all))
+            submenu.append(())
+            submenu.append((_(u"Calculate T20"),self.GetMixedLevelid_t20))
+            submenu.append((_(u"Calculate T30"),self.GetMixedLevelid_t30))
+            submenu.append((_(u"Calculate EDT"),self.GetMixedLevelid_edt))
+            submenu.append(())
+            submenu.append((_(u"Calculate C50"),self.GetMixedLevelid_c50))
+            submenu.append((_(u"Calculate C80"),self.GetMixedLevelid_c80))
+            submenu.append((_(u"Calculate D50"),self.GetMixedLevelid_d50))
+            submenu.append((_(u"Calculate STI, NC25"),self.GetMixedLevelid_sti))
+            menu.insert(0,())
+            menu.insert(0,(_(u"Combine receivers"),submenu))
+            return True
         else:
             return False
     def OnFusion_all(self,idel):
