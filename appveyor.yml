@@ -106,8 +106,8 @@ on_finish:
     - if exist c:\projects\isimpa\build\Testing\Temporary\LastTest.log ( type c:\projects\isimpa\build\Testing\Temporary\LastTest.log )
 
 on_failure:
-    - appveyor PushArtifact build\CMakeFiles\CMakeOutput.log -FileName CMakeOutput.log
-    - appveyor PushArtifact build\CMakeFiles\CMakeError.log -FileName CMakeError.log
+    - appveyor PushArtifact CMakeFiles\CMakeOutput.log -FileName CMakeOutput.log
+    - appveyor PushArtifact CMakeFiles\CMakeError.log -FileName CMakeError.log
 
 artifacts:
   - path: 'build\*.exe'
