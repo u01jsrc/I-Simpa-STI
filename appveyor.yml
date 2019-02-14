@@ -104,6 +104,11 @@ test_script:
 on_finish:
     - if exist c:\projects\isimpa\build\depends.txt ( type c:\projects\isimpa\build\depends.txt )
     - if exist c:\projects\isimpa\build\Testing\Temporary\LastTest.log ( type c:\projects\isimpa\build\Testing\Temporary\LastTest.log )
+
+on_failure:
+	- appveyor PushArtifact build\CMakeFiles\CMakeOutput.log -FileName CMakeOutput.log
+	- appveyor PushArtifact build\CMakeFiles\CMakeError.log -FileName CMakeError.log
+
 artifacts:
   - path: 'build\*.exe'
     name: isimpa-win64-install
@@ -112,4 +117,4 @@ artifacts:
   - path: 'build\CMakeFiles\CMakeOutput.log'
     name: cmake_output_log
   - path: 'build\CMakeFiles\CMakeError.log'
-    name: cmake_output_log
+    name: cmake_error_log
