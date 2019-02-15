@@ -520,13 +520,15 @@ DESTINATION .)
 if(WIN32) # Check if we are on Windows
     # Copy python libraries
     get_filename_component(PYTHON_ROOT_FOLDER ${PYTHON_EXECUTABLE} PATH)
-	set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
+    set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
 
     #Fetch required Dll's for GUI
+    get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
     string(REPLACE "\\" "/" wxWidgets_LIB_DIR_SLASH ${wxWidgets_LIB_DIR})
     set(DIRS ${Boost_LIBRARY_DIR_DEBUG}
              ${Boost_LIBRARY_DIR_RELEASE}
              ${wxWidgets_LIB_DIR_SLASH}
+             ${PYTHON_PATH}
     )
 
     install(CODE "
