@@ -13,7 +13,7 @@ def mean(array, weight):
 
 def std(array, weight):
     avr = mean(array, weight)
-    variance = sum(x**2 * y for x, y in zip(array, weight)) / sum(weight) - avr**2
+    variance = sum(y*(x-avr)**2  for x, y in zip(array, weight)) / sum(weight)
     return math.sqrt(variance)
 
 
@@ -67,14 +67,14 @@ def SaveStats(tab,path):
     gabewriter=Gabe_rw(len(tab))
     labelcol=stringarray()
     for label in ['Average', 'STD']:
-        labelcol.append(label.encode('cp1252'))
+        labelcol.append(label)
     gabewriter.AppendStrCol(labelcol,'surface_receiver_parameters')
     for col in tab:
         datacol=floatarray()
         for cell in col[1][:]:
             datacol.append(float(cell))
         gabewriter.AppendFloatCol(datacol,str(col[0]))
-    gabewriter.Save(path.encode('cp1252'))
+    gabewriter.Save(path)
 
 def askForInput():
     label_start = _(u"Start time [s]")
