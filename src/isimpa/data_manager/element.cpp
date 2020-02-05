@@ -1422,11 +1422,15 @@ Element* Element::AppendPropertyColor(wxString propertyName,wxString propertyLab
 		return alreadyExist;
 }
 
-Element* Element::AppendPropertyFile(wxString propertyName, wxString propertyLabel, wxString storageFolder, wxString _dialogTitle, wxString _fileExtension)
+Element* Element::AppendPropertyFile(wxString propertyName, wxString propertyLabel, wxString storageFolder, wxString _dialogTitle, wxString _fileExtension, bool exportToCore)
 {
 	Element* alreadyExist = NULL;
 	if (!IsPropertyExist(propertyName, &alreadyExist))
-		return this->AppendFils(new E_Data_File(this, propertyName, propertyLabel, storageFolder, _dialogTitle, _fileExtension));
+	{
+		E_Data_File *nouvFils = new E_Data_File(this, propertyName, propertyLabel, storageFolder, _dialogTitle, _fileExtension);
+		nouvFils->SetXmlCoreVisibility(exportToCore);
+		return this->AppendFils(nouvFils);
+	}
 	else
 		return alreadyExist;
 }

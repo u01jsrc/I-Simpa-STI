@@ -6,8 +6,8 @@ from libsimpa import *
 
 def GetMixedLevel(folderwxid,param,enable):
     """
-     Retourne un tableau contenant le niveau sonore global et toute bande des récepteurs ponctuels d'un dossier
-     folderwxid identifiant wxid de l'élément dossier contenant les récepteurs ponctuels.
+     Retourne un tableau contenant le niveau sonore global et toute bande des rï¿½cepteurs ponctuels d'un dossier
+     folderwxid identifiant wxid de l'ï¿½lï¿½ment dossier contenant les rï¿½cepteurs ponctuels.
     """
     #cols=[]
     cols2=[]
@@ -18,62 +18,62 @@ def GetMixedLevel(folderwxid,param,enable):
     avr_std=[]
     #folder devient l'objet dossier
     folder=ui.element(folderwxid)
-    #dans un tableau on place les indices des fichiers de données des récepteurs ponctuels
+    #dans un tableau on place les indices des fichiers de donnï¿½es des rï¿½cepteurs ponctuels
     recplist=folder.getallelementbytype(ui.element_type.ELEMENT_TYPE_REPORT_GABE_RECP)
-    #Pour chaque récepteur on demande à l'application les données traitées du fichier (niveau sonore et cumuls)
+    #Pour chaque rï¿½cepteur on demande ï¿½ l'application les donnï¿½es traitï¿½es du fichier (niveau sonore et cumuls)
     for idrecp in recplist:
         #recp devient l'objet ayant comme indice idrecp (entier)
         recp=ui.element(idrecp)
         if recp.getinfos()["name"]=="soundpressure":
-            #on demande le calcul des paramètres sonores
+            #on demande le calcul des paramï¿½tres sonores
             if enable==1: 
-				ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"20;30", "EDT":"", "D":"50"})
-            #on recupere l'element parent (le dossier de récepteur ponctuel)
+                ui.application.sendevent(recp,ui.idevent.IDEVENT_RECP_COMPUTE_ACOUSTIC_PARAMETERS,{"TR":"20;30", "EDT":"", "D":"50"})
+            #on recupere l'element parent (le dossier de rï¿½cepteur ponctuel)
             pere=ui.element(recp.getinfos()["parentid"])
             #application.sendevent(pere,idevent.IDEVENT_RELOAD_FOLDER)
             nomrecp=pere.getinfos()["label"]
-            #on recupere les données calculées
+            #on recupere les donnï¿½es calculï¿½es
             params=ui.element(pere.getelementbylibelle('acoustic_param'))
             #on stocke dans gridspl le tableau des niveaux de pression
             gridparam=ui.application.getdataarray(params)
             #on ajoute la colonne
-            #if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-            #    cols.append(list(zip(*gridparam)[0])) #libellé Freq et Global
-            if len(cols2)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-                cols2.append(list(zip(*gridparam)[0])) #libellé Freq et Global
-            if len(cols3)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-                cols3.append(list(zip(*gridparam)[0])) #libellé Freq et Global
-            idcol1=gridparam[0].index(param) #Changer le paramètre par celui pour lequel on veut la fusion
-            #cols.append([nomrecp]+list(zip(*gridparam)[idcol1][1:])) #1ere colonne, (0 etant le libellé des lignes) et [1:] pour sauter la premiere ligne						
-			
-            if len(avr)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-				avr=(['average']+list(zip(*gridparam)[idcol1][1:])) #libellé Freq et Global
+            #if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+            #    cols.append(list(zip(*gridparam)[0])) #libellï¿½ Freq et Global
+            if len(cols2)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+                cols2.append(list(zip(*gridparam)[0])) #libellï¿½ Freq et Global
+            if len(cols3)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+                cols3.append(list(zip(*gridparam)[0])) #libellï¿½ Freq et Global
+            idcol1=gridparam[0].index(param) #Changer le paramï¿½tre par celui pour lequel on veut la fusion
+            #cols.append([nomrecp]+list(zip(*gridparam)[idcol1][1:])) #1ere colonne, (0 etant le libellï¿½ des lignes) et [1:] pour sauter la premiere ligne						
+            
+            if len(avr)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+                avr=(['average']+list(zip(*gridparam)[idcol1][1:])) #libellï¿½ Freq et Global
             else:
-				avr[1:]=[x + y for x, y in zip(avr[1:], list(zip(*gridparam)[idcol1][1:]))]
-			
-            if len(global_Std)==0: #si le tableau de sortie est vide alors on ajoute les libellés des lignes
-				global_Std=(['global']+[x*x for x in list(zip(*gridparam)[idcol1][1:])]) #libellé Freq et Global
+                avr[1:]=[x + y for x, y in zip(avr[1:], list(zip(*gridparam)[idcol1][1:]))]
+            
+            if len(global_Std)==0: #si le tableau de sortie est vide alors on ajoute les libellï¿½s des lignes
+                global_Std=(['global']+[x*x for x in list(zip(*gridparam)[idcol1][1:])]) #libellï¿½ Freq et Global
             else:
-				global_Std[1:]=[x + y for x, y in zip(global_Std[1:],[z*z  for z in list(zip(*gridparam)[idcol1][1:])])]
-			
+                global_Std[1:]=[x + y for x, y in zip(global_Std[1:],[z*z  for z in list(zip(*gridparam)[idcol1][1:])])]
+            
             try:
-				nomrecpint=int(nomrecp)
+                nomrecpint=int(nomrecp)
             except ValueError:
-				nomrecpint=int(nomrecp[9:])
-			
+                nomrecpint=int(nomrecp[9:])
+            
             if len(cols2)>nomrecpint:
-				cols2[nomrecpint][1:]=[x + y for x, y in zip(cols2[nomrecpint][1:], list(zip(*gridparam)[idcol1][1:]))]		
-				cols3[nomrecpint][1:]=[x + y for x, y in zip(cols3[nomrecpint][1:],[z*z  for z in list(zip(*gridparam)[idcol1][1:])])]
-				licznik[nomrecpint-1]=licznik[nomrecpint-1]+1;
+                cols2[nomrecpint][1:]=[x + y for x, y in zip(cols2[nomrecpint][1:], list(zip(*gridparam)[idcol1][1:]))]		
+                cols3[nomrecpint][1:]=[x + y for x, y in zip(cols3[nomrecpint][1:],[z*z  for z in list(zip(*gridparam)[idcol1][1:])])]
+                licznik[nomrecpint-1]=licznik[nomrecpint-1]+1;
             else:
-				cols2.append([nomrecp]+list(zip(*gridparam)[idcol1][1:]))
-				cols3.append([nomrecp]+[x*x for x in list(zip(*gridparam)[idcol1][1:])])
-				licznik.append(1)
+                cols2.append([nomrecp]+list(zip(*gridparam)[idcol1][1:]))
+                cols3.append([nomrecp]+[x*x for x in list(zip(*gridparam)[idcol1][1:])])
+                licznik.append(1)
 
-		
+        
     suma=sum(licznik)						#number of calculations for receiver	
     avr_std=(['average']+[0 for x in avr[1:]])
-	
+    
     for wek1, wek2 in zip(cols2[1:], cols3[1:]):	#calculate average std for eache frequency range
         wek1[1:] = [x / y  for x,y in zip(wek1[1:],licznik)]
         wek2[1:] = [math.sqrt(math.fabs(x1/n-x2*x2)) for n,x1,x2 in zip(licznik,wek2[1:],wek1[1:])]
@@ -82,79 +82,79 @@ def GetMixedLevel(folderwxid,param,enable):
     avr[1:]=[x / suma for x in avr[1:]]		#calculate average parameter for each frequency range		
     avr_std[1:]= [x/len(licznik) for x in avr_std[1:]]		
     global_Std[1:]=[math.sqrt(math.fabs(x/suma - x2*x2)) for x,x2 in zip(global_Std[1:],avr[1:])] #calculate global std for eache frequency range
-	
+    
     average=(['mean']+[sum(avr[1:])/len(avr[1:])])				#average calculated from all values
     maks=(['max']+ [max(max(l) for l in zip(*cols2[1:])[1:])])	#maximum calculated from all values
-	
+    
     average2=(['mean']+[sum(avr_std[1:])/len(avr_std[1:])])		#average calculated from all std's
     maks2=(['max']+ [max(max(l) for l in zip(*cols3[1:])[1:])])	#maximum calculated from all std's
-	
+    
     for x in range(1, len(zip(*cols2))-1): #add zeros so that all rows are the same length
-		average.append(0)
-		maks.append(0)
-		average2.append(0)
-		maks2.append(0)	
+        average.append(0)
+        maks.append(0)
+        average2.append(0)
+        maks2.append(0)	
 
     cols2.append(avr)		#average in each frequency range
     cols2.append(average)	#average calculated from all values
     cols2.append(maks)		#maximum calculated from all values
-		
+        
 
     cols3.append(avr_std) 	#average calculated from std's in frequency range
     cols3.append(global_Std)	#std calculated from every each value in frequency range (each receiver and each calculation)
     cols3.append(average2)	#average calculated from all std's
     cols3.append(maks2)		#maximum calculated from all std's
-	
+    
     return [cols2,cols3]
 
 def CalcJND(tab1,tab2,param):
     JND=[]   
     JND.append(tab1[0])
     if(param=="RT-20 (s)" or param=="RT-30 (s)" or param=="EDT (s)"):
-		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
-			tmp=[]
-			tmp.append(wek2[0])
-			for x,y in zip(wek1[1:],wek2[1:]):
-				if x==0:
-					tmp.append(0)
-				else:
-					tmp.append((y / x)/0.05)
-			JND.append(tmp)
-	
-	
+        for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+            tmp=[]
+            tmp.append(wek2[0])
+            for x,y in zip(wek1[1:],wek2[1:]):
+                if x==0:
+                    tmp.append(0)
+                else:
+                    tmp.append((y / x)/0.05)
+            JND.append(tmp)
+    
+    
     elif(param=="C-50 (dB)" or param=="C-80 (dB)"):
-		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
-			tmp=[]
-			tmp.append(wek2[0])
-			for x,y in zip(wek1[1:],wek2[1:]):
-				if x==0:
-					tmp.append(0)
-				else:
-					tmp.append(y)
-			JND.append(tmp)		
-	
+        for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+            tmp=[]
+            tmp.append(wek2[0])
+            for x,y in zip(wek1[1:],wek2[1:]):
+                if x==0:
+                    tmp.append(0)
+                else:
+                    tmp.append(y)
+            JND.append(tmp)		
+    
     elif(param=="D-50 (%)"):
-		for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
-			tmp=[]
-			tmp.append(wek2[0])
-			for x,y in zip(wek1[1:],wek2[1:]):
-				if x==0:
-					tmp.append(0)
-				else:
-					tmp.append(y /5)
-			JND.append(tmp)
-	
+        for wek1, wek2 in zip(tab1[1:-2], tab2[1:-3]):
+            tmp=[]
+            tmp.append(wek2[0])
+            for x,y in zip(wek1[1:],wek2[1:]):
+                if x==0:
+                    tmp.append(0)
+                else:
+                    tmp.append(y /5)
+            JND.append(tmp)
+    
     average=(['mean']+[sum(JND[-1][1:])/len(JND[-1][1:])])				#average calculated from all values
     maks=(['max']+ [max(max(l) for l in zip(*JND[1:])[1:])])	#maximum calculated from all values
-	
+    
     for x in range(1, len(zip(*JND))-1): #add zeros so that all rows are the same length
-		average.append(0)
-		maks.append(0)
-		
+        average.append(0)
+        maks.append(0)
+        
     JND.append(average)	#average calculated from all values
     JND.append(maks)		#maximum calculated from all values
     return JND
-	
+    
 def SaveLevel(tab,path,param):
     #Creation de l'objet qui lit et ecrit les fichiers gabe
     gabewriter=Gabe_rw(len(tab))
@@ -191,19 +191,19 @@ class manager:
         el=ui.element(idel)
         infos=el.getinfos()
         if infos["name"]==u"SPPS":
-			submenu=[]
-			submenu.append(((u"Calculate All"),self.GetMixedLevelid_all))
-			submenu.append(())
-			submenu.append(((u"Calculate T20"),self.GetMixedLevelid_t20))
-			submenu.append(((u"Calculate T30"),self.GetMixedLevelid_t30))
-			submenu.append(((u"Calculate EDT"),self.GetMixedLevelid_edt))
-			submenu.append(())
-			submenu.append(((u"Calculate C50"),self.GetMixedLevelid_c50))
-			submenu.append(((u"Calculate C80"),self.GetMixedLevelid_c80))
-			submenu.append(((u"Calculate D50"),self.GetMixedLevelid_d50))
-			menu.insert(0,())
-			menu.insert(0,(u"Combine receivers",submenu))
-			return True
+            submenu=[]
+            submenu.append(((u"Calculate All"),self.GetMixedLevelid_all))
+            submenu.append(())
+            submenu.append(((u"Calculate T20"),self.GetMixedLevelid_t20))
+            submenu.append(((u"Calculate T30"),self.GetMixedLevelid_t30))
+            submenu.append(((u"Calculate EDT"),self.GetMixedLevelid_edt))
+            submenu.append(())
+            submenu.append(((u"Calculate C50"),self.GetMixedLevelid_c50))
+            submenu.append(((u"Calculate C80"),self.GetMixedLevelid_c80))
+            submenu.append(((u"Calculate D50"),self.GetMixedLevelid_d50))
+            menu.insert(0,())
+            menu.insert(0,(u"Combine receivers",submenu))
+            return True
         else:
             return False
     def OnFusion_all(self,idel):
@@ -232,5 +232,5 @@ class manager:
     def OnFusion_d50(self,idel):
         grp=ui.e_file(idel)
         dofusion(idel,grp.buildfullpath()+"fusion_","D-50 (%)",1)
-		
+        
 ui.application.register_menu_manager(ui.element_type.ELEMENT_TYPE_REPORT_FOLDER, manager())

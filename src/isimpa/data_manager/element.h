@@ -210,7 +210,8 @@ public :
 		ELEMENT_TYPE_CORE_SPPSAGH = 200,
 		ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_SPPS,
 		ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_NEE,
-		ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT
+		ELEMENT_TYPE_CORE_SPPSAGH_ADVANCED_MLT,
+		ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED = 300
     };
     /**
      * Indice des états des images
@@ -867,7 +868,7 @@ public :
      */
     Element *
     AppendPropertyFile(wxString propertyName, wxString propertyLabel, wxString storageFolder, wxString _dialogTitle,
-                       wxString _fileExtension);
+                       wxString _fileExtension, bool exportToCore = false);
 
     /**
      * Ajoute un champ de saisie de nombre dans la feuille de propriété de cet élément

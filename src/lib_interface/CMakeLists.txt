@@ -73,6 +73,12 @@ set(IO_DIRECTIVITY_SOURCES
     input_output/directivity/directivityBalloon.cpp
     input_output/directivity/directivityParser.h
     input_output/directivity/directivityParser.cpp)
+	
+set(IO_BRDF_SOURCES
+    input_output/brdfs/brdfBalloon.h
+    input_output/brdfs/brdfBalloon.cpp
+    input_output/brdfs/brdfParser.h
+    input_output/brdfs/brdfParser.cpp)
 
 set(TOOLS_SOURCES
     tools/octree44.hpp
@@ -106,6 +112,7 @@ source_group( "input_output/importExportMaillage" FILES ${IO_MAILLAGE_SOURCES} )
 source_group( "input_output/particles" FILES ${IO_PARTICLES_SOURCES} )
 source_group( "input_output/ply" FILES ${IO_PLY_SOURCES} )
 source_group( "input_output/directivity" FILES ${IO_DIRECTIVITY_SOURCES} )
+source_group( "input_output/brdfs" FILES ${IO_BRDF_SOURCES} )
 
 source_group( "tools" FILES ${TOOLS_SOURCES} )
 
@@ -129,6 +136,7 @@ add_library(lib_interface
     ${IO_PARTICLES_SOURCES}
     ${IO_PLY_SOURCES}
     ${IO_DIRECTIVITY_SOURCES}
+	${IO_BRDF_SOURCES}
     ${TOOLS_SOURCES})
 
 # Creates a folder "libraries" and adds target project (lib_interface.vcproj) under it

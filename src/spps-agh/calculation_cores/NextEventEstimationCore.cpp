@@ -177,6 +177,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 						}
 					}
 				}
+
 				if (configurationP.energie <= configurationP.energie_epsilon)
 				{
 					if (configurationP.stateParticule == PARTICULE_STATE_ALIVE)
@@ -194,7 +195,19 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 					faceNormal = faceInfo->normal;
 
 				//Calculate and cast shadow rays
-				GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, confEnv.duplicatedParticles);
+				if (GetRandValue() < (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_NEE_SHADOWRAY_PROB))) {
+					configurationP.record = false;
+					GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, confEnv.duplicatedParticles);
+				}
+				else {
+					configurationP.record = true;
+				}
+
+				if (faceInfo->faceMaterial->use_custom_BRDF) {
+					materialInfo->reflectionLaw = REFLECTION_LAW_UNIFORM;
+					//materialInfo->reflectionLaw = REFLECTION_LAW_SPECULAR;
+					materialInfo->diffusion = 1;
+				}
 
 				//Get direction for diffuse or specular part based on material info
 				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
@@ -204,6 +217,13 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 				else 
 				{
 					nouvDirection = ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal);
+				}
+
+				if (faceInfo->faceMaterial->use_custom_BRDF)
+				{
+					int curentFreq = this->configurationTool->freqList[configurationP.frequenceIndex]->freqValue;
+					decimal prob = M_2PI;
+					configurationP.energie *= faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection) * M_2PI;
 				}
 
 				//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
@@ -238,7 +258,10 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 
 void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &configurationP, const vec3 &translationVector)
 {
-	if(configurationP.isShadowRay) reportTool->ShadowRayFreeTranslation(configurationP, configurationP.position + translationVector);
+	if(configurationP.isShadowRay) 
+		reportTool->ShadowRayFreeTranslation(configurationP, configurationP.position + translationVector);
+	else 
+		reportTool->ParticuleFreeTranslation(configurationP, configurationP.position + translationVector);
 	// On prend en compte le rapprochement vers l'encombrement virtuel
 	if (configurationP.currentTetra->volumeEncombrement)
 		configurationP.distanceToNextEncombrementEle -= translationVector.length();

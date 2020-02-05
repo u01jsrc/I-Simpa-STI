@@ -12,9 +12,9 @@ FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${SWIG_USE_FILE})
 
 # Find package for building
-FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
+FIND_PACKAGE(PythonLibs 3.7 REQUIRED)
 # Find package for testing
-FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
+FIND_PACKAGE(PythonInterp 3.7 REQUIRED)
 
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
 
@@ -75,9 +75,11 @@ install (FILES
         
 
 if(WIN32)
+    get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
     #Fetch required Dll's 
     set(DIRS ${Boost_LIBRARY_DIR_DEBUG}
              ${Boost_LIBRARY_DIR_RELEASE}
+             ${PYTHON_PATH}
     )
     
     install(CODE "

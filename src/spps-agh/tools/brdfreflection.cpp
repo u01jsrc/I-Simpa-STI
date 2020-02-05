@@ -129,7 +129,7 @@ float BRDFs::SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNo
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
 	//calculate Phong exponent based on experiments (used also in dotreflection - remember to change in both places)
-	int n = (int) powf(10, powf(-0.82662*material.diffusion, 3) + 1.5228);
+	int n = (int) powf(10, -1.7234170470604733*material.diffusion + 2.6245274102195886);
 
 	//receiver is small and/or it is far from reflection point - evaluated as one point
 	//	consider taking n into accont - small n means slowly changing Phong function.

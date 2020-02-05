@@ -1,5 +1,6 @@
 #include "Core_ConfigurationAGH.h"
 #include <iostream>
+#include "input_output/brdfs/brdfParser.h"
 
 
 Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbose_mode)
@@ -28,6 +29,47 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbo
 				break;
 			}
 		}
+
+
+		CXmlNode* surfacesNode = root->GetChild("surface_absorption_enum");
+		if (surfacesNode)
+		{
+			//Pour chaque matériaux
+			std::vector<CXmlNode*>::iterator iterateurNoeuds;
+
+			for (iterateurNoeuds = surfacesNode->GetFirstChild(); iterateurNoeuds != surfacesNode->GetLastChild(); iterateurNoeuds++)
+			{			
+				if ((*iterateurNoeuds)->IsPropertyExist("custom_BRDF") && (*iterateurNoeuds)->GetProperty("custom_BRDF").ToInt())
+				{
+					int matID = (*iterateurNoeuds)->GetProperty("id").ToInt();
+
+					for (t_Material* material : this->materialList)
+					{
+						if (material->outsideMaterialIndice == matID)
+						{
+							material->use_custom_BRDF = true;
+							t_BrdfBalloon* material_brdf = new t_BrdfBalloon();
+							txt_BrdfParser parser;
+							std::string path = (*iterateurNoeuds)->GetProperty("brdf_file");
+							parser.parse(path, material_brdf);
+							material->customBrdf = material_brdf;
+
+							vector<float> avalibleFreq = material_brdf->getAvalibleFrequencies();
+							for (auto& freq : freqList) {
+								if(freq->doCalculation && find(avalibleFreq.begin(), avalibleFreq.end(), freq->freqValue) == avalibleFreq.end())
+								{
+									freq->doCalculation = false;
+									cout << "BRDF does not contain information for " << freq->freqValue << " Hz. This frequency is disabled!" << endl;
+								}
+							}
+
+							break;
+						}
+					}
+				}
+			}
+		}
+
 	}
 }
 
@@ -115,6 +157,7 @@ void Core_ConfigurationAGH::LoadAdvancedNEE(CXmlNode* simuNode) {
 		SetConfigInformation(IPROP_ANGLE_STATS_MIN_REFL, advancedNode->GetProperty("angle_stats_min_reflection").ToInt());
 		SetConfigInformation(SPROP_ANGLE_FILE_PATH, advancedNode->GetProperty("angle_filename"));
 		SetConfigInformation(IPROP_CAST_SR_TO_SURFACE_REC, advancedNode->GetProperty("SR_to_surface_reciver").ToInt());
+		SetConfigInformation(FPROP_NEE_SHADOWRAY_PROB, advancedNode->GetProperty("shadowray_prob").ToFloat());
 	}
 }
 

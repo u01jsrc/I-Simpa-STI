@@ -236,6 +236,7 @@ set(DATA_MANAGER_TREECORE_SOURCES
     data_manager/tree_core/e_core_core_tetconf.h
     data_manager/tree_core/e_core_sppscore.h
     data_manager/tree_core/e_core_spps_aghcore.h
+	data_manager/tree_core/e_core_spps_aghcore_advanced.h
     data_manager/tree_core/e_core_sppsoctreecore.h
     data_manager/tree_core/e_core_tccore.h)
 
@@ -267,6 +268,8 @@ set(DATA_MANAGER_TREESCENE_SOURCES
     data_manager/tree_scene/e_scene_bdd_materiaux_app_group.h
     data_manager/tree_scene/e_scene_bdd_materiaux_app_materiau.h
     data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h
+	data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau_adv.h
+	data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau_adv.cpp
     data_manager/tree_scene/e_scene_bdd_materiaux_rendermateriau.h
     data_manager/tree_scene/e_scene_bdd_materiaux_user.h
     data_manager/tree_scene/e_scene_bdd_materiaux_user_group.h
@@ -307,7 +310,7 @@ set(DATA_MANAGER_TREESCENE_SOURCES
     data_manager/tree_scene/e_scene_recepteurss_recepteurcoupe_rendu.h
     data_manager/tree_scene/e_scene_sources.h
     data_manager/tree_scene/e_scene_sources_source.h
-        data_manager/tree_scene/e_scene_sources_source_properties.h
+    data_manager/tree_scene/e_scene_sources_source_properties.h
     data_manager/tree_scene/e_scene_sources_source_rendu.h
     data_manager/tree_scene/e_scene_volumes.cpp
     data_manager/tree_scene/e_scene_volumes.h
@@ -374,13 +377,14 @@ source_group( "" FILES ${ISIMPA_SOURCES} )
 
 # Build auto-generated source files
 # Find package for generation
-FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
+FIND_PACKAGE(PythonInterp 3.7 REQUIRED)
 
 # Ask make to call python in order to use element.h to produce enum_def.cpp
 ADD_CUSTOM_COMMAND(
   OUTPUT "enum_def.cpp"
   COMMAND "${PYTHON_EXECUTABLE}" ${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/python_interface/py_ui_module/generate_enum_def.py
-  ARGS    "${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/element.h" > "enum_def.cpp"
+#  ARGS    "${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/element.h" > "enum_def.cpp"
+  ARGS    "${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/element.h"
   DEPENDS "data_manager/element.h"
   )
 
@@ -390,7 +394,7 @@ set_property(SOURCE data_manager/python_interface/py_ui_module/element_pywrap.cp
 configure_file(data_manager/appconfig_version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/generated/appconfig_version.cpp )
 
 set(Boost_USE_STATIC_LIBS   OFF)
-find_package(Boost REQUIRED COMPONENTS system python filesystem regex)
+find_package(Boost REQUIRED COMPONENTS system python3.7 filesystem regex)
 link_directories( ${Boost_LIBRARY_DIRS} )
 
 # Set Properties->General->Configuration Type to Application
@@ -516,13 +520,15 @@ DESTINATION .)
 if(WIN32) # Check if we are on Windows
     # Copy python libraries
     get_filename_component(PYTHON_ROOT_FOLDER ${PYTHON_EXECUTABLE} PATH)
-	set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
+    set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
 
     #Fetch required Dll's for GUI
+    get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
     string(REPLACE "\\" "/" wxWidgets_LIB_DIR_SLASH ${wxWidgets_LIB_DIR})
     set(DIRS ${Boost_LIBRARY_DIR_DEBUG}
              ${Boost_LIBRARY_DIR_RELEASE}
              ${wxWidgets_LIB_DIR_SLASH}
+             ${PYTHON_PATH}
     )
 
     install(CODE "

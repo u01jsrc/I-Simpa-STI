@@ -33,6 +33,7 @@
 #include "data_manager/generic_element/e_materiau_user.h"
 #include "data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau.h"
 #include "data_manager/tree_scene/e_scene_bdd_materiaux_rendermateriau.h"
+#include "data_manager/tree_scene/e_scene_bdd_materiaux_propmateriau_adv.h"
 
 
 #ifndef __USERMAT__
@@ -78,10 +79,14 @@ public:
 						this->AppendFils(new E_Scene_Bdd_Materiaux_PropertyMaterial(currentChild,this));
 					else if(typeEle==Element::ELEMENT_TYPE_SCENE_BDD_MATERIAUX_MATERIAU_RENDER)
 						this->AppendFils(new E_Scene_Bdd_Materiaux_RenderMaterial(currentChild,this));
+					else if (typeEle == Element::ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED)
+						this->AppendFils(new E_Scene_Bdd_Materiaux_PropertyMaterial_Adv(currentChild, this));
 				}
 				currentChild = currentChild->GetNext();
 			}
 		}
+		if (this->GetElementByType(ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED) == nullptr)
+			this->AppendFils(new E_Scene_Bdd_Materiaux_PropertyMaterial_Adv(this));
 	}
 	
 	E_Scene_Bdd_Materiaux_User_Materiau( Element* parent, wxString name=wxTRANSLATE("New material"))
@@ -94,6 +99,7 @@ public:
 		this->AppendFils( new E_Materiau_User(this));
 		this->AppendFils( new E_Scene_Bdd_Materiaux_PropertyMaterial(this));
 		this->AppendFils( new E_Scene_Bdd_Materiaux_RenderMaterial(this));
+		this->AppendFils( new E_Scene_Bdd_Materiaux_PropertyMaterial_Adv(this));
 	}
 
 	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent)

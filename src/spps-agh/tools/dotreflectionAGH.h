@@ -57,7 +57,7 @@ private:
 
 	static vec3 PhongSpecularPart(vec3 &vectorDirection, vec3 &faceNormal, t_Material_BFreq &material)
 	{
-		float n = powf(10, powf(-0.82662*material.diffusion, 3) + 1.5228);
+		float n = powf(10, -1.7234170470604733*material.diffusion + 2.6245274102195886);
 		vec3 specularDir = SpecularReflection(vectorDirection, faceNormal);
 
 		Matrix3 rotationMatrix;
