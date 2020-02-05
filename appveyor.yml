@@ -10,15 +10,16 @@ environment:
     MSVC_DEFAULT_OPTIONS: ON
     BOOST_ROOT: C:\Libraries\boost_1_69_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\lib64-msvc-14.1
-    PYTHON_LIBRARY: C:\Python37-x64\libs\python37.lib
-    PYTHON_INCLUDE_DIR: C:\Python37-x64\include
+    Python_LIBRARY: C:\Python37-x64\libs\python37.lib
+    Python_INCLUDE_DIR: C:\Python37-x64\include
     WXWIN: C:\wxWidgets-3.1.2\
     wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.2\
     wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.2\include
     wxWidgets_LIBRARIES: C:\wxWidgets-3.1.2\lib\vc141_x64_dll
     SWIG_DIR: C:\Libraries\swigwin-3.0.11
     SWIG_EXECUTABLE: C:\Libraries\swigwin-3.0.11\swig.exe
-    PYTHON_EXECUTABLE: C:\Python37-x64\python.exe
+    Python_EXECUTABLE: C:\Python37-x64\python.exe
+    Python_ROOT_DIR: C:\Python37-x64\
     CTEST_OUTPUT_ON_FAILURE: 1
 
 # branches to build
