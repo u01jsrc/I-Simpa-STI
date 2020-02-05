@@ -3,7 +3,7 @@
 import uilocale
 import os
 import uictrl as ui
-import gabe2csv as g2c
+import gabe2csv.gabe2csv as g2c
 from libsimpa import *
 
 _=uilocale.InstallUiModule(ui.application.getapplicationpath()["userscript"]+"gabe2csv"+os.sep,ui.application.getlocale())

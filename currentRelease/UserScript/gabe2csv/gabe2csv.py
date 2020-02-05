@@ -21,7 +21,7 @@ def GabeToCsv(filepath,csvpath):
             print("Data table is empty. Check if path to binary file is correct!")
             return
         # Results matrix rotation
-        data=zip(*data)
+        data=list(zip(*data))
         # Remove unwanted characters
         data[0] = [word.replace("\n", "_") for word in data[0]]
         # Open output file
@@ -86,8 +86,8 @@ def main(argv):
             base = os.path.splitext(file)[0]
             csvpath = os.path.join(basepath,base + ".csv")         
 
-            print 'Input file is :', filepath
-            print 'Output file is :', csvpath
+            print('Input file is : %s' % filepath)
+            print('Output file is : %s' % csvpath)
 
             GabeToCsv(filepath,csvpath)
 
@@ -100,8 +100,8 @@ def main(argv):
             file = base + ".csv"
             csvpath = os.path.join(basepath,file)         
 
-        print 'Input file is :', filepath
-        print 'Output file is :', csvpath
+        print('Input file is : %s' % filepath)
+        print('Output file is : %s' % csvpath)
 
         GabeToCsv(filepath,csvpath)
 
