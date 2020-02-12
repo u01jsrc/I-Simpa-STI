@@ -874,6 +874,13 @@ void ProjectManager::RunCoreCalculation(Element* coreCalculation)
 	wxLongLong durationCalculation=wxDateTime::UNow().GetValue()-timeDebCalculation.GetValue();
 
 	wxLogMessage(_("Calculation time: %lld ms"),durationCalculation.GetValue());
+	wxFile calculationTimeFile(workingDir+ wxFileName::GetPathSeparator()+"CalculationTime.txt", wxFile::write);
+	if (calculationTimeFile.IsOpened()) {
+		wxString calcTime(wxString::Format(_("Calculation time: %lld ms"), durationCalculation.GetValue()));
+		calculationTimeFile.Write(calcTime);
+	}
+	calculationTimeFile.Close();
+
 
 	///////////////////////////////////////////
 	// Copie du fichier de projet XML dans le dossier de rapport de calcul
