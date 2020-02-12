@@ -348,6 +348,14 @@ set(ISIMPA_SOURCES
     ConvertUTF.c
     ConvertUTF.h)
 
+# Add scripts folders to project
+file(GLOB_RECURSE SYSTEM_SCRIPT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../currentRelease/SystemScript/*.py)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../../currentRelease/SystemScript" PREFIX "Scripts/SystemScript" FILES ${SYSTEM_SCRIPT_FILES})
+
+file(GLOB_RECURSE USER_SCRIPT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../currentRelease/UserScript/*.py)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../../currentRelease/UserScript" PREFIX "Scripts/UserScript" FILES ${USER_SCRIPT_FILES})
+
+
 source_group( "3dengine" FILES ${3DENGINE_SOURCES} )
 source_group( "3dengine\\Core" FILES ${3DENGINE_CORE_SOURCES} )
 source_group( "3dengine\\tools" FILES ${3DENGINE_TOOLS_SOURCES} )
@@ -422,7 +430,9 @@ add_executable(isimpa
     ${MANAGER_SOURCES}
     ${ISIMPA_SOURCES}
     ${CMAKE_CURRENT_BINARY_DIR}/enum_def.cpp
-	${CMAKE_CURRENT_BINARY_DIR}/generated/appconfig_version.cpp)
+	${CMAKE_CURRENT_BINARY_DIR}/generated/appconfig_version.cpp
+    ${SYSTEM_SCRIPT_FILES}
+    ${USER_SCRIPT_FILES})
 
 # Creates a folder "executables" and adds target
 # project (isimpa.vcproj) under it
