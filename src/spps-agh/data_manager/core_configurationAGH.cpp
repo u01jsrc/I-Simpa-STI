@@ -47,11 +47,17 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbo
 					{
 						if (material->outsideMaterialIndice == matID)
 						{
+							uentier BRDF_sampling = (*iterateurNoeuds)->GetProperty("custom_BRDF_sampling_method").ToInt();
+							material->custom_BRDF_sampling_method = BRDF_sampling;
+
+							string brdfFile_path = *FastGetConfigValue(SPROP_CORE_WORKING_DIRECTORY);
+							brdfFile_path += *FastGetConfigValue(SPROP_BRDF_FOLDER_PATH);
+							brdfFile_path += (*iterateurNoeuds)->GetProperty("brdf_file");
+							
 							material->use_custom_BRDF = true;
 							t_BrdfBalloon* material_brdf = new t_BrdfBalloon();
 							txt_BrdfParser parser;
-							std::string path = (*iterateurNoeuds)->GetProperty("brdf_file");
-							parser.parse(path, material_brdf);
+							parser.parse(brdfFile_path, material_brdf);
 							material->customBrdf = material_brdf;
 
 							vector<float> avalibleFreq = material_brdf->getAvalibleFrequencies();

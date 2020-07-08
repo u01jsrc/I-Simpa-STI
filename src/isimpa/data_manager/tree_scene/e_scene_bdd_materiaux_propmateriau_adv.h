@@ -50,6 +50,7 @@ public:
 	
 	// Sauvegarde des informations à destination des moteurs de calculs
 	virtual Element* AppendFilsByType(ELEMENT_TYPE etypefils,const wxString& libelle="");
+	wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent);
 	//wxXmlNode* SaveXMLCoreDoc(wxXmlNode* NoeudParent);
 
 	wxXmlNode* SaveXMLDoc(wxXmlNode* NoeudParent);
@@ -57,6 +58,7 @@ public:
 	void OnRightClic(wxMenu* leMenu);
 
 	void AddCustomBRDF();
+	void AddCustomBRDFSamplingMehtods();
 };
 
 #endif

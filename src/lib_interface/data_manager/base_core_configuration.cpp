@@ -97,6 +97,7 @@ bool Base_Core_Configuration::LoadCfgFile( CXml& fichierXml, bool verbose_mode)
 			SetConfigInformation(IPROP_QUANT_TIMESTEP,(entier)(ceil((*FastGetConfigValue(FPROP_SIMULATION_TIME))/(*FastGetConfigValue(FPROP_TIME_STEP)))));
 
 			SetConfigInformation(SPROP_DIRECTIVITY_FOLDER_PATH, simuNode->GetProperty("directivities_directory"));
+			SetConfigInformation(SPROP_BRDF_FOLDER_PATH, simuNode->GetProperty("brdfs_directory"));
 
 			CXmlNode* frequNode=simuNode->GetChild("freq_enum");
 			if(frequNode)
