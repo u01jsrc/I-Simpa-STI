@@ -190,6 +190,7 @@ public:
 	static const wxString CONST_REPORT_RECEPTEURSS_FILENAME_TR;
 	static const wxString CONST_REPORT_RECEPTEURSS_FILENAME_EDT;
 	static const wxString CONST_REPORT_DIRECTIVITIES_FOLDER_PATH;
+	static const wxString CONST_REPORT_BRDF_FOLDER_PATH;
 	static const wxString CONST_MODEL_SCENE_FILENAME;
 	static const wxString CONST_TETGEN_EXE_FILENAME;
 	static const wxString CONST_TETGEN_EXE_PATH;
