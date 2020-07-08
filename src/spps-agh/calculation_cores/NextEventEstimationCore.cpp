@@ -204,9 +204,17 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 				}
 
 				if (faceInfo->faceMaterial->use_custom_BRDF) {
-					materialInfo->reflectionLaw = REFLECTION_LAW_UNIFORM;
-					//materialInfo->reflectionLaw = REFLECTION_LAW_SPECULAR;
-					materialInfo->diffusion = 1;
+					switch (faceInfo->faceMaterial->custom_BRDF_sampling_method) {
+					case 0:
+						materialInfo->reflectionLaw = REFLECTION_LAW_UNIFORM;
+						materialInfo->diffusion = 1;
+						break;
+					case 1:
+						materialInfo->reflectionLaw = REFLECTION_LAW_LAMBERT;
+						materialInfo->diffusion = 1;
+						break;
+					}
+
 				}
 
 				//Get direction for diffuse or specular part based on material info
@@ -222,8 +230,18 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 				if (faceInfo->faceMaterial->use_custom_BRDF)
 				{
 					int curentFreq = this->configurationTool->freqList[configurationP.frequenceIndex]->freqValue;
-					decimal prob = M_2PI;
-					configurationP.energie *= faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection) * M_2PI;
+					double brdf_energy = faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection);
+					float prob;
+					switch (faceInfo->faceMaterial->custom_BRDF_sampling_method) {
+					case 0:
+						prob = 1/M_2PI;
+						configurationP.energie *= brdf_energy * (1 / prob);
+						break;
+					case 1:
+						prob = nouvDirection.dot(faceNormal) / M_PI;
+						configurationP.energie *= brdf_energy * (1 / prob);
+						break;
+					}
 				}
 
 				//Calcul de la nouvelle direction de réflexion (en reprenant la célérité de propagation du son)
