@@ -78,13 +78,13 @@ before_build:
   - cmd: echo WX_LIB_DIR:INTERNAL=%wxWidgets_LIBRARIES% >> CMakeCache.txt
   - cmd: echo WX_ROOT_DIR:INTERNAL=%wxWidgets_ROOT_DIR% >> CMakeCache.txt
   - cmd: echo PYTHON_EXECUTABLE:FILEPATH=%PYTHON_EXECUTABLE% >> CMakeCache.txt
-  - cmake --debug-output -G "Visual Studio 15 2017 Win64" c:\projects\isimpa
+  - cmake --debug-output -G "Visual Studio 16 2019 Win64" c:\projects\isimpa
 
 build_script:
   - cd c:\projects\isimpa\build
   - ECHO Building %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - dir
-  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
+  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - msbuild "INSTALL.vcxproj" /consoleloggerparameters:Verbosity=minimal /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
