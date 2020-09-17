@@ -197,7 +197,7 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 				//Calculate and cast shadow rays
 				if (GetRandValue() < (*configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_NEE_SHADOWRAY_PROB))) {
 					configurationP.record = false;
-					GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, confEnv.duplicatedParticles);
+					GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceSurLePas, confEnv.duplicatedParticles, faceInfo);
 				}
 				else {
 					configurationP.record = true;
@@ -286,7 +286,7 @@ void NextEventEstimationCore::FreeParticleTranslation(CONF_PARTICULE_AGH &config
 	configurationP.position += translationVector;
 }
 
-void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq* materialInfo,const vec3& faceNormal,const double& deltaT,const double& distanceToTravel, std::list<CONF_PARTICULE_AGH>& shadowRays, double* probability)
+void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t_Material_BFreq* materialInfo,const vec3& faceNormal,const double& deltaT,const double& distanceToTravel, std::list<CONF_PARTICULE_AGH>& shadowRays, const t_cFace* faceInfo)
 {
 	//Calculate and cast shadow rays
 	for each (t_Recepteur_P* receiver in configurationTool->recepteur_p_List)
@@ -303,12 +303,22 @@ void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t
 		{
 			shadowRay.targetReceiver = receiver;
 			shadowRay.isShadowRay = true;
-
-			float energy = BRDFs::SolveBRDFReflection(*materialInfo, faceNormal, receiver->position, shadowRay, particle.direction, configurationTool);
+			
+			float energy = 0;
+			if (faceInfo->faceMaterial->use_custom_BRDF) {
+				int curentFreq = this->configurationTool->freqList[particle.frequenceIndex]->freqValue;
+				float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
+				double solidAngle = (M_PI * receiverRadius * receiverRadius) / (toReceiver.length() * toReceiver.length());
+				energy = faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, particle.direction, newDirection)* solidAngle*0.66;
+			}
+			else {
+				energy = BRDFs::SolveBRDFReflection(*materialInfo, faceNormal, receiver->position, shadowRay, particle.direction, configurationTool);
+			}
+			
 			shadowRay.energie *= energy;
 
 			//fast forward particle to receiver surrounding
-			int timeStepNum = (toReceiver.length() - ((deltaT - particle.elapsedTime) / deltaT) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceToTravel;
+			int timeStepNum = (toReceiver.length() - ((deltaT - particle.elapsedTime)/deltaT * distanceToTravel) - *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP)) / distanceToTravel;
 
 			decimal densite_proba_absorption_atmospherique = configurationTool->freqList[particle.frequenceIndex]->densite_proba_absorption_atmospherique;
 			shadowRay.position = shadowRay.position + shadowRay.direction * (timeStepNum + (deltaT - particle.elapsedTime) / deltaT);
