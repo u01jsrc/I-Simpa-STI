@@ -9,6 +9,13 @@ import os
 
 _=uilocale.InstallUiModule(ui.application.getapplicationpath()["systemscript"]+"recp_tool"+os.sep,ui.application.getlocale())
 
+def spherical2cartesian(phi,theta,r):
+    phi_rad = math.radians(phi)
+    theta_rad = math.radians(theta)
+    x=r*math.cos(phi_rad)*math.sin(theta_rad)
+    y=r*math.sin(phi_rad)*math.sin(theta_rad)
+    z=r*math.cos(theta_rad)
+    return [x,y,z]
 
 def MakeLineRecp(recpgroupindice,startpoint=[0,0,0],quantity=1,step=[1,0,0]):
     """
@@ -34,18 +41,60 @@ def MakeLineRecp(recpgroupindice,startpoint=[0,0,0],quantity=1,step=[1,0,0]):
         #il nous faut affecter la position du recepteur ponctuel
         recpEl.updatepositionconfig("pos_recepteur",curpos)
         curpos=[curpos[0]+step[0],curpos[1]+step[1],curpos[2]+step[2]]
+
 def MakeGridRecp(recpgroupindice,startpoint=[0,0,0],quantityline=1,quantitycol=1,stepline=[1,0,0],stepcol=[0,1,0]):
     curpos=startpoint
     for col in range(0,quantitycol):
         MakeLineRecp(recpgroupindice,curpos,quantityline,stepline)
         curpos=[curpos[0]+stepcol[0],curpos[1]+stepcol[1],curpos[2]+stepcol[2]]
+
+def MakeHemisphereRecp(recpgroupindice,startpoint=[0,0,0],resoltion=5,radious=5):
+    """
+        Create hemisphere of sound sources with given resolution
+    """
+    #on recupere le groupe des sources
+    recpgroup=ui.element(recpgroupindice)
+    #on recupere tout les indices des sources déjà existante
+    oldrecplst=recpgroup.getallelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_RECEPTEURSP_RECEPTEUR)
+    # Make array of angles
+    phi = range(0,360,resoltion)
+    theta = range(0,90,resoltion)
+    quantity = len(phi)*len(theta)
+    #On construit les quantity nouvelles sources
+    for i in range(0,quantity):
+        ui.application.sendevent(recpgroup,ui.idevent.IDEVENT_NEW_RECEPTEUR_P)
+    #on cherche a obtenir les indices des nouvelles sources
+    newrecplst=recpgroup.getallelementbytype(ui.element_type.ELEMENT_TYPE_SCENE_RECEPTEURSP_RECEPTEUR)
+    createdrecp=[]
+    for recp in newrecplst:
+        if recp not in oldrecplst:
+            createdrecp.append(recp)
+    #on modifie la position des sources selon les pas de positions en paramètre
+    rid = 0;
+    for p in phi:
+        for t in theta:
+            rec = createdrecp[rid]
+            recEl=ui.element(rec)
+            #il nous faut la position de la source
+            name = "name","%s x %s" % (p,t)
+            recEl.libelleElement = name
+            print(recEl.getinfos())
+            ui.application.sendevent(recEl,ui.idevent.IDEVENT_RENAME_ELEMENT)
+            pos_cartesian = spherical2cartesian(p,t,radious)
+            position=[startpoint[0]+pos_cartesian[0],startpoint[1]+pos_cartesian[1],startpoint[2]+pos_cartesian[2]]
+            recEl.updatepositionconfig("pos_recepteur",position)
+            rid+=1
+
 class manager:
+
     def __init__(self):
         self.makelinerecpid=ui.application.register_event(self.makeline)
+        self.makehemishphererecpid=ui.application.register_event(self.makehemisphere)
         self.alignfuncid=ui.application.register_event(self.align_on_same_point)
         self.rotaterpfuncid=ui.application.register_event(self.rotate)
         self.translaterpfuncid=ui.application.register_event(self.translate)
         self.defaultval=[]
+
     def getmenu(self,typeel,idel,menu):
         #si le groupe n'est pas vide
         if len(ui.element(idel).childs())>0:
@@ -54,7 +103,9 @@ class manager:
             menu.insert(2,(_(u"Rotation of receivers"),self.rotaterpfuncid))
             menu.insert(2,())
         menu.insert(2,(_(u"Create a receiver grid"),self.makelinerecpid,"Bitmaps/popup_new.png"))
+        menu.insert(2,(_(u"Create a hemisphere of receivers"),self.makehemishphererecpid,"Bitmaps/popup_new.png"))
         return True
+
     def makeline(self,idel):
         lbl_startptx=_(u"Starting position x (m)")
         lbl_startpty=_(u"Starting position y (m)")
@@ -89,6 +140,31 @@ class manager:
             step=[float(res[1][lbl_stepx]),float(res[1][lbl_stepy]),float(res[1][lbl_stepz])]
             stepcol=[float(res[1][lbl_stepcolx]),float(res[1][lbl_stepcoly]),float(res[1][lbl_stepcolz])]
             MakeGridRecp(idel,startpoint,nbrecp,nbrecpcol,step,stepcol)
+
+    def makehemisphere(self,idel):
+        lbl_startptx=_(u"Center position x (m)")
+        lbl_startpty=_(u"Center position y (m)")
+        lbl_startptz=_(u"Center position z (m)")
+        lbl_resolution=_(u"Resolution (deg)")
+        lbl_radious=_(u"Radius (m)")
+        res=ui.application.getuserinput(_(u"Create a hemisphere of receivers"),
+                                    _(u"Please fill the following fields to create the hemisphere"),
+                                    { lbl_startptx : "0",
+                                    lbl_startpty : "0",
+                                    lbl_startptz : "0",
+                                       lbl_resolution : "5",
+                                       lbl_radious : "5",
+                                        })
+        if res[0]:
+            try:
+                startpoint=[float(res[1][lbl_startptx]),float(res[1][lbl_startpty]),float(res[1][lbl_startptz])]
+                resoltuion=int(res[1][lbl_resolution])
+                radious=int(res[1][lbl_radious])
+            except:
+                print(_(u"Wrong parameters"),file=sys.stderr)
+                return
+            MakeHemisphereRecp(idel,startpoint,resoltuion,radious)
+
     def align_on_same_point(self,idel):
         
         lbl_toptx=_(u"Orient to position x (m)")
