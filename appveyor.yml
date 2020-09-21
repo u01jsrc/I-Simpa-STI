@@ -10,7 +10,7 @@ environment:
     MSVC_DEFAULT_OPTIONS: ON
     BOOST_ROOT: C:\Libraries\boost_1_73_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_73_0\lib64-msvc-14.2
-    Python_LIBRARY: C:\Python38-x64\libs\python38.lib
+    #Python_LIBRARY: C:\Python38-x64\libs\python38.lib
     Python_INCLUDE_DIR: C:\Python38-x64\include
     WXWIN: C:\wxWidgets-3.1.4\
     wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.4\
