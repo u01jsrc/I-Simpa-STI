@@ -162,7 +162,7 @@ void OnUserConfigElementEvent(wxCommandEvent& eventElement)
 }
 
 MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APPLICATION_NAME,
-									wxDefaultPosition, FromDIP(wxSize(1024,768)),
+									wxDefaultPosition, wxSize(1024,768),
 									wxDEFAULT_FRAME_STYLE),m_locale(lang)
 {
 	saveManagerConfig=true;
