@@ -12,9 +12,9 @@ FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${SWIG_USE_FILE})
 
 # Find package for building
-#FIND_PACKAGE(PythonLibs 3.7 REQUIRED)
+FIND_PACKAGE(PythonLibs 3.8 REQUIRED)
 # Find package for testing
-#FIND_PACKAGE(PythonInterp 3.7 REQUIRED)
+FIND_PACKAGE(PythonInterp 3.8 REQUIRED)
 
 FIND_PACKAGE (Python COMPONENTS Interpreter Development)
 

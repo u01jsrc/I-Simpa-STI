@@ -385,7 +385,7 @@ source_group( "" FILES ${ISIMPA_SOURCES} )
 
 # Build auto-generated source files
 # Find package for generation
-#FIND_PACKAGE(PythonInterp 3.8 REQUIRED)
+FIND_PACKAGE(PythonInterp 3.8 REQUIRED)
 FIND_PACKAGE (Python COMPONENTS Interpreter Development)
 
 # Ask make to call python in order to use element.h to produce enum_def.cpp
