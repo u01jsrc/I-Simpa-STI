@@ -263,8 +263,8 @@ void OpenGlViewer::OnTimer( wxTimerEvent& event) //rafraichie le rendu afin d'af
 			{
 				//Display(&wxClientDC(this));
 				doScreenRefresh=false;
-				wxPaintEvent ptevt;
-				GetEventHandler()->ProcessEvent(ptevt);
+				//wxPaintEvent ptevt;
+				//GetEventHandler()->ProcessEvent(ptevt);
 				this->Refresh();
 			}
 		}
