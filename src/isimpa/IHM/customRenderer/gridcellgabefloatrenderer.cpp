@@ -31,6 +31,7 @@
 #include "gridcellgabefloatrenderer.hpp"
 #include <wx/log.h>
 #include <float.h>
+#include <cmath>
 #include <std_tools.hpp>
 #include "last_cpp_include.hpp"
 
