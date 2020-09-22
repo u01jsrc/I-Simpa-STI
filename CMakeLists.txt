@@ -58,9 +58,7 @@ ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-error=c++11-narrowing")
     ENDIF()
 ELSEIF (MSVC AND MSVC_VERSION GREATER 1600)
-    #SET(USE_CXX_11 TRUE)
-    set(CMAKE_CXX_STANDARD 11)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    SET(USE_CXX_11 TRUE)
 ELSE()
     SET(USE_CXX_11 FALSE)
 ENDIF()
@@ -70,7 +68,6 @@ ENDIF()
 cmake_policy(SET CMP0086 NEW)
 cmake_policy(SET CMP0078 NEW)
 cmake_policy(SET CMP0074 NEW)
-
 
 # Command to output information to the console
 # Useful for displaying errors, warnings, and debugging

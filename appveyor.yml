@@ -10,16 +10,15 @@ environment:
     MSVC_DEFAULT_OPTIONS: ON
     BOOST_ROOT: C:\Libraries\boost_1_73_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_73_0\lib64-msvc-14.2
-    Python_LIBRARY: C:\Python38-x64\libs\python38.lib
-    Python_INCLUDE_DIR: C:\Python38-x64\include
+    PYTHON_LIBRARY: C:\Python38-x64\libs\python38.lib
+    PYTHON_INCLUDE_DIR: C:\Python38-x64\include
     WXWIN: C:\wxWidgets-3.1.4\
     wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.4\
     wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.4\include
     wxWidgets_LIBRARIES: C:\wxWidgets-3.1.4\lib\vc14x_x64_dll
     SWIG_DIR: C:\Libraries\swigwin-3.0.11
     SWIG_EXECUTABLE: C:\Libraries\swigwin-3.0.11\swig.exe
-    Python_EXECUTABLE: C:\Python38-x64\python.exe
-    Python_ROOT_DIR: C:\Python38-x64\
+    PYTHON_EXECUTABLE: C:\Python38-x64\python.exe
     CTEST_OUTPUT_ON_FAILURE: 1
 
 # branches to build
@@ -50,10 +49,6 @@ before_build:
   - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
   # Copy x64 dll from system32 to python27 x64
   #- cmd: copy c:\windows\system32\PYTHON27.DLL C:\Python27-x64\python27.dll
-  # sent environment variables for wxWidgets
-  - set WXWIN=C:\wxWidgets-3.1.4\
-  - set wxWidgets_ROOT_DIR=%WXWIN%
-  - set wxWidgets_LIB_DIR=%WXWIN%\lib\vc_dll
   - echo Download wxWidgets lib
   - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxWidgets-3.1.4.7z'
   - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxMSW-3.1.4_vc14x_x64_Dev.7z'
@@ -89,7 +84,6 @@ build_script:
 
 after_build:
   - cd c:\projects\isimpa\build
-#  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - ECHO Package I-SIMPA %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - msbuild "PACKAGE.vcxproj" /consoleloggerparameters:Verbosity=minimal /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
@@ -98,18 +92,12 @@ test_script:
   - choco install dependencywalker -y --allow-empty-checksums
   - depends.exe /f:1 /c /oc:c:\projects\isimpa\build\depends.txt c:\projects\isimpa\build\bin\isimpa.exe
   - cd c:\projects\isimpa\build
-#  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - ECHO Test I-SIMPA %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - appveyor-retry msbuild "RUN_TESTS.vcxproj" /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 on_finish:
     - if exist c:\projects\isimpa\build\depends.txt ( type c:\projects\isimpa\build\depends.txt )
     - if exist c:\projects\isimpa\build\Testing\Temporary\LastTest.log ( type c:\projects\isimpa\build\Testing\Temporary\LastTest.log )
-
-on_failure:
-    - appveyor PushArtifact CMakeFiles\CMakeOutput.log -FileName CMakeOutput.log
-    - appveyor PushArtifact CMakeFiles\CMakeError.log -FileName CMakeError.log
-
 artifacts:
   - path: 'build\*.exe'
     name: isimpa-win64-install
@@ -118,4 +106,4 @@ artifacts:
   - path: 'build\CMakeFiles\CMakeOutput.log'
     name: cmake_output_log
   - path: 'build\CMakeFiles\CMakeError.log'
-    name: cmake_error_log
+    name: cmake_output_log
