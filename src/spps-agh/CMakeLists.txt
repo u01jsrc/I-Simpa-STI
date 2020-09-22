@@ -84,6 +84,13 @@ add_executable(spps-agh
 # Creates a folder "executables" and adds target project (spps.vcproj) under it
 set_property(TARGET spps-agh PROPERTY FOLDER "executables")
 
+# Add optimization flags
+include(CheckIPOSupported)
+check_ipo_supported(RESULT IPO_SUPPORTED)
+if(IPO_SUPPORTED)
+	set_property(TARGET spps-agh PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
+
 
 # Properties->Linker->Input->Additional Dependencies
 target_link_libraries (spps-agh spps-lib lib_interface ${Boost_LIBRARIES})

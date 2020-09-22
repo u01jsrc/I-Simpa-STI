@@ -435,6 +435,12 @@ add_executable(isimpa
 # Creates a folder "executables" and adds target
 # project (isimpa.vcproj) under it
 set_property(TARGET isimpa PROPERTY FOLDER "executables")
+check_ipo_supported(RESULT IPO_SUPPORTED)
+
+# Add optimization flags
+if(IPO_SUPPORTED)
+	set_property(TARGET isimpa PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
 
 # to convert .po files into .mo files
 FIND_PACKAGE(Gettext)

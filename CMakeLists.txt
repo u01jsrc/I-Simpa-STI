@@ -68,6 +68,7 @@ ENDIF()
 cmake_policy(SET CMP0086 NEW)
 cmake_policy(SET CMP0078 NEW)
 cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0069 NEW)
 
 # Command to output information to the console
 # Useful for displaying errors, warnings, and debugging

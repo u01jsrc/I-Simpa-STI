@@ -96,6 +96,13 @@ add_library(spps-lib
 # Creates a folder "executables" and adds target project (spps.vcproj) under it
 set_property(TARGET spps PROPERTY FOLDER "executables")
 
+# Add optimization flags
+include(CheckIPOSupported)
+check_ipo_supported(RESULT IPO_SUPPORTED)
+if(IPO_SUPPORTED)
+	set_property(TARGET spps PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
+
 # Creates a folder "libraries" and adds target project (spps-lib.vcproj) under it
 set_property(TARGET spps-lib PROPERTY FOLDER "libraries")
 
