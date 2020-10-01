@@ -99,8 +99,6 @@ public:
 		}while(u>rejection);
 		return BaseUniformReflection(vecteurVitesse,vecteurVitesse/vecteurVitesse.length(),theta,phi);
 	}
-protected:
-
 
 	/**
 	 * Calcul de base ayant attrait à la reflection de type uniforme
@@ -112,15 +110,32 @@ protected:
 	 */
 	static vec3 BaseUniformReflection(const vec3& vecteurVitesse,const vec3 &faceNormal, decimal theta,decimal phi)
 	{
-		vec3 retVal;
-		if(vec3(faceNormal.x,faceNormal.y,0).length()>EPSILON)
-		{
-			retVal.set(faceNormal.y,-faceNormal.x,0);
-		}else{
-			retVal.set(1,0,0);
-		}
-		retVal=faceNormal.Rotation(retVal,phi);
-		retVal=retVal.Rotation(faceNormal,theta);
-		return retVal / retVal.length();
+		//vec3 retVal;
+		//if(vec3(faceNormal.x,faceNormal.y,0).length()>EPSILON)
+		//{
+		//	retVal.set(faceNormal.y,-faceNormal.x,0);
+		//}else{
+		//	retVal.set(1,0,0);
+		//}
+		//retVal=faceNormal.Rotation(retVal,phi);
+		//retVal=retVal.Rotation(faceNormal,theta);
+		//return retVal / retVal.length();
+
+		//More universal rotation calculation method - gives better results with custom reflection patterns.
+		//Original code sometimes rotates reflection pattern 90 degrees. 
+		//Note that theta and phi in this class are oposite to commonly used in CG literature.
+
+		vec3 zup(0, 0, 1);
+		vec3 retVal(cos(theta) * sin(phi),
+			sin(theta) * sin(phi),
+			cos(phi));
+
+		Matrix3 rotationMatrix;
+		rotationMatrix.calculateRotationMatrix(zup, faceNormal);
+
+		retVal = rotationMatrix * retVal;
+		retVal.normalize();
+
+		return retVal;
 	}
 };
