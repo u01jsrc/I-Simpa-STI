@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------------------------------------
-* This code is based on sppsNantes 2.1.4 by Judicael Picaut and Nicolas Fortin - IFSTTAR
+* This code is based on sppsNantes 2.2.1 by Judicael Picaut and Nicolas Fortin - IFSTTAR
 *
 * It is modified for resarch and educational purposes by
 * Wojciech Binek, AGH University of Science and Technology, Cracow, Poland
@@ -31,7 +31,7 @@
 
 
 
-#define SPPSNEE_AGH_VERSION "SPPS-AGH 0.3 (07.03.2017). Based on SPPS Nantes 2.2.0 version march 2017"
+#define SPPSNEE_AGH_VERSION "SPPS-AGH 0.35 (01.10.2020). Based on SPPS Nantes 2.2.1 version ocober 2020"
 #define __USE_BOOST_RANDOM_GENERATOR__
 #define UTILISER_MAILLAGE_OPTIMISATION
 
