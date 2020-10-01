@@ -213,12 +213,23 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 						materialInfo->reflectionLaw = REFLECTION_LAW_LAMBERT;
 						materialInfo->diffusion = 1;
 						break;
+					case 2:
+						break;
 					}
 
 				}
 
+
 				//Get direction for diffuse or specular part based on material info
-				if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
+				if (faceInfo->faceMaterial->use_custom_BRDF && faceInfo->faceMaterial->custom_BRDF_sampling_method==2)
+				{
+					float phi, theta;
+					int curentFreq = this->configurationTool->freqList[configurationP.frequenceIndex]->freqValue;
+					
+					faceInfo->faceMaterial->customBrdf->calculateReflectionAnglesFromPdf(curentFreq, faceNormal, configurationP.direction, phi, theta);				
+					nouvDirection = ReflectionLawsAGH::BaseUniformReflection(configurationP.direction, faceNormal, phi, theta); //meaning of phi and theta is opposite to custom BRDF class
+				}
+				else if (materialInfo->diffusion == 1 || GetRandValue()<materialInfo->diffusion)
 				{
 					nouvDirection = ReflectionLawsAGH::SolveDiffusePart(configurationP.direction, *materialInfo, faceNormal);
 				}
@@ -227,19 +238,23 @@ void NextEventEstimationCore::Movement(CONF_PARTICULE_AGH &configurationP)
 					nouvDirection = ReflectionLawsAGH::SolveSpecularPart(configurationP.direction, *materialInfo, faceNormal);
 				}
 
+
 				if (faceInfo->faceMaterial->use_custom_BRDF)
 				{
 					int curentFreq = this->configurationTool->freqList[configurationP.frequenceIndex]->freqValue;
-					double brdf_energy = faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection);
-					float prob;
+					double brdf_energy, prob;
 					switch (faceInfo->faceMaterial->custom_BRDF_sampling_method) {
-					case 0:
+					case 0:						
+						brdf_energy = faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection);
 						prob = 1/M_2PI;
 						configurationP.energie *= brdf_energy * (1 / prob);
 						break;
 					case 1:
+						brdf_energy = faceInfo->faceMaterial->customBrdf->getEnergy(curentFreq, faceNormal, configurationP.direction, nouvDirection);
 						prob = nouvDirection.dot(faceNormal) / M_PI;
 						configurationP.energie *= brdf_energy * (1 / prob);
+						break;
+					case 2:
 						break;
 					}
 				}

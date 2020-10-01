@@ -142,5 +142,6 @@ void  E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AddCustomBRDFSamplingMehtods()
 	std::vector<int> samplingMethodsIndex;
 	samplingMethods.push_back("Uniform");
 	samplingMethods.push_back("Lambert");
-	this->AppendPropertyList("custom_BRDF_sampling_method", wxTRANSLATE("Custom BRDF sampling"), samplingMethods, 0, false, 1, samplingMethodsIndex, true);
+	samplingMethods.push_back("PDF");
+	this->AppendPropertyList("custom_BRDF_sampling_method", wxTRANSLATE("Custom BRDF sampling"), samplingMethods, 2, false, 1, samplingMethodsIndex, true);
 }
