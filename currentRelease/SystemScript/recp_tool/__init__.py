@@ -78,8 +78,6 @@ def MakeHemisphereRecp(recpgroupindice,startpoint=[0,0,0],resoltion=5,radious=5)
             #il nous faut la position de la source
             name = "name","%s x %s" % (p,t)
             recEl.libelleElement = name
-            print(recEl.getinfos())
-            ui.application.sendevent(recEl,ui.idevent.IDEVENT_RENAME_ELEMENT)
             pos_cartesian = spherical2cartesian(p,t,radious)
             position=[startpoint[0]+pos_cartesian[0],startpoint[1]+pos_cartesian[1],startpoint[2]+pos_cartesian[2]]
             recEl.updatepositionconfig("pos_recepteur",position)
