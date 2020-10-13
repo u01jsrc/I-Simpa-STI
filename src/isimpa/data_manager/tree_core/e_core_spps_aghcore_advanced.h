@@ -124,9 +124,9 @@ public:
 		if (!this->IsPropertyExist("shadowray_prob")) {
 			InitShadowRayProbability(this);
 		}
-		//if (!this->IsPropertyExist("SR_to_surface_reciver")) {
-		//	InitCastShadowRaysToSurfRec(this);
-		//}
+		if (!this->IsPropertyExist("skip_direct_sound_calc")) {
+			InitSkipDirectSoundCalc(this);
+		}
 	}
 
 	E_Core_SppsNee_AGH_advanced_NEE(Element* parent)
@@ -163,7 +163,7 @@ protected:
 		InitRandomSeed(this);
 		InitAngleStatsCalc(this);
 		InitShadowRayProbability(this);
-		//InitCastShadowRaysToSurfRec(this);
+		InitSkipDirectSoundCalc(this);
 	}
 
 	void InitRandomSeed(Element* confCore) {
@@ -176,8 +176,8 @@ protected:
 		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
 		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
 	}
-	void InitCastShadowRaysToSurfRec(Element* confCore) {
-		confCore->AppendPropertyBool("SR_to_surface_reciver", wxTRANSLATE("Cast shadow rays to surface receivers"), false, true);
+	void InitSkipDirectSoundCalc(Element* confCore) {
+		confCore->AppendPropertyBool("skip_direct_sound_calc", wxTRANSLATE("Skip direct sound calculation"), false, true);
 	}
 	void InitShadowRayProbability(Element* confCore) {
 		confCore->AppendPropertyDecimal("shadowray_prob", wxTRANSLATE("Shadowray probability"), 1.0f, false, 3, true, true, 1.0f, 0, true);

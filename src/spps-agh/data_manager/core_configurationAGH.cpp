@@ -162,7 +162,7 @@ void Core_ConfigurationAGH::LoadAdvancedNEE(CXmlNode* simuNode) {
 		SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS, advancedNode->GetProperty("extended_angle_stats").ToInt());
 		SetConfigInformation(IPROP_ANGLE_STATS_MIN_REFL, advancedNode->GetProperty("angle_stats_min_reflection").ToInt());
 		SetConfigInformation(SPROP_ANGLE_FILE_PATH, advancedNode->GetProperty("angle_filename"));
-		SetConfigInformation(IPROP_CAST_SR_TO_SURFACE_REC, advancedNode->GetProperty("SR_to_surface_reciver").ToInt());
+		SetConfigInformation(IPROP_SKIP_DIRECT_SOUND_CALC, advancedNode->GetProperty("skip_direct_sound_calc").ToInt());
 		SetConfigInformation(FPROP_NEE_SHADOWRAY_PROB, advancedNode->GetProperty("shadowray_prob").ToFloat());
 	}
 }

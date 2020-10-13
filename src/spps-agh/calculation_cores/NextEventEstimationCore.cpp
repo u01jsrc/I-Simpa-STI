@@ -8,7 +8,13 @@
 NextEventEstimationCore::NextEventEstimationCore(t_Mesh& _sceneMesh, t_TetraMesh& _sceneTetraMesh, CONF_CALCULATION_AGH &_confEnv, Core_ConfigurationAGH &_configurationTool, ReportManagerAGH* _reportTool)
 	: CalculationCoreSPPS(_sceneMesh, _sceneTetraMesh, _confEnv, _configurationTool, _reportTool) 
 {
-	doDirectSoundCalculation = true;
+	bool skip_direct = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::IPROP_SKIP_DIRECT_SOUND_CALC);
+	if (skip_direct) {
+		doDirectSoundCalculation = false;
+	}
+	else {
+		doDirectSoundCalculation = true;
+	}
 };
 
 
