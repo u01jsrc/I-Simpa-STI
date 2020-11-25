@@ -488,7 +488,7 @@ include_directories(${Python3_INCLUDE_DIRS})
 # Properties->Linker->Input->Additional Dependencies
 target_link_libraries(isimpa lib_interface)
 target_link_libraries(isimpa ${Boost_LIBRARIES})
-target_link_libraries(isimpa ${Python3_LIBRARIES})
+target_link_libraries(isimpa ${Python3_LIBRARY})
 
 if(WIN32 AND MSVC)
   target_link_libraries(isimpa ${Python3_LIBRARY_RELEASE})
@@ -589,7 +589,7 @@ if(WIN32) # Check if we are on Windows
     endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
 
     # Try to fetch x64 version of python dll
-    get_filename_component(PYTHON_DLL_FILENAME ${Python3_LIBRARIES} NAME_WLE)
+    get_filename_component(PYTHON_DLL_FILENAME ${Python3_LIBRARY} NAME_WLE)
 
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")

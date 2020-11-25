@@ -36,10 +36,10 @@ ELSE()
   SWIG_ADD_LIBRARY(libsimpa LANGUAGE python SOURCES libsimpa.i)
 ENDIF ()
 
-SWIG_LINK_LIBRARIES(libsimpa lib_interface ${Python3_LIBRARIES})
+SWIG_LINK_LIBRARIES(libsimpa lib_interface ${Python3_LIBRARY})
 
 if(WIN32 AND MSVC)
-  target_link_libraries(${SWIG_MODULE_libsimpa_REAL_NAME} ${Python3_LIBRARY_RELEASE})
+  target_link_libraries(${SWIG_MODULE_libsimpa_REAL_NAME} ${Python3_LIBRARY})
 endif()
 
 # Creates a folder "libraries" and adds target project (lib_interface.vcproj) under it

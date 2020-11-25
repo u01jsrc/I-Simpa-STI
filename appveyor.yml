@@ -11,6 +11,7 @@ environment:
     BOOST_ROOT: C:\Libraries\boost_1_73_0
     #BOOST_LIBRARYDIR: C:\Libraries\boost_1_73_0\lib64-msvc-14.2
     Python3_ROOT_DIR: C:\Python38-x64\
+    Python3_LIBRARY: C:\Python38-x64\libs\python38.lib
     WXWIN: C:\wxWidgets-3.1.4\
     wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.4\
     wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.4\include
