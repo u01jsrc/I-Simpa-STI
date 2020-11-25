@@ -588,7 +588,6 @@ if(WIN32) # Check if we are on Windows
         install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Runtime )
     endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
 
-    message(Python3libraries:${Python3_LIBRARY_RELEASE})
     # Try to fetch x64 version of python dll
     get_filename_component(PYTHON_DLL_FILENAME ${Python3_LIBRARY_RELEASE} NAME_WLE)
 
