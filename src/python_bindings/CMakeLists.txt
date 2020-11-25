@@ -13,11 +13,10 @@ FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${SWIG_USE_FILE})
 
 # Find package for building
-FIND_PACKAGE(PythonLibs 3.8 REQUIRED)
-# Find package for testing
-FIND_PACKAGE(PythonInterp 3.8 REQUIRED)
+FIND_PACKAGE(Python3 3.8 COMPONENTS Interpreter Development REQUIRED)
 
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
+
+INCLUDE_DIRECTORIES(${Python3_INCLUDE_DIRS})
 
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src/lib_interface")
 
@@ -36,11 +35,11 @@ IF (${CMAKE_VERSION} VERSION_LESS "3.8.0")
 ELSE()
   SWIG_ADD_LIBRARY(libsimpa LANGUAGE python SOURCES libsimpa.i)
 ENDIF ()
-message(STATUS ${Python_LIBRARY_RELEASE})
-SWIG_LINK_LIBRARIES(libsimpa lib_interface ${PYTHON_LIBRARIES})
+
+SWIG_LINK_LIBRARIES(libsimpa lib_interface ${Python3_LIBRARIES})
 
 if(WIN32 AND MSVC)
-  target_link_libraries(${SWIG_MODULE_libsimpa_REAL_NAME} ${PYTHON_LIBRARY_RELEASE})
+  target_link_libraries(${SWIG_MODULE_libsimpa_REAL_NAME} ${Python3_LIBRARY_RELEASE})
 endif()
 
 # Creates a folder "libraries" and adds target project (lib_interface.vcproj) under it
@@ -78,7 +77,7 @@ install (FILES
         
 
 if(WIN32)
-    get_filename_component(PYTHON_PATH ${PYTHON_EXECUTABLE} DIRECTORY)
+    get_filename_component(PYTHON_PATH "${Python3_EXECUTABLE}" DIRECTORY)
     #Fetch required Dll's 
     set(DIRS ${Boost_LIBRARY_DIR_DEBUG}
              ${Boost_LIBRARY_DIR_RELEASE}
@@ -105,25 +104,25 @@ enable_testing()
 MESSAGE(STATUS "Run test in ${CMAKE_CURRENT_BINARY_DIR}")
 
 add_test(NAME test_modelio
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/model_io.py ${PROJECT_BINARY_DIR}/Testing/Temporary/
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/model_io.py ${PROJECT_BINARY_DIR}/Testing/Temporary/
    WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/libsimpa/)
   
 add_test(NAME check_retrocompat
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat.py ${CMAKE_CURRENT_SOURCE_DIR}/tests/mesh.cbin ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat.py ${CMAKE_CURRENT_SOURCE_DIR}/tests/mesh.cbin ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
   
   
 add_test(NAME check_retrocompat_mesh
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_mesh.py ${CMAKE_CURRENT_SOURCE_DIR}/tests/tetramesh.mbin ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_mesh.py ${CMAKE_CURRENT_SOURCE_DIR}/tests/tetramesh.mbin ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
   
   
 add_test(NAME check_retrocompat_gabe
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_gabe.py ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_gabe.py ${PROJECT_BINARY_DIR}/Testing/Temporary/ WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
   
 add_test(NAME test_math
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_math.py WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_math.py WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
   
 add_test(NAME check_retrocompat_recsurf
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_recsurf.py WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_retrocompat_recsurf.py WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
   
   
   

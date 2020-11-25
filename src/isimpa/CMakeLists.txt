@@ -383,14 +383,14 @@ source_group( "" FILES ${ISIMPA_SOURCES} )
 
 # Build auto-generated source files
 # Find package for generation
-FIND_PACKAGE(PythonInterp 3.8 REQUIRED)
+FIND_PACKAGE(Python3 3.8 COMPONENTS Interpreter REQUIRED)
 
 # Ask make to call python in order to use element.h to produce enum_def.cpp
 ADD_CUSTOM_COMMAND(
   PRE_BUILD
   OUTPUT "enum_def.cpp"
   COMMENT "Building enum_def.cpp using python script"
-  COMMAND "${PYTHON_EXECUTABLE}" ${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/python_interface/py_ui_module/generate_enum_def.py
+  COMMAND "${Python3_EXECUTABLE}" ${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/python_interface/py_ui_module/generate_enum_def.py
   ARGS    "${PROJECT_SOURCE_DIR}/src/isimpa/data_manager/element.h"
   DEPENDS "data_manager/element.h"
   )
@@ -476,28 +476,28 @@ ENDIF()
 find_package(wxWidgets COMPONENTS core base xml gl aui adv html REQUIRED)
 include(${wxWidgets_USE_FILE})
 # Find package for building
-FIND_PACKAGE(PythonLibs)
+FIND_PACKAGE(Python3 3.8 COMPONENTS Interpreter Development REQUIRED)
 
 find_package(OpenGL REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
 
 link_directories( ${Boost_LIBRARY_DIRS} )
 include_directories( ${Boost_INCLUDE_DIRS} )
-include_directories(${PYTHON_INCLUDE_PATH})
+include_directories(${Python3_INCLUDE_DIRS})
 
 # Properties->Linker->Input->Additional Dependencies
 target_link_libraries(isimpa lib_interface)
 target_link_libraries(isimpa ${Boost_LIBRARIES})
-target_link_libraries(isimpa ${PYTHON_LIBRARIES})
+target_link_libraries(isimpa ${Python3_LIBRARIES})
 
 if(WIN32 AND MSVC)
-  target_link_libraries(isimpa ${PYTHON_LIBRARY_RELEASE})
+  target_link_libraries(isimpa ${Python3_LIBRARY_RELEASE})
 endif()
 
 target_link_libraries(isimpa ${wxWidgets_LIBRARIES})
 target_link_libraries(isimpa ${OPENGL_LIBRARIES})
 
-add_definitions(-DUSE_PYTHON=${PYTHONLIBS_FOUND})
+add_definitions(-DUSE_PYTHON=${Python3_FOUND})
 
 if(WIN32) # Check if we are on Windows
   if(MSVC) # Check if we are using the Visual Studio compiler
@@ -541,8 +541,8 @@ DESTINATION .)
 
 if(WIN32) # Check if we are on Windows
     # Copy python libraries
-    get_filename_component(PYTHON_ROOT_FOLDER ${PYTHON_EXECUTABLE} PATH)
-	set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
+    get_filename_component(PYTHON_ROOT_FOLDER "${Python3_EXECUTABLE}" DIRECTORY)
+    set(PYTHON_LIB_FOLDER ${PYTHON_ROOT_FOLDER}/Lib)
 
     #Fetch required Dll's for GUI
     string(REPLACE "\\" "/" wxWidgets_LIB_DIR_SLASH ${wxWidgets_LIB_DIR})
@@ -587,8 +587,9 @@ if(WIN32) # Check if we are on Windows
     if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
         install( PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Runtime )
     endif( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )
+
     # Try to fetch x64 version of python dll
-    get_filename_component(PYTHON_DLL_FILENAME "${PYTHON_LIBRARY}" NAME_WLE)
+    get_filename_component(PYTHON_DLL_FILENAME ${Python3_LIBRARIES} NAME_WLE)
 
     SET(CMAKE_FIND_LIBRARY_PREFIXES "")
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
