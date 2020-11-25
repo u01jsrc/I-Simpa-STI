@@ -45,7 +45,7 @@
 // Number precision for display (after comma separator)
 const int COMMA_PRECISION_DB = 1;
 const int COMMA_PRECISION_TIME_S = 2;
-const int COMMA_PRECISION_TIME_MS = 1;
+const int COMMA_PRECISION_TIME_MS = 2;
 const int COMMA_PRECISION_PERCENT = 1;
 const int COMMA_PRECISION_AREA = 2;
 
