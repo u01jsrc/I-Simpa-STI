@@ -204,6 +204,11 @@ bool CalculationCoreSPPS::VisabilityTest(const CONF_PARTICULE_AGH &configuration
 	testParticle.nextModelIntersection.collisionPosition = testParticle.position + testParticle.direction*t;
 	obst_dist = configurationP.direction.length()*t;
 
+	if (rec_dist < obst_dist)
+	{
+		return true;
+	}
+
 	int maxIteration = 100 * rec_dist/configurationP.direction.length();                      //idistance in each iteration may be smaller than max allowed (direction.length())
 	int iteration = 0;
 
