@@ -174,13 +174,18 @@ set_property(TARGET TEST_lib_interface PROPERTY FOLDER "tests")
 # Fetch unit test dependencies
 
 
-
 # Add to test suite
 enable_testing()
 add_test( NAME lib_interface
     WORKING_DIRECTORY ${TEST_DATA_DIR}
     COMMAND TEST_lib_interface )
-
+    
+set_tests_properties(
+    lib_interface
+PROPERTIES
+    # Make sure DLL is found by adding its directory to PATH
+    ENVIRONMENT "PATH=${Boost_LIBRARY_DIRS};$ENV{PATH}"
+)
 
 #------------#
 #    TEST 2
