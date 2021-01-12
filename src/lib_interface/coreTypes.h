@@ -148,6 +148,7 @@ struct t_Material
 	uentier outsideMaterialIndice;		   /*!< Indice associé au matériau XML */
 	bool doubleSidedMaterialEffect;		   /*!< Prise en compte du matériau de la surface des deux cotés de la propagation */
 	bool use_custom_BRDF = false;		   /*!< Added property for custom BRDF usage */
+	uentier custom_BRDF_sampling_method;		/*!< Added property for custom BRDF usage sampling mehtod*/
 	t_BrdfBalloon* customBrdf;			   /*!<  Custom BRDF object */
 	~t_Material(){ if(matSpectrumProperty) delete[] matSpectrumProperty; }
 	t_Material(){ matSpectrumProperty=NULL;doubleSidedMaterialEffect=true; }

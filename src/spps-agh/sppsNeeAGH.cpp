@@ -28,7 +28,7 @@
 	#include <boost/thread/thread.hpp>
 	#include <boost/bind.hpp>
 
-	boost::mutex mutex; /*!< Variable permettant la synchronisation des processus */
+	boost::mutex amutex; /*!< Variable permettant la synchronisation des processus */
 #endif
 	// Print warning if particle lost is superior than this ratio
 const double PARTICLE_LOST_WARNING_RATIO = 0.05;
@@ -59,7 +59,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 	if(!sourceInfo.currentVolume)
 	{
 		#if __USE_MULTITHREAD__
-		boost::mutex::scoped_lock lock(mutex);
+		boost::mutex::scoped_lock lock(amutex);
 		#endif
 		std::cerr<<"Unable to find the source position!";
 		return;
@@ -162,7 +162,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 
 
 			#if __USE_MULTITHREAD__
-				boost::mutex::scoped_lock lock(mutex);
+				boost::mutex::scoped_lock lock(amutex);
 			#endif
 			applicationTools.mainProgressionOutput->OutputCurrentProgression();
 			//progressOperation thisPartOperation(&thisSrcOperation);
@@ -176,7 +176,7 @@ void runSourceCalculation( progressOperation* parentOperation, t_ToolBox& applic
 				static_cast<MLTCore*>(applicationTools.calculationTool)->RunMutation();
 
 				#if __USE_MULTITHREAD__
-					boost::mutex::scoped_lock lock(mutex);
+					boost::mutex::scoped_lock lock(amutex);
 				#endif
 				applicationTools.mainProgressionOutput->OutputCurrentProgression();
 				thisSrcOperation.Next();

@@ -161,7 +161,7 @@ set(LIBINTERFACE_TESTS
     tests/balloon_test.cpp)
 
 set(Boost_USE_STATIC_LIBS   ON)
-find_package(Boost COMPONENTS regex unit_test_framework timer chrono REQUIRED)
+find_package(Boost COMPONENTS regex unit_test_framework timer chrono filesystem REQUIRED)
 
 add_executable(TEST_lib_interface ${LIBINTERFACE_TESTS})
 
@@ -174,13 +174,18 @@ set_property(TARGET TEST_lib_interface PROPERTY FOLDER "tests")
 # Fetch unit test dependencies
 
 
-
 # Add to test suite
 enable_testing()
 add_test( NAME lib_interface
     WORKING_DIRECTORY ${TEST_DATA_DIR}
     COMMAND TEST_lib_interface )
-
+    
+set_tests_properties(
+    lib_interface
+PROPERTIES
+    # Make sure DLL is found by adding its directory to PATH
+    ENVIRONMENT "PATH=${Boost_LIBRARY_DIRS};$ENV{PATH}"
+)
 
 #------------#
 #    TEST 2
@@ -203,6 +208,13 @@ set_property(TARGET TEST_io_lib_interface PROPERTY FOLDER "tests")
 add_test( NAME io_lib_interface
     WORKING_DIRECTORY ${TEST_DATA_DIR}
     COMMAND TEST_io_lib_interface )
+
+set_tests_properties(
+    io_lib_interface
+PROPERTIES
+    # Make sure DLL is found by adding its directory to PATH
+    ENVIRONMENT "PATH=${Boost_LIBRARY_DIRS};$ENV{PATH}"
+)
 
 #------------#
 #    FIX

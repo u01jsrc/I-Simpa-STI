@@ -45,7 +45,7 @@ E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMateri
 	wxFileName storageFolder("");
 
 	currentChild = noeudCourant->GetChildren();
-	storageFolder.Assign(ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath + "BRDFs" + wxFileName::GetPathSeparator());
+	storageFolder.Assign(ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath + ApplicationConfiguration::CONST_REPORT_BRDF_FOLDER_PATH + wxFileName::GetPathSeparator());
 	while (currentChild != NULL)
 	{
 		if (currentChild->GetAttribute("eid", &propValue))
@@ -60,6 +60,10 @@ E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMateri
 		}
 		currentChild = currentChild->GetNext();
 	}
+
+	E_Scene_Bdd_Materiaux_PropertyMaterial_Adv* confCore = dynamic_cast<E_Scene_Bdd_Materiaux_PropertyMaterial_Adv*>(this->GetElementByType(ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED));
+	if (!confCore->IsPropertyExist("output_recp_bysource"))
+		this->AddCustomBRDFSamplingMehtods();
 }
 
 E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMaterial_Adv( Element* parent)
@@ -67,6 +71,7 @@ E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMateri
 {
 	_("Advanced properties");
 	this->AddCustomBRDF();
+	this->AddCustomBRDFSamplingMehtods();
 }
 
 
@@ -79,12 +84,30 @@ Element* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AppendFilsByType(ELEMENT_TY
 	return Element::AppendFilsByType(etypefils,libelle);
 }
 
-//wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLCoreDoc(wxXmlNode* NoeudParent)
-//{
-//	wxXmlNode* thisNode = new wxXmlNode(NoeudParent,wxXML_ELEMENT_NODE,"advanced_properties");
-//	Element::SaveXMLCoreDoc(thisNode);
-//	return thisNode;
-//}
+wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLCoreDoc(wxXmlNode* NoeudParent)
+{
+	bool containsCustomBRDF;
+	Element* materialAdvProperty = this->GetElementByType(Element::ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED);
+	if (materialAdvProperty) {
+		containsCustomBRDF = materialAdvProperty->GetBoolConfig("custom_BRDF");
+	}
+	if (containsCustomBRDF) {
+		wxFileName brdfFile = materialAdvProperty->GetFileConfig("brdf_file");
+		wxFileName storageFolder(ApplicationConfiguration::GLOBAL_VAR.workingFolderPath);
+		//wxFileName brdfDir = ApplicationConfiguration::CONST_REPORT_BRDF_FOLDER_PATH;
+		storageFolder.AppendDir("BRDFs");
+		if (!storageFolder.DirExists())
+		{
+			storageFolder.Mkdir();
+		}
+		storageFolder.SetFullName(brdfFile.GetFullName());
+		wxCopyFile(brdfFile.GetFullPath(), storageFolder.GetFullPath());
+
+	}
+
+	Element::SaveXMLCoreDoc(NoeudParent);
+	return NoeudParent;
+}
 
 wxXmlNode* E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::SaveXMLDoc(wxXmlNode* NoeudParent)
 {
@@ -112,4 +135,13 @@ void E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AddCustomBRDF()
 	this->AppendPropertyBool("custom_BRDF", "Use custom BRDF", false, true);
 	this->AppendPropertyFile("brdf_file", wxTRANSLATE("BRDF file"), storageFolder.GetPath(), _("Open BRDF file"), _("TXT files (*.TXT)|*.TXT"), true);
 	_("Use custom BRDF");
+}
+
+void  E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AddCustomBRDFSamplingMehtods() {
+	std::vector<wxString> samplingMethods;
+	std::vector<int> samplingMethodsIndex;
+	samplingMethods.push_back("Uniform");
+	samplingMethods.push_back("Lambert");
+	samplingMethods.push_back("PDF");
+	this->AppendPropertyList("custom_BRDF_sampling_method", wxTRANSLATE("Custom BRDF sampling"), samplingMethods, 2, false, 1, samplingMethodsIndex, true);
 }

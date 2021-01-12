@@ -85,17 +85,13 @@ bool txt_BrdfParser::parse(std::string filePath, t_BrdfBalloon *balloon)
 				// check header
 				if (boost::regex_match(line, headerMatch, Re_angleHeader))
 				{
-					if (Rphi > 0)
-					{
-						balloon->setNormalizationFactor(1 / energyIntegral, Sphi, Stheta, currentFrequency);
-						//cout << "Parsed BRDF for: " << currentFrequency << Sphi << Stheta << endl;
-					}
 					// Skip match 0, it contains full string
 					currentFrequency = stoi(headerMatch[1].str());
 					Stheta = stod(headerMatch[2].str());
 					Sphi = stod(headerMatch[3].str());
 					Rtheta = 0;
 					energyIntegral = 0;
+					balloon->initializePdfVector(currentFrequency, Sphi, Stheta);
 					continue;
 				}
 				boost::trim(line);
@@ -117,9 +113,17 @@ bool txt_BrdfParser::parse(std::string filePath, t_BrdfBalloon *balloon)
 
 							domega = this->getDifferentialSolidAngle(Rphi, Rtheta);
 							energyIntegral += domega * value;
+							balloon->setPdfVectorValue(currentFrequency, Sphi, Stheta, Rphi, Rtheta, energyIntegral);
 							//energyIntegral += domega * 1;
 						}
 						Rtheta += txt_BrdfParser::ANGLE_INCREMENT;
+
+						if (Rtheta == 90)
+						{
+							balloon->setNormalizationFactor(1. / energyIntegral, Sphi, Stheta, currentFrequency);
+							balloon->normalizePdfVector(currentFrequency, Sphi, Stheta, 1. / energyIntegral);
+							//cout << "Parsed BRDF for: " << currentFrequency << Sphi << Stheta << endl;
+						}
 					}
 				}
 			}

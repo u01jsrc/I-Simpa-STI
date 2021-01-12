@@ -2,24 +2,22 @@
 # specify custom environment variables
 environment:
   matrix:
-    - VisualStudioVersion: 14.1
+    - VisualStudioVersion: 14.2
       platform: x64
       configuration: Release
       vcvarsall_platform: "x64"
   global:
     MSVC_DEFAULT_OPTIONS: ON
-    BOOST_ROOT: C:\Libraries\boost_1_69_0
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\lib64-msvc-14.1
-    Python_LIBRARY: C:\Python37-x64\libs\python37.lib
-    Python_INCLUDE_DIR: C:\Python37-x64\include
-    WXWIN: C:\wxWidgets-3.1.2\
-    wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.2\
-    wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.2\include
-    wxWidgets_LIBRARIES: C:\wxWidgets-3.1.2\lib\vc141_x64_dll
+    BOOST_ROOT: C:\Libraries\boost_1_73_0
+    #BOOST_LIBRARYDIR: C:\Libraries\boost_1_73_0\lib64-msvc-14.2
+    Python3_ROOT_DIR: C:\Python38-x64\
+    Python3_LIBRARY_RELEASE: C:\Python38-x64\libs\python38.lib
+    WXWIN: C:\wxWidgets-3.1.4\
+    wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.4\
+    wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.4\include
+    wxWidgets_LIBRARIES: C:\wxWidgets-3.1.4\lib\vc14x_x64_dll
     SWIG_DIR: C:\Libraries\swigwin-3.0.11
-    SWIG_EXECUTABLE: C:\Libraries\swigwin-3.0.11\swig.exe
-    Python_EXECUTABLE: C:\Python37-x64\python.exe
-    Python_ROOT_DIR: C:\Python37-x64\
+    #SWIG_EXECUTABLE: C:\Libraries\swigwin-3.0.11\swig.exe
     CTEST_OUTPUT_ON_FAILURE: 1
 
 # branches to build
@@ -29,7 +27,7 @@ branches:
     - master
 
 # Operating system (build VM template)
-os: Visual Studio 2017
+os: Visual Studio 2019
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -47,22 +45,18 @@ configuration: Release
 before_build:
   - ps: git rev-parse HEAD
   # msbuild will use x64 visual studio compiler
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
   # Copy x64 dll from system32 to python27 x64
   #- cmd: copy c:\windows\system32\PYTHON27.DLL C:\Python27-x64\python27.dll
-  # sent environment variables for wxWidgets
-  - set WXWIN=C:\wxWidgets-3.1.2\
-  - set wxWidgets_ROOT_DIR=%WXWIN%
-  - set wxWidgets_LIB_DIR=%WXWIN%\lib\vc_dll
   - echo Download wxWidgets lib
-  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.2/wxWidgets-3.1.2.7z'
-  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.2/wxMSW-3.1.2_vc141_x64_Dev.7z'
-  - cmd: 7z x wxWidgets-3.1.2.7z -oC:\wxWidgets-3.1.2
-  - cmd: 7z x wxMSW-3.1.2_vc141_x64_Dev.7z -oC:\wxWidgets-3.1.2
+  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxWidgets-3.1.4.7z'
+  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxMSW-3.1.4_vc14x_x64_Dev.7z'
+  - cmd: 7z x wxWidgets-3.1.4.7z -oC:\wxWidgets-3.1.4 -aoa
+  - cmd: 7z x wxMSW-3.1.4_vc14x_x64_Dev.7z -oC:\wxWidgets-3.1.4 -aoa
   - cmd: dir %wxWidgets_LIBRARIES%
   # Download Release wxWidgets DLL's
-  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.2/wxMSW-3.1.2_vc141_x64_ReleaseDLL.7z' -Timeout 15000
-  - cmd: 7z x wxMSW-3.1.2_vc141_x64_ReleaseDLL.7z -oC:\wxWidgets-3.1.2
+  - ps: Start-FileDownload 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxMSW-3.1.4_vc14x_x64_ReleaseDLL.7z' -Timeout 15000
+  - cmd: 7z x wxMSW-3.1.4_vc14x_x64_ReleaseDLL.7z -oC:\wxWidgets-3.1.4 -aoa
   # install dependencies:
   - choco install poedit nsis 7zip.install
   - ps: Start-FileDownload 'https://github.com/nicolas-f/build_resources/raw/master/swigwin-3.0.11.zip' -FileName 'c:\Libraries\swigwin-3.0.11.zip' -Timeout 15000
@@ -78,18 +72,17 @@ before_build:
   - cmd: echo WX_LIB_DIR:INTERNAL=%wxWidgets_LIBRARIES% >> CMakeCache.txt
   - cmd: echo WX_ROOT_DIR:INTERNAL=%wxWidgets_ROOT_DIR% >> CMakeCache.txt
   - cmd: echo PYTHON_EXECUTABLE:FILEPATH=%PYTHON_EXECUTABLE% >> CMakeCache.txt
-  - cmake --debug-output -G "Visual Studio 15 2017 Win64" c:\projects\isimpa
+  - cmake --debug-output -G "Visual Studio 16 2019" -A x64 c:\projects\isimpa
 
 build_script:
   - cd c:\projects\isimpa\build
   - ECHO Building %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - dir
-  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
+  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - msbuild "INSTALL.vcxproj" /consoleloggerparameters:Verbosity=minimal /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
   - cd c:\projects\isimpa\build
-#  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - ECHO Package I-SIMPA %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - msbuild "PACKAGE.vcxproj" /consoleloggerparameters:Verbosity=minimal /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
@@ -98,18 +91,12 @@ test_script:
   - choco install dependencywalker -y --allow-empty-checksums
   - depends.exe /f:1 /c /oc:c:\projects\isimpa\build\depends.txt c:\projects\isimpa\build\bin\isimpa.exe
   - cd c:\projects\isimpa\build
-#  - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - ECHO Test I-SIMPA %configuration% %platform% with MSVC %VisualStudioVersion% using %PlatformToolset% PlatformToolset
   - appveyor-retry msbuild "RUN_TESTS.vcxproj" /target:Build  /p:Configuration=%configuration% /p:Platform=%platform% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 on_finish:
     - if exist c:\projects\isimpa\build\depends.txt ( type c:\projects\isimpa\build\depends.txt )
     - if exist c:\projects\isimpa\build\Testing\Temporary\LastTest.log ( type c:\projects\isimpa\build\Testing\Temporary\LastTest.log )
-
-on_failure:
-    - appveyor PushArtifact CMakeFiles\CMakeOutput.log -FileName CMakeOutput.log
-    - appveyor PushArtifact CMakeFiles\CMakeError.log -FileName CMakeError.log
-
 artifacts:
   - path: 'build\*.exe'
     name: isimpa-win64-install
@@ -118,4 +105,4 @@ artifacts:
   - path: 'build\CMakeFiles\CMakeOutput.log'
     name: cmake_output_log
   - path: 'build\CMakeFiles\CMakeError.log'
-    name: cmake_error_log
+    name: cmake_output_log

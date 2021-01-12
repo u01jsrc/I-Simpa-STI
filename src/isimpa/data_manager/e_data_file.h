@@ -97,7 +97,7 @@ public:
 	{
 		wxXmlNode* thisNode = E_Data::SaveXMLDoc(NoeudParent);
 		thisNode->DeleteAttribute("value");
-		thisNode->AddAttribute("value", file.IsOk() ? file.GetFullPath() : "");
+		thisNode->AddAttribute("value", file.IsOk() ? file.GetFullName() : "");
 		return thisNode;
 	}
 
@@ -106,7 +106,7 @@ public:
 		if (exportToCore)
 		{
 			NoeudParent->DeleteAttribute(this->elementInfo.libelleElement);
-			NoeudParent->AddAttribute(this->elementInfo.libelleElement, this->GetFile().GetFullPath());
+			NoeudParent->AddAttribute(this->elementInfo.libelleElement, this->GetFile().GetFullName());
 		}
 		return NoeudParent;
 	}

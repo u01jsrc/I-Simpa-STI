@@ -42,6 +42,7 @@
 #include <wx/evtloop.h>
 #include <IHM/AboutDialog.hpp>
 #include "last_cpp_include.hpp"
+#include "data_manager/python_interface/pythonshell.hpp"
 
 
 BEGIN_EVENT_TABLE(MainUiFrame, wxFrame)
@@ -162,7 +163,7 @@ void OnUserConfigElementEvent(wxCommandEvent& eventElement)
 }
 
 MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APPLICATION_NAME,
-									wxDefaultPosition, FromDIP(wxSize(1024,768)),
+									wxDefaultPosition, wxSize(1024,768),
 									wxDEFAULT_FRAME_STYLE),m_locale(lang)
 {
 	saveManagerConfig=true;
@@ -526,7 +527,12 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 	// Render 3D view
 	m_mgr.GetPane("3Dview").Show();
 }
-
+void MainUiFrame::OnWindowLoaded() {
+    // Run Python script for started
+    #ifdef USE_PYTHON
+        projetCourant->GetPythonShell()->run_startupscript("SystemScript/", "__ui_started__.py");
+    #endif
+}
 void MainUiFrame::OnClearConsole(wxCommandEvent& event)
 {
 	projetCourant->OnClearConsole();

@@ -38,7 +38,7 @@ public:
 		IPROP_NORMALIZE_ANGLE_STATS,
 		IPROP_EXTENDED_ANGLE_STATS,
 		IPROP_ANGLE_STATS_MIN_REFL,					/*!< Min reflection order for angle stats calculation*/
-		IPROP_CAST_SR_TO_SURFACE_REC
+		IPROP_SKIP_DIRECT_SOUND_CALC
 	};
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML

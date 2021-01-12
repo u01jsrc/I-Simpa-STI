@@ -32,6 +32,7 @@
 #include <vector>
 #include <string>
 #include <Core/mathlib.h>
+#include <algorithm>
 
 #ifndef BRDF_BALLOON
 #define BRDF_BALLOON
@@ -46,6 +47,7 @@ private:
 	std::unordered_map<short, std::unordered_map<short, std::unordered_map<short, std::unordered_map<short, std::unordered_map<short, float>>>>> attenuations;
 	int AngleIncrement;
 	std::unordered_map<short, std::unordered_map<short, std::unordered_map<short, float>>> normalizationFactor;
+	std::unordered_map<short, std::unordered_map<short, std::unordered_map<short, std::vector<float>>>> pdfVector;
 
 public:
 	/** 
@@ -67,7 +69,19 @@ public:
 	std::vector<float> getAvalibleFrequencies();
 	void getThetaPhi(const vec3 &normal, const vec3 &ray, double &theta, double &phi);
 	double getEnergy(short freq, const vec3 &normal, const vec3 &inRay, const vec3 &outRay);
+	float integrateEnergy(short freq, short sphi, short stheta);
 	short roundToNearestAngle(double &value);
+
+	double getDifferentialSolidAngle(double phi, double theta);
+	double deg2rad(double deg);
+	
+	void initializePdfVector(short freq, short sphi, short stheta);
+
+	void setPdfVectorValue(short freq, short sphi, short stheta, short rphi, short rtheta, float value);
+
+	void normalizePdfVector(short freq, short sphi, short stheta, float normalizationFactor);
+
+	void calculateReflectionAnglesFromPdf(short freq, const vec3& normal, const vec3& inRay, float& rphi, float& rtheta);
 	
 };
 #endif

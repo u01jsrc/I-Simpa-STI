@@ -61,7 +61,8 @@ const wxString ApplicationConfiguration::CONST_REPORT_RECEPTEURSS_FILENAME=wxStr
 const wxString ApplicationConfiguration::CONST_REPORT_RECEPTEURSS_CUT_FILENAME= wxString(wxTRANSLATE("rs_cut")) + wxString(".csbin");
 const wxString ApplicationConfiguration::CONST_REPORT_RECEPTEURSS_FILENAME_TR="TR.csbin";
 const wxString ApplicationConfiguration::CONST_REPORT_RECEPTEURSS_FILENAME_EDT="EDT.csbin";
-const wxString ApplicationConfiguration::CONST_REPORT_DIRECTIVITIES_FOLDER_PATH = wxString(wxTRANSLATE("loudspeakers")) + wxFileName::GetPathSeparator();;
+const wxString ApplicationConfiguration::CONST_REPORT_DIRECTIVITIES_FOLDER_PATH = wxString(wxTRANSLATE("loudspeakers")) + wxFileName::GetPathSeparator();
+const wxString ApplicationConfiguration::CONST_REPORT_BRDF_FOLDER_PATH = wxString(wxTRANSLATE("BRDFs")) + wxFileName::GetPathSeparator();
 const wxString ApplicationConfiguration::CONST_MODEL_SCENE_FILENAME="sceneMesh.bin";
 
 

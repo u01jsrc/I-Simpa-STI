@@ -637,7 +637,8 @@ void ReportManager::SaveRecpIntensity(const CoreString& filename,std::vector<t_s
 	GABE_Data_ShortString collbl(params.nbTimeStep+1); //+1 pour le cumul
 	GABE_Data_ShortString* statdBLbl=&collbl;
 	for(uentier idstep=0;idstep<params.nbTimeStep;idstep++)
-		statdBLbl->SetString(idstep,(CoreString::FromInt((int)(params.timeStep*(idstep+1)*1000))+" ms").c_str());
+		//statdBLbl->SetString(idstep,(CoreString::FromFloat((params.timeStep*(idstep+1)*1000))+" ms").c_str());
+		statdBLbl->SetString(idstep,(CoreString::FromFloat(params.timeStep*(float)(idstep + 1) * 1000.f, COMMA_PRECISION_TIME_MS)+ " ms").c_str());
 	statdBLbl->SetString(params.nbTimeStep,"Sum");
 	statdBLbl->SetLabel("Intensity");
 

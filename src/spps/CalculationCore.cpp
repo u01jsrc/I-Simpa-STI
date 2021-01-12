@@ -442,7 +442,8 @@ entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE &configurati
 			if(old_tetra->voisins[idtet]!=NULL)
 			{
 				configurationP.currentTetra=old_tetra->voisins[idtet];
-				if(core_mathlib::DotInTetra(configurationP.position,this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.a],
+				if(core_mathlib::DotInTetra(configurationP.position,
+					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.a],
 					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.b],
 					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.c],
 					this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.d]))
@@ -454,6 +455,36 @@ entier_court  CalculationCore::GetTetraFaceCollision(CONF_PARTICULE &configurati
 				}
 			}
 		}
+
+		// Test second order tetra - possible to go pass tetra through vertex or edge. 
+		// Then the particle may find itself in tetra which is second next neibghour to current tetra 
+		t_Tetra* middle_tetra;
+		for (unsigned short idtet_m = 0; idtet_m < 4; idtet_m++)
+		{
+			if (old_tetra->voisins[idtet_m] != NULL)
+			{
+				middle_tetra = old_tetra->voisins[idtet_m];
+				for (unsigned short idtet = 0; idtet < 4; idtet++)
+				{
+					if (middle_tetra->voisins[idtet] != NULL && middle_tetra->voisins[idtet] != old_tetra)
+					{
+						configurationP.currentTetra = middle_tetra->voisins[idtet];
+						if (core_mathlib::DotInTetra(configurationP.position,
+							this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.a],
+							this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.b],
+							this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.c],
+							this->sceneTetraMesh->nodes[configurationP.currentTetra->sommets.d]))
+						{
+							TetraFaceTest(0);
+							TetraFaceTest(1);
+							TetraFaceTest(2);
+							TetraFaceTest(3);
+						}
+					}
+				}
+			}
+		}
+
 		configurationP.energie=0;
 		if(configurationP.stateParticule==PARTICULE_STATE_ALIVE)
 			configurationP.stateParticule=PARTICULE_STATE_LOST;

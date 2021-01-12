@@ -36,27 +36,28 @@ def GetMixedLevel(folderwxid,param):
             gridparam=ui.application.getdataarray(params)
             #on ajoute la colonne
             if len(cols)==0: #si le tableau de sortie est vide alors on ajoute les libell�s des lignes
-                cols.append(list(zip(*gridparam)[0])) #libell� Freq et Global
+                cols.append(list(zip(*gridparam))[0]) #libell� Freq et Global
             idcol=gridparam[0].index(param) #Changer le param�tre par celui pour lequel on veut la fusion
-            cols.append([nomrecp.encode('cp1250')]+list(zip(*gridparam)[idcol][1:])) #1ere colonne, (0 etant le libell� des lignes) et [1:] pour sauter la premiere ligne
+            cols.append([nomrecp]+[*list(zip(*gridparam))[idcol][1:]]) #1ere colonne, (0 etant le libell� des lignes) et [1:] pour sauter la premiere ligne
     
-    cols2=zip(*cols[1:])
+    cols2=list(zip(*cols[1:]))
     cols.append(['Average']+[float(sum(l))/len(l) for l in cols2[1:]])
     return cols
 
 def SaveLevel(tab,path):
     #Creation de l'objet qui lit et ecrit les fichiers gabe
+    tab=list(tab)
     gabewriter=Gabe_rw(len(tab))
     labelcol=stringarray()
     for cell in tab[0][1:]:
-        labelcol.append(cell.encode('cp1250'))
+        labelcol.append(str(cell))
     gabewriter.AppendStrCol(labelcol,"Label")
     for col in tab[1:]:
         datacol=floatarray()
         for cell in col[1:]:
             datacol.append(float(cell))
-        gabewriter.AppendFloatCol(datacol,str(col[0].encode('cp1250', 'replace')))
-    gabewriter.Save(path.encode('cp1250'))
+        gabewriter.AppendFloatCol(datacol,str(col[0]))
+    gabewriter.Save(path)
     
 def dofusion(folderwxid, path,param):
     arraydata=GetMixedLevel(folderwxid,param)

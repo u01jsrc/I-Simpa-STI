@@ -249,7 +249,7 @@ bool MLTCore::MoveToNextReflection(CONF_PARTICULE_MLT& configurationP, double rn
 		faceNormal = faceInfo->normal;
 
 
-	GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, configurationP.shadowRays, &configurationP.totalProbability);
+	GenerateShadowRays(configurationP, materialInfo, faceNormal, deltaT, distanceToTravel, configurationP.shadowRays, faceInfo);
 
 	//******************************* REFLECTION ***************************************//
 
