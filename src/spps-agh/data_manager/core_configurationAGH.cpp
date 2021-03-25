@@ -50,6 +50,10 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbo
 							uentier BRDF_sampling = (*iterateurNoeuds)->GetProperty("custom_BRDF_sampling_method").ToInt();
 							material->custom_BRDF_sampling_method = BRDF_sampling;
 
+							float BRDF_exponent = (*iterateurNoeuds)->GetProperty("custom_BRDF_exponent").ToFloat();
+							if (BRDF_exponent != 1)
+								cout << "Found BRDF exponent " << BRDF_exponent << endl;
+
 							string brdfFile_path = *FastGetConfigValue(SPROP_CORE_WORKING_DIRECTORY);
 							brdfFile_path += *FastGetConfigValue(SPROP_BRDF_FOLDER_PATH);
 							brdfFile_path += (*iterateurNoeuds)->GetProperty("brdf_file");
@@ -57,7 +61,7 @@ Core_ConfigurationAGH::Core_ConfigurationAGH( CoreString xmlFilePath, bool verbo
 							material->use_custom_BRDF = true;
 							t_BrdfBalloon* material_brdf = new t_BrdfBalloon();
 							txt_BrdfParser parser;
-							parser.parse(brdfFile_path, material_brdf);
+							parser.parse(brdfFile_path, material_brdf, BRDF_exponent);
 							material->customBrdf = material_brdf;
 
 							vector<float> avalibleFreq = material_brdf->getAvalibleFrequencies();

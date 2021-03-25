@@ -62,8 +62,10 @@ E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMateri
 	}
 
 	E_Scene_Bdd_Materiaux_PropertyMaterial_Adv* confCore = dynamic_cast<E_Scene_Bdd_Materiaux_PropertyMaterial_Adv*>(this->GetElementByType(ELEMENT_TYPE_SCENE_BDD_MATERIAUX_PROPMATERIAU_ADVANCED));
-	if (!confCore->IsPropertyExist("output_recp_bysource"))
+	if (!confCore->IsPropertyExist("custom_BRDF_sampling_method"))
 		this->AddCustomBRDFSamplingMehtods();
+	if (!confCore->IsPropertyExist("custom_BRDF_exponent"))
+		this->AddCustomBRDFExpnentFactor();
 }
 
 E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMaterial_Adv( Element* parent)
@@ -72,6 +74,7 @@ E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::E_Scene_Bdd_Materiaux_PropertyMateri
 	_("Advanced properties");
 	this->AddCustomBRDF();
 	this->AddCustomBRDFSamplingMehtods();
+	this->AddCustomBRDFExpnentFactor();
 }
 
 
@@ -144,4 +147,8 @@ void  E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AddCustomBRDFSamplingMehtods()
 	samplingMethods.push_back("Lambert");
 	samplingMethods.push_back("PDF");
 	this->AppendPropertyList("custom_BRDF_sampling_method", wxTRANSLATE("Custom BRDF sampling"), samplingMethods, 2, false, 1, samplingMethodsIndex, true);
+}
+
+void  E_Scene_Bdd_Materiaux_PropertyMaterial_Adv::AddCustomBRDFExpnentFactor() {
+	this->AppendPropertyDecimal("custom_BRDF_exponent", wxTRANSLATE("Custom BRDF exponent"), 1., false, 3, false, true, 10, 0, true);
 }

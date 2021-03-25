@@ -43,7 +43,7 @@ class BrdfParser
 {
 public:
 	virtual ~BrdfParser() {};
-	virtual bool parse(std::string filePath, t_BrdfBalloon *balloon) = 0;
+	virtual bool parse(std::string filePath, t_BrdfBalloon *balloon, float BRDF_exponent = 1) = 0;
 	static const int ANGLE_INCREMENT = 0;
 };
 
@@ -54,7 +54,7 @@ class txt_BrdfParser : public BrdfParser
 {
 public:
 	int ANGLE_INCREMENT;
-	virtual bool parse(std::string filePath, t_BrdfBalloon *balloon);
+	virtual bool parse(std::string filePath, t_BrdfBalloon *balloon, float BRDF_exponent = 1);
 private:
 	double getDifferentialSolidAngle(double phi, double theta);
 	inline double deg2rad(double deg);

@@ -59,6 +59,7 @@ public:
 
 	void AddCustomBRDF();
 	void AddCustomBRDFSamplingMehtods();
+	void AddCustomBRDFExpnentFactor();
 };
 
 #endif

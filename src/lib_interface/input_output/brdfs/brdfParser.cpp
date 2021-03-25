@@ -38,7 +38,7 @@
 
 using namespace std;
 
-bool txt_BrdfParser::parse(std::string filePath, t_BrdfBalloon *balloon)
+bool txt_BrdfParser::parse(std::string filePath, t_BrdfBalloon *balloon, float BRDF_exponent)
 {
 	#ifdef WIN32
 		ifstream file(pugi::as_wide(filePath), ifstream::in);
@@ -109,6 +109,7 @@ bool txt_BrdfParser::parse(std::string filePath, t_BrdfBalloon *balloon)
 							Rphi = i * txt_BrdfParser::ANGLE_INCREMENT;
 							double value = stod(tokens[i]);
 							value = value * value;
+							value = pow(value,BRDF_exponent);
 							balloon->setValue(currentFrequency, Sphi, Stheta, Rphi, Rtheta, value);
 
 							domega = this->getDifferentialSolidAngle(Rphi, Rtheta);
