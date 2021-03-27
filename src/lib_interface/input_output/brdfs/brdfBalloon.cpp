@@ -113,11 +113,11 @@ double t_BrdfBalloon::getEnergy(short freq, const vec3 & normal, const vec3 & in
 	Rphi_r = roundToNearestAngle(Rphi);
 
 	if (Sphi_r > 360 - AngleIncrement)
-		Sphi_r -= 0;
+		Sphi_r = 0;
 	if (Stheta_r > 90 - AngleIncrement)
 		Stheta_r = 90 - AngleIncrement;
 	if (Rphi_r > 360 - AngleIncrement)
-		Rphi_r -= 0;
+		Rphi_r = 0;
 	if (Rtheta_r > 90 - AngleIncrement)
 		Rtheta_r = 90 - AngleIncrement;
 
@@ -125,6 +125,7 @@ double t_BrdfBalloon::getEnergy(short freq, const vec3 & normal, const vec3 & in
 	//auto norm = getNormalizationFactor(Sphi_r, Stheta_r, freq);
 	//auto total_energy_test = integrateEnergy(freq, Sphi_r, Stheta_r);
 	//auto test = att * norm;
+
 	return double(getAttenuation(freq, Sphi_r, Stheta_r, Rphi_r, Rtheta_r)) * getNormalizationFactor(Sphi_r, Stheta_r, freq);
 }
 
