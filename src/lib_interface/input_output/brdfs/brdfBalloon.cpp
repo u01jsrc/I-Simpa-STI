@@ -212,7 +212,7 @@ void t_BrdfBalloon::calculateReflectionAnglesFromPdf(short freq, const vec3& nor
 	Sphi_r = roundToNearestAngle(Sphi);
 
 	if (Sphi_r > 360 - AngleIncrement)
-		Sphi_r -= 0;
+		Sphi_r = 0;
 	if (Stheta_r > 90 - AngleIncrement)
 		Stheta_r = 90 - AngleIncrement;
 
