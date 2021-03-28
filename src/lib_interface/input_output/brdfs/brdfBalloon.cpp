@@ -100,12 +100,12 @@ double t_BrdfBalloon::getEnergy(short freq, const vec3 & normal, const vec3 & in
 	short  Stheta_r, Sphi_r, Rtheta_r, Rphi_r;
 
 	getThetaPhi(normal, -inRay, Stheta, Sphi);
-	if (Stheta > 90) 
-		std::cout << "Stheta > 90" << std::endl;
+	//if (Stheta > 90) 
+	//	std::cout << "Stheta > 90" << std::endl;
 
 	getThetaPhi(normal, outRay, Rtheta, Rphi);
-	if (Rtheta > 90)
-		std::cout << "Rtheta > 90" << std::endl;
+	//if (Rtheta > 90)
+	//	std::cout << "Rtheta > 90" << std::endl;
 
 	Stheta_r = roundToNearestAngle(Stheta);
 	Sphi_r = roundToNearestAngle(Sphi);
