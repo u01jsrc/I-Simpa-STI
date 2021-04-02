@@ -56,6 +56,11 @@ public:
 		if (!this->IsPropertyExist("angle_filename")) {
 			InitAngleStatsCalc(this);
 		}
+		if (this->IsPropertyExist("angle_stats_min_reflection")) {
+			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "label", "Min reflection order for maps");
+			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "name", "map_min_reflection");
+			this->Modified(this);
+		}
 	}
 
 	E_Core_SppsNee_AGH_advanced_SPPS(Element* parent)
@@ -100,7 +105,7 @@ protected:
 	void InitAngleStatsCalc(Element* confCore) {
 		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
 		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
-		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), 0, true, false, true, 0, 0);
 		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
 	}
 };
@@ -126,6 +131,11 @@ public:
 		}
 		if (!this->IsPropertyExist("skip_direct_sound_calc")) {
 			InitSkipDirectSoundCalc(this);
+		}
+		if (this->IsPropertyExist("angle_stats_min_reflection")) {
+			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "label", "Min reflection order for maps");
+			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "name", "map_min_reflection");
+			this->Modified(this);
 		}
 	}
 
@@ -173,7 +183,7 @@ protected:
 	void InitAngleStatsCalc(Element* confCore) {
 		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
 		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
-		confCore->AppendPropertyInteger("angle_stats_min_reflection", wxTRANSLATE("Min reflection for incidence angle record"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), 0, true, false, true, 0, 0);
 		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
 	}
 	void InitSkipDirectSoundCalc(Element* confCore) {
