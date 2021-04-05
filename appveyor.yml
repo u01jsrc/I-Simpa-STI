@@ -16,7 +16,7 @@ environment:
     wxWidgets_ROOT_DIR: C:\wxWidgets-3.1.4\
     wxWidgets_INCLUDE_DIRS: C:\wxWidgets-3.1.4\include
     wxWidgets_LIBRARIES: C:\wxWidgets-3.1.4\lib\vc14x_x64_dll
-    SWIG_DIR: C:\Libraries\swigwin-3.0.11
+    SWIG_DIR: C:\ProgramData\chocolatey\lib\swig\tools
     #SWIG_EXECUTABLE: C:\Libraries\swigwin-3.0.11\swig.exe
     CTEST_OUTPUT_ON_FAILURE: 1
 
@@ -59,8 +59,9 @@ before_build:
   - cmd: 7z x wxMSW-3.1.4_vc14x_x64_ReleaseDLL.7z -oC:\wxWidgets-3.1.4 -aoa
   # install dependencies:
   - choco install poedit nsis 7zip.install
-  - ps: Start-FileDownload 'https://github.com/nicolas-f/build_resources/raw/master/swigwin-3.0.11.zip' -FileName 'c:\Libraries\swigwin-3.0.11.zip' -Timeout 15000
-  - ps: 7z x c:\Libraries\swigwin-3.0.11.zip -oC:\Libraries -r -y
+  #- ps: Start-FileDownload 'https://github.com/nicolas-f/build_resources/raw/master/swigwin-3.0.11.zip' -FileName 'c:\Libraries\swigwin-3.0.11.zip' -Timeout 15000
+  #- ps: 7z x c:\Libraries\swigwin-3.0.11.zip -oC:\Libraries -r -y
+  - choco install swig
   - cmd: SET PATH=%PATH%;%WXWIN%;%SWIG_DIR%;%wxWidgets_LIB_DIR%;C:\Program Files (x86)\Poedit\Gettexttools\bin;%BOOST_LIBRARYDIR%;
   - ps: swig.exe -version
   - echo Running cmake...
