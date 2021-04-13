@@ -37,8 +37,9 @@ public:
 		I_PROP_CALCULATION_CORE_SELLECTION = 70,
 		IPROP_NORMALIZE_ANGLE_STATS,
 		IPROP_EXTENDED_ANGLE_STATS,
-		IPROP_MAP_MIN_REFL,					/*!< Min reflection order for angle stats calculation*/
-		IPROP_SKIP_DIRECT_SOUND_CALC
+		IPROP_MAP_MIN_REFL,					/*!< Min reflection order for map calculation*/
+		IPROP_SKIP_DIRECT_SOUND_CALC,
+		IPROP_MAP_MAX_REFL,					/*!< Max reflection order for map calculation*/
 	};
 	/**
 	 * Initialisation des paramètres du coeur de calcul à partir d'un fichier XML

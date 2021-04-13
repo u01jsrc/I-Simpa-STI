@@ -61,6 +61,9 @@ public:
 			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "name", "map_min_reflection");
 			this->Modified(this);
 		}
+		if (!this->IsPropertyExist("map_max_reflection")) {
+			InitMapMaxReflection(this);
+		}
 	}
 
 	E_Core_SppsNee_AGH_advanced_SPPS(Element* parent)
@@ -96,6 +99,7 @@ protected:
 	{
 		InitRandomSeed(this);
 		InitAngleStatsCalc(this);
+		InitMapMaxReflection(this);
 	}
 
 	void InitRandomSeed(Element* confCore) {
@@ -105,8 +109,11 @@ protected:
 	void InitAngleStatsCalc(Element* confCore) {
 		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
 		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
-		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), -1, true, false, true, 0, -1);
 		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
+	}
+	void InitMapMaxReflection(Element* confCore) {
+		confCore->AppendPropertyInteger("map_max_reflection", wxTRANSLATE("Max reflection order for maps"), -1, true, false, true, 0, -1);
 	}
 };
 
@@ -136,6 +143,9 @@ public:
 			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "label", "Min reflection order for maps");
 			this->renameAttribute(noeudCourant, { wxString("angle_stats_min_reflection") }, "name", "map_min_reflection");
 			this->Modified(this);
+		}
+		if (!this->IsPropertyExist("map_max_reflection")) {
+			InitMapMaxReflection(this);
 		}
 	}
 
@@ -174,6 +184,7 @@ protected:
 		InitAngleStatsCalc(this);
 		InitShadowRayProbability(this);
 		InitSkipDirectSoundCalc(this);
+		InitMapMaxReflection(this);
 	}
 
 	void InitRandomSeed(Element* confCore) {
@@ -183,7 +194,7 @@ protected:
 	void InitAngleStatsCalc(Element* confCore) {
 		confCore->AppendPropertyText("angle_filename", "angle_filename", wxTRANSLATE("Surface incidence angle stats") + wxString(".gabe"), true, true)->Hide();
 		confCore->AppendPropertyBool("normalize_angle_stats", wxTRANSLATE("Normalize angle stats"), true, true);
-		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), 0, true, false, true, 0, 0);
+		confCore->AppendPropertyInteger("map_min_reflection", wxTRANSLATE("Min reflection order for maps"), -1, true, false, true, 0, -1);
 		confCore->AppendPropertyBool("extended_angle_stats", wxTRANSLATE("Extended angle stats"), false, true);
 	}
 	void InitSkipDirectSoundCalc(Element* confCore) {
@@ -191,6 +202,9 @@ protected:
 	}
 	void InitShadowRayProbability(Element* confCore) {
 		confCore->AppendPropertyDecimal("shadowray_prob", wxTRANSLATE("Shadowray probability"), 1.0f, false, 3, true, true, 1.0f, 0, true);
+	}
+	void InitMapMaxReflection(Element* confCore) {
+		confCore->AppendPropertyInteger("map_max_reflection", wxTRANSLATE("Max reflection order for maps"), -1, true, false, true, 0, -1);
 	}
 };
 

@@ -140,10 +140,15 @@ void Core_ConfigurationAGH::LoadAdvancedSPPS(CXmlNode* simuNode) {
 			SetConfigInformation(IPROP_DO_MULTITHREAD, 0);
 			std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl;
 		}
+		int mapMaxRefl = advancedNode->GetProperty("map_max_reflection").ToInt();
+		if (mapMaxRefl == -1) {
+			mapMaxRefl = INT32_MAX;
+		}
 		SetConfigInformation(I_PROP_RANDOM_SEED, seed);
 		SetConfigInformation(IPROP_NORMALIZE_ANGLE_STATS, advancedNode->GetProperty("normalize_angle_stats").ToInt());
 		SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS, advancedNode->GetProperty("extended_angle_stats").ToInt());
-		SetConfigInformation(IPROP_MAP_MIN_REFL, advancedNode->GetProperty("map_min_reflection").ToInt());;
+		SetConfigInformation(IPROP_MAP_MIN_REFL, advancedNode->GetProperty("map_min_reflection").ToInt());
+		SetConfigInformation(IPROP_MAP_MAX_REFL, mapMaxRefl);
 		SetConfigInformation(SPROP_ANGLE_FILE_PATH, advancedNode->GetProperty("angle_filename"));
 	}
 }
@@ -161,14 +166,19 @@ void Core_ConfigurationAGH::LoadAdvancedNEE(CXmlNode* simuNode) {
 			SetConfigInformation(IPROP_DO_MULTITHREAD, 0);
 			std::cout << "Random seed has been set; then multi-thread has been desactivated." << std::endl;
 		}
+		int mapMaxRefl = advancedNode->GetProperty("map_max_reflection").ToInt();
+		if (mapMaxRefl == -1) {
+			mapMaxRefl = INT32_MAX;
+		}
 		SetConfigInformation(I_PROP_RANDOM_SEED, seed);
 		SetConfigInformation(IPROP_NORMALIZE_ANGLE_STATS, advancedNode->GetProperty("normalize_angle_stats").ToInt());
 		SetConfigInformation(IPROP_EXTENDED_ANGLE_STATS, advancedNode->GetProperty("extended_angle_stats").ToInt());
 		SetConfigInformation(IPROP_MAP_MIN_REFL, advancedNode->GetProperty("map_min_reflection").ToInt());
+		SetConfigInformation(IPROP_MAP_MAX_REFL, mapMaxRefl);
 		SetConfigInformation(SPROP_ANGLE_FILE_PATH, advancedNode->GetProperty("angle_filename"));
 		SetConfigInformation(IPROP_SKIP_DIRECT_SOUND_CALC, advancedNode->GetProperty("skip_direct_sound_calc").ToInt());
 		SetConfigInformation(FPROP_NEE_SHADOWRAY_PROB, advancedNode->GetProperty("shadowray_prob").ToFloat());
-	}
+	}	
 }
 
 void Core_ConfigurationAGH::LoadAdvancedMLT(CXmlNode* simuNode) {
