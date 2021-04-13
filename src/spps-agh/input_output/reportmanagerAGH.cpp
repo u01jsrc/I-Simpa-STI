@@ -55,7 +55,7 @@ void ReportManagerAGH::ParticuleFreeTranslation(CONF_PARTICULE_AGH& particleInfo
 	vec3 direction(nextPosition - particleInfos.position);
 
 	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (particleInfos.currentTetra->linkedCutMap && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	if (particleInfos.currentTetra->linkedCutMap && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_MAP_MIN_REFL)))
 	{
 		for (std::vector<r_SurfCut*>::iterator itrs = particleInfos.currentTetra->linkedCutMap->begin(); itrs != particleInfos.currentTetra->linkedCutMap->end(); itrs++)
 		{
@@ -232,7 +232,7 @@ void ReportManagerAGH::ParticuleCollideWithSceneMesh(CONF_PARTICULE & particleIn
 	}
 
 	Core_ConfigurationAGH* configManager = static_cast<Core_ConfigurationAGH*>(this->paramReport.configManager);
-	if (face->recepteurS && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_ANGLE_STATS_MIN_REFL)))
+	if (face->recepteurS && particleInfos.reflectionOrder >= *(configManager->FastGetConfigValue(Core_ConfigurationAGH::IPROP_MAP_MIN_REFL)))
 	{
 		vec3& normal = face->face_scene->normal;
 		if (particleInfos.direction.dot(normal)<0) //If the receiver surface is on the other side then revert the normal

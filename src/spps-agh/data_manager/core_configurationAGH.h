@@ -37,7 +37,7 @@ public:
 		I_PROP_CALCULATION_CORE_SELLECTION = 70,
 		IPROP_NORMALIZE_ANGLE_STATS,
 		IPROP_EXTENDED_ANGLE_STATS,
-		IPROP_ANGLE_STATS_MIN_REFL,					/*!< Min reflection order for angle stats calculation*/
+		IPROP_MAP_MIN_REFL,					/*!< Min reflection order for angle stats calculation*/
 		IPROP_SKIP_DIRECT_SOUND_CALC
 	};
 	/**
