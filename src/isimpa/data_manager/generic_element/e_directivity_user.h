@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+Ôªø/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -33,15 +33,15 @@
 #include "e_directivity.h"
 
 /** \file e_directivity_user.h
-\brief Classe spÈcialisant e_directivity
+\brief Classe sp√©cialisant e_directivity
 
-ReprÈsente une directivitÈ personalisÈe utilisateur
+Repr√©sente une directivit√© personalis√©e utilisateur
 */
 
 /**
-\brief Classe spÈcialisant e_directivity
+\brief Classe sp√©cialisant e_directivity
 
-ReprÈsente une directivitÈ personalisÈe utilisateur
+Repr√©sente une directivit√© personalis√©e utilisateur
 */
 
 class E_Directivity_User : public E_Directivity
@@ -62,7 +62,7 @@ public:
 
 	void OnBeginLabelEdit(wxTreeEvent& treeEvent)
 	{
-		// On autorise l'edition en surchargeant l'ÈvÈnement
+		// On autorise l'edition en surchargeant l'√©v√©nement
 	}
 
 	void OnEndLabelEdit(wxTreeEvent& treeEvent)
@@ -70,7 +70,7 @@ public:
 		if (treeEvent.GetLabel() != "")
 		{
 			this->elementInfo.libelleElement = treeEvent.GetLabel();
-			this->Modified(this); //Indique le l'element a ÈtÈ modifiÈ
+			this->Modified(this); //Indique le l'element a √©t√© modifi√©
 		}
 	}
 

@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+Ôªø/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -32,18 +32,18 @@
 #define _HSTL
 
 /*! \file stl.hpp
-    \brief ImplÈmentation de l'interprÈteur de fichier modËle STL (*.stl) 
+    \brief Impl√©mentation de l'interpr√©teur de fichier modƒçle STL (*.stl) 
 */
 #include "Core/mathlib.h"
 #include <vector>
 
-/*! \brief ImplÈmentation de l'interprÈteur de fichier modËle STL (*.stl) 
+/*! \brief Impl√©mentation de l'interpr√©teur de fichier modƒçle STL (*.stl) 
 */
 namespace formatSTL
 {
 
 	/**
-	 * @brief Structure de donnÈes d'echange avec la classe
+	 * @brief Structure de donn√©es d'echange avec la classe
 	 */
 	struct t_face
 	{
@@ -56,7 +56,7 @@ namespace formatSTL
 	};
 
 	/**
-	 * @brief Structure de donnÈes du modËle
+	 * @brief Structure de donn√©es du modƒçle
 	 *
 	 */
 	struct t_model
@@ -78,11 +78,11 @@ public:
 	 */
 	CStl();
 	/**
-	 * MÈthode d'exportation d'un modËle 3D
+	 * M√©thode d'exportation d'un modƒçle 3D
 	 */
 	bool ExportSTL(t_model& sceneconst,const char* mfilename);
 	/**
-	 * MÈthode d'importation d'un modËle 3D
+	 * M√©thode d'importation d'un modƒçle 3D
 	 */
 	bool ImportSTL(t_model& sceneconst,const char* mfilename);
 

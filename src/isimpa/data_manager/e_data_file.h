@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+ï»¿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -39,11 +39,11 @@
 #include <wx/string.h>
 
 /** \file e_data_file.h
-\brief Classe spécialisant E_Data afin de représenter un chemin de fichier
+\brief Classe spÃ©cialisant E_Data afin de reprÃ©senter un chemin de fichier
 */
 
 /**
-\brief Classe spécialisant E_Data afin de représenter un chemin de fichier
+\brief Classe spÃ©cialisant E_Data afin de reprÃ©senter un chemin de fichier
 @see MainPropGrid
 */
 
@@ -61,7 +61,7 @@ public:
 	E_Data_File(wxXmlNode* noeudCourant, Element* parent, wxString storageFolder, wxString _dialogTitle, wxString _fileExtension)
 		:E_Data(parent, "Unnamedprop", "", Element::ELEMENT_TYPE_FILE, noeudCourant)
 	{
-		// création depuis le xml
+		// crÃ©ation depuis le xml
 		dialogTitle = _dialogTitle;
 		fileExtension = _fileExtension;
 

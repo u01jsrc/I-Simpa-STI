@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+ï»¿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -33,11 +33,11 @@
 #include "data_manager/element.h"
 
 /** \file e_scene_bdd_spectrums_app.h
-\brief Element représentant un dossier contenant une ou plusieures directivités et/ou un ou plusieurs groupes de directivités
+\brief Element reprÃ©sentant un dossier contenant une ou plusieures directivitÃ©s et/ou un ou plusieurs groupes de directivitÃ©s
 */
 
 /**
-\brief Element représentant un dossier contenant une ou plusieures directivités et/ou un ou plusieurs groupes de directivités
+\brief Element reprÃ©sentant un dossier contenant une ou plusieures directivitÃ©s et/ou un ou plusieurs groupes de directivitÃ©s
 */
 
 class E_Scene_Bdd_Directivities_Application : public Element
@@ -55,7 +55,7 @@ public:
 		{
 			wxXmlNode* currentChild;
 			currentChild = noeudCfg->GetChildren();
-			// On va créer les fils de notre noeudCourant
+			// On va crÃ©er les fils de notre noeudCourant
 			wxString propValue;
 			while (currentChild != NULL)
 			{

@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+ï»¿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -33,15 +33,15 @@
 #include "e_directivity.h"
 
 /** \file e_directivity_app.h
-\brief Classe spécialisant e_directivity
+\brief Classe spÃ©cialisant e_directivity
 
-Représente une directivité de référence
+ReprÃ©sente une directivitÃ© de rÃ©fÃ©rence
 */
 
 /**
-\brief Classe spécialisant e_directivity
+\brief Classe spÃ©cialisant e_directivity
 
-Représente une directivité de référence
+ReprÃ©sente une directivitÃ© de rÃ©fÃ©rence
 */
 
 class E_Directivity_App : public E_Directivity

@@ -61,7 +61,7 @@ public:
 	 */
 	void InitProperties()
 	{
-		this->AppendPropertyText("urlmodel","Fichier de modèle","",true);
+		this->AppendPropertyText("urlmodel","Fichier de modele","",true);
 		_("Scene file"); //Pour generer les fichiers de langues
 		this->AppendPropertyText("urlsave","Fichier de sauvegarde","",true);
 		_("Backup file");

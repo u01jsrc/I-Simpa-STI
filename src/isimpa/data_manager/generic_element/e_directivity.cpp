@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+ï»¿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -43,7 +43,7 @@ E_Directivity::E_Directivity(Element* parent, wxString Nom, ELEMENT_TYPE _type, 
 
 	if (nodeElement != NULL) // && nodeElement->GetAttribute("wxid",&propVal)
 	{
-		//Element initialisé AVEC Xml
+		//Element initialisÃ© AVEC Xml
 		long lval;
 		if (nodeElement->GetAttribute("iddirectivity", &propVal))
 		{
@@ -160,7 +160,7 @@ void E_Directivity::Modified(Element* eModif)
 	Element* pereEModif = eModif->GetElementParent();
 	if (pereEModif != NULL)
 	{
-		Element::Modified(eModif); //Element de base modifié
+		Element::Modified(eModif); //Element de base modifiÃ©
 	}
 }
 

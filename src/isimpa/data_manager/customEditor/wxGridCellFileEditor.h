@@ -1,4 +1,4 @@
-/* ----------------------------------------------------------------------
+ï»¿/* ----------------------------------------------------------------------
 * I-SIMPA (http://i-simpa.ifsttar.fr). This file is part of I-SIMPA.
 *
 * I-SIMPA is a GUI for 3D numerical sound propagation modelling dedicated
@@ -44,9 +44,9 @@
 /**
 *  @brief Editeur de cellule de type fichier
 *
-*  Lors ce que l'utilisateur désire éditer un champ fichier l'instance de cette classe associé est appelé via wxGridCellFileEditor::BeginEdit
+*  Lors ce que l'utilisateur dÃ©sire Ã©diter un champ fichier l'instance de cette classe associÃ© est appelÃ© via wxGridCellFileEditor::BeginEdit
 *  Lors ce que la grille MainPropGrid affiche ce type de champ elle appelle wxGridCellFileEditor::Show
-*  A la fin de l'édition du champ la méthode wxGridCellFileEditor::EndEdit est appelé afin de mettre à jour la cellule texte de base
+*  A la fin de l'Ã©dition du champ la mÃ©thode wxGridCellFileEditor::EndEdit est appelÃ© afin de mettre Å• jour la cellule texte de base
 *  @see E_Data_File
 */
 
@@ -59,25 +59,25 @@ public:
 	wxGridCellFileEditor(wxString dialogTitle, wxString fileExtension);
 
 	/**
-	* Début d'édition du champ
+	* DÃ©but d'Ã©dition du champ
 	* @param row Ligne
 	* @param col Colonne
-	* @param grid Pointeur vers le contrôle
+	* @param grid Pointeur vers le contrÃ´le
 	*/
 	virtual void BeginEdit(int row, int col, wxGrid* grid);
 
 	/**
 	* Affichage du champ
 	* @param show "use the specified attributes to set colours/fonts for it."
-	* @param attr Attributs de la cellule associée
+	* @param attr Attributs de la cellule associÃ©e
 	*/
 	virtual void Show(bool show, wxGridCellAttr *attr);
 
 	/**
-	* Fin d'édition du champ
+	* Fin d'Ã©dition du champ
 	* @param row Ligne
 	* @param col Colonne
-	* @param grid Pointeur vers le contrôle
+	* @param grid Pointeur vers le contrÃ´le
 	*/
 	virtual bool EndEdit(int row, int col, const wxGrid *grid,
 		const wxString& oldval, wxString *newval);
