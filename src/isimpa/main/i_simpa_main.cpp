@@ -494,7 +494,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
 
 	m_mgr.AddPane(&(*(propertiesGrid)), wxAuiPaneInfo().
 					Name(_("Properties")).Caption(_("Properties")).
-					Bottom().Position(-1).BestSize(350,400).CloseButton(false));
+					Bottom().Position(-1).BestSize(FromDIP(wxSize(350,400))).CloseButton(false));
 
 
 	//Charge l'arrangement des fenêtres en fonction de l'utilisateur
@@ -642,7 +642,7 @@ void MainUiFrame::OnSetDockStatus(wxCommandEvent& event)
 }
 void MainUiFrame::OnClearWindowManager(wxCommandEvent& event)
 {
-	saveManagerConfig=false;
+	//saveManagerConfig=false;
 	m_mgr.LoadPerspective(originalPerspective);
 }
 void MainUiFrame::CopyGlToFileWithDim(wxCommandEvent& event)
