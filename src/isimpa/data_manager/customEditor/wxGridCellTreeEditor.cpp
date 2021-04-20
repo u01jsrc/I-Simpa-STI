@@ -158,6 +158,5 @@ void wxGridCellTreeEditor::Reset(void)
 
 wxString wxGridCellTreeEditor::GetValue() const
 {
-	wxString test = Combo()->GetValue();
 	return Combo()->GetValue();
 }
