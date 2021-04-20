@@ -399,7 +399,7 @@ MainUiFrame::MainUiFrame(wxLocale &lang) : wxFrame(NULL, -1, _("Interface ")+APP
         None };
 #  endif
 #endif
-	GlFrame = new OpenGlViewer(this, -1, wxPoint(0,25), wxSize(-1,-1),
+	GlFrame = new OpenGlViewer(this, -1, wxPoint(0,25), FromDIP(wxSize(-1,-1)),
 												0, _("Main window"), gl_attrib );
 
 	toolbarGl = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
