@@ -148,13 +148,19 @@ void BRDFs::evaluatePhongAtPoint(int n, float diffusion, float solidAngle, vec3 
 
 	double cosFace = faceNormal.dot(toSubSurf);
 	double cosPow = specular.dot(toSubSurf);
-	double cosPowN = powf(cosPow, n);
-	//double scalingFactor = ((n + 2) / (2 * M_PI));
-	double scalingFactor = 1./calculatePhongNormalizationFactor(faceNormal, specular, n);
-
-	result += diffusion*(1. / M_PI)*solidAngle*cosFace;					//diffuse
-
-	result += (1. - diffusion)*scalingFactor*cosPowN*cosFace*solidAngle; //specular
+	double specEnerg;
+	if (cosPow > 0){
+		double cosPowN = powf(cosPow, n);
+		//double scalingFactor = ((n + 2) / (2 * M_PI));
+		double scalingFactor = 1. / calculatePhongNormalizationFactor(faceNormal, specular, n);
+		specEnerg = (1. - diffusion) * scalingFactor * cosPowN * cosFace * solidAngle;
+	}
+	else {
+		specEnerg = 0;
+	}
+		
+	result += diffusion*(1. / M_PI)*solidAngle*cosFace;		//diffuse
+	result += (1. - diffusion) * specEnerg;					//specular
 
 
 }
