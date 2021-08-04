@@ -325,7 +325,7 @@ void NextEventEstimationCore::GenerateShadowRays(CONF_PARTICULE_AGH& particle, t
 			shadowRay.targetReceiver = receiver;
 			shadowRay.isShadowRay = true;
 			
-			float energy = 0;
+			double energy = 0;
 			if (faceInfo->faceMaterial->use_custom_BRDF) {
 				int curentFreq = this->configurationTool->freqList[particle.frequenceIndex]->freqValue;
 				float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);

@@ -1,4 +1,5 @@
 #include "brdfreflection.h"
+#include <iostream>
 
 
 /**
@@ -42,11 +43,11 @@ int RaySphereIntersection(const vec3& p1, const vec3& p2, const vec3& sc, double
 double BRDFs::calculatePhongNormalizationFactor(const vec3& faceNormal, const vec3& specularDirection, const int& n)
 {
 	double S = 0;
-	double d = faceNormal.dot(specularDirection);
+	double d = std::min((float)faceNormal.dot(specularDirection),1.f);
 	double c = sqrt(1 - d*d);
 	double T = ((n % 2)==0) ? M_PIDIV2 : c;
 	double A = ((n % 2) == 0) ? M_PIDIV2 : M_PI - acos(d);
-	double i = ((n % 2) == 0) ? 0 : 1;
+	int i = ((n % 2) == 0) ? 0 : 1;
 	while (i <= n - 2) {
 		S = S + T;
 		T = T*c*c*(i + 1) / (i + 2);
@@ -56,7 +57,7 @@ double BRDFs::calculatePhongNormalizationFactor(const vec3& faceNormal, const ve
 	
 }
 
-float BRDFs::SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool)
+double BRDFs::SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool)
 {
 	switch (material.reflectionLaw)
 	{
@@ -80,7 +81,7 @@ vec3 BRDFs::SolveSpecularReflection(const vec3 &incomingDirection, const vec3 &f
 	return retVal / retVal.length();
 }
 
-float BRDFs::SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
+double BRDFs::SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	double specularEnergy = 0;
@@ -95,7 +96,7 @@ float BRDFs::SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& fac
 	return  specularEnergy;
 }
 
-float BRDFs::SolveSpecularLambertBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
+double BRDFs::SolveSpecularLambertBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	vec3 toReceiver = targetPoint - shadowRay.position;
@@ -120,16 +121,16 @@ float BRDFs::SolveSpecularLambertBRDF(const t_Material_BFreq& material, const ve
 	return  specularEnergy + lambertEnergy;
 }
 
-float BRDFs::SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
+double BRDFs::SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool)
 {
 	vec3 specular = SolveSpecularReflection(incomingDirection, faceNormal);
 	vec3 toReceiver = targetPoint - shadowRay.position;
 	Matrix3 rotMatrix;
-	double energyFactor = 0, solidAngle, dl;	
+	double energyFactor = 0, solidAngle;	
 	float receiverRadius = *configurationTool->FastGetConfigValue(Core_ConfigurationAGH::FPROP_RAYON_RECEPTEURP);
 
 	//calculate Phong exponent based on experiments (used also in dotreflection - remember to change in both places)
-	int n = (int) powf(10, -1.7234170470604733*material.diffusion + 2.6245274102195886);
+	int n = (int) pow(10, -1.7234170470604733*material.diffusion + 2.6245274102195886);
 
 	//receiver is small and/or it is far from reflection point - evaluated as one point
 	//	consider taking n into accont - small n means slowly changing Phong function.
@@ -140,7 +141,7 @@ float BRDFs::SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNo
 	
 }
 
-void BRDFs::evaluatePhongAtPoint(int n, float diffusion, float solidAngle, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, double &result)
+void BRDFs::evaluatePhongAtPoint(int n, float diffusion, double solidAngle, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, double &result)
 {
 	vec3 toSubSurf = target - position;
 	
@@ -150,10 +151,15 @@ void BRDFs::evaluatePhongAtPoint(int n, float diffusion, float solidAngle, vec3 
 	double cosPow = specular.dot(toSubSurf);
 	double specEnerg;
 	if (cosPow > 0){
-		double cosPowN = powf(cosPow, n);
+		double cosPowN = pow(cosPow, n);
 		//double scalingFactor = ((n + 2) / (2 * M_PI));
 		double scalingFactor = 1. / calculatePhongNormalizationFactor(faceNormal, specular, n);
 		specEnerg = (1. - diffusion) * scalingFactor * cosPowN * cosFace * solidAngle;
+		if (isnan(cosFace) || isnan(cosPow) || isnan(scalingFactor)) {
+			std::cout << "CosFace:" << cosFace << " cosPow:" << cosPow << " scalingFactor:" << scalingFactor << std::endl;
+			std::cout << "Norm Factor:" << calculatePhongNormalizationFactor(faceNormal, specular, n) << std::endl;
+			std::cout << "Face normal:" << faceNormal.x <<","<< faceNormal.y<<","<< faceNormal.z << " Specular:" << specular.x<<","<< specular.y << "," << specular.z <<" n" << n << std::endl;
+		}
 	}
 	else {
 		specEnerg = 0;

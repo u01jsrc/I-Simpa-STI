@@ -163,7 +163,7 @@ private:
 		decimal theta = rnd1 * M_2PI;
 		decimal phi = acos(pow((float)1 - rnd2, (float)(1. / (expo + 1.))));//pow((float)acos(1-GetRandValue()),(float)(1./(expo+1.)));
 
-		probability = ((expo + 2) / (2 * M_PI)) * pow(cos(phi),expo);
+		probability = ((expo + 2) / (2 * M_PI)) * powf(cos(phi),expo);
 
 		return BaseUniformReflection(vecteurVitesse, faceNormal, theta, phi);
 	}

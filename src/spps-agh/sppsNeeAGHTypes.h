@@ -31,7 +31,7 @@
 
 
 
-#define SPPSNEE_AGH_VERSION "SPPS-AGH 0.35 (01.10.2020). Based on SPPS Nantes 2.2.1 version ocober 2020"
+#define SPPSNEE_AGH_VERSION "SPPS-AGH 0.36 (16.06.2021). Based on SPPS Nantes 2.2.1 version ocober 2020"
 #define __USE_BOOST_RANDOM_GENERATOR__
 #define UTILISER_MAILLAGE_OPTIMISATION
 

@@ -23,7 +23,7 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal,const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool);
+	static double SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal,const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool);
 
 	/**
 	* Calculates specular reflection direction
@@ -33,7 +33,7 @@ public:
 	*/
 	static vec3 SolveSpecularReflection(const vec3& incomingDirection, const vec3& faceNormal);
 
-	static float SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH & shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH * configurationTool);
+	static double SolveSpecularBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH & shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH * configurationTool);
 
 	/**
 	* Solves reflecion energy using Specular+Lambert BRDF
@@ -44,7 +44,7 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolveSpecularLambertBRDF(const t_Material_BFreq& material,const vec3& faceNormal,const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool);
+	static double SolveSpecularLambertBRDF(const t_Material_BFreq& material,const vec3& faceNormal,const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool);
 
 	/**
 	* Solves reflecion energy using Phong BRDF
@@ -56,8 +56,8 @@ public:
 	* @param incomingDirection Direction of incoming ray
 	* @param configurationTool Simulation configuration
 	*/
-	static float SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool);
-	static void evaluatePhongAtPoint(int n, float diffusion, float solidAngle, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, double& result);
+	static double SolvePhongBRDF(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH& shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH* configurationTool);
+	static void evaluatePhongAtPoint(int n, float diffusion, double solidAngle, vec3 target, vec3 position, vec3 faceNormal, vec3 specular, double& result);
 
 	static double calculatePhongNormalizationFactor(const vec3 & faceNormal, const vec3 & specularDirection, const int & n);
 };
