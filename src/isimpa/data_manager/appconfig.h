@@ -194,6 +194,7 @@ public:
 	static const wxString CONST_MODEL_SCENE_FILENAME;
 	static const wxString CONST_TETGEN_EXE_FILENAME;
 	static const wxString CONST_TETGEN_EXE_PATH;
+	static const wxString CONST_TETGEN16_EXE_FILENAME;
 	static const wxString CONST_TETROOT_PATH;
 	static const wxString CONST_PREPROCESS_EXE_FILENAME;
 	static const wxString CONST_PREPROCESS_EXE_PATH;

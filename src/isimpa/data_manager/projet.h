@@ -103,6 +103,7 @@ private:
 		wxString cmd_append;			/*!< Ajout de paramètres à l'execution du maillage */
 		wxString user_defined_params;	/*!< Remplacement des paramètres standart par les paramètres utilisateurs */
 		float maxAreaOnRecepteurss;		/*!< Aire maximal des faces des tetrahèdre coplainaires au faces composants les recepteurs surfaciques. */
+		bool useTetgen16;				/*!< Choose if Tetgen 1.6 should be used (older 1.5 is used otherwise). */
 	};
 
 	/**

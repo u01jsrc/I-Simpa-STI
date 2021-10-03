@@ -83,6 +83,12 @@ const wxString ApplicationConfiguration::CONST_TETGEN_EXE_FILENAME = "tetgen";
 const wxString ApplicationConfiguration::CONST_TETGEN_EXE_FILENAME = "tetgen.exe";
 #endif
 
+#ifndef _WIN32
+const wxString ApplicationConfiguration::CONST_TETGEN16_EXE_FILENAME = "tetgen16";
+#else
+const wxString ApplicationConfiguration::CONST_TETGEN16_EXE_FILENAME = "tetgen16.exe";
+#endif
+
 const wxString ApplicationConfiguration::CONST_TETGEN_EXE_PATH=ApplicationConfiguration::CONST_TETROOT_PATH+wxString("tetgen")+wxFileName::GetPathSeparator();
 const wxString ApplicationConfiguration::CONST_CORE_PATH=wxString("core") + wxFileName::GetPathSeparator();
 const wxString ApplicationConfiguration::CONST_PREPROCESS_EXE_PATH=ApplicationConfiguration::CONST_TETROOT_PATH+"tetgen"+wxFileName::GetPathSeparator();

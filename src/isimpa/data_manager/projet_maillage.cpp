@@ -59,6 +59,7 @@ bool ProjectManager::RunCoreMaillage(Element* selectedCore)
 			parametresMaillage.isAreaConstraint=configMaillage->GetBoolConfig("isareaconstraint");
 			parametresMaillage.doMeshRepair=configMaillage->GetBoolConfig("preprocess");
 			parametresMaillage.debugMode=configMaillage->GetBoolConfig("debugmode");
+			parametresMaillage.useTetgen16 = configMaillage->GetBoolConfig("usetetgen16");
 			return RunTetGenMaillage(parametresMaillage);
 
 		}
@@ -153,7 +154,13 @@ bool ProjectManager::RunTetGenMaillage(param_TetGenMaillage& paramMaillage)
 {
 	wxDateTime timeDebOperation=wxDateTime::UNow();
 	wxString tetgenPath=ApplicationConfiguration::CONST_TETGEN_EXE_PATH;
-	wxString tetgenExe=ApplicationConfiguration::CONST_TETGEN_EXE_FILENAME;
+	wxString tetgenExe;
+	if (paramMaillage.useTetgen16) {
+		tetgenExe = ApplicationConfiguration::CONST_TETGEN16_EXE_FILENAME;
+	}
+	else {
+		tetgenExe = ApplicationConfiguration::CONST_TETGEN_EXE_FILENAME;
+	}
 	wxString cacheFolder=ApplicationConfiguration::GLOBAL_VAR.cacheFolderPath+"temp"+wxFileName::GetPathSeparator();
 	if(!wxDirExists(cacheFolder))
 		wxMkdir(cacheFolder);

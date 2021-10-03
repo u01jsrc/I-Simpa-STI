@@ -54,6 +54,10 @@ public:
 		{
 			this->AppendPropertyBool("debugmode","Test mesh topology",false);
 		}
+		if (!this->IsPropertyExist("usetetgen16"))
+		{
+			this->AppendPropertyBool("usetetgen16", wxTRANSLATE("Use tetgen 1.6 (otherwise 1.5 is used)"), false);
+		}
 	}
 
 	E_Core_Core_Conf_Mailleur( Element* parent)
@@ -110,6 +114,7 @@ protected:
 		this->AppendPropertyBool("ismaxvol", wxTRANSLATE("Volume constraint"),false);
 		this->AppendPropertyBool("preprocess", wxTRANSLATE("Scene correction before meshing"),true);
 		this->AppendPropertyBool("debugmode", wxTRANSLATE("Test mesh topology"),false);
+		this->AppendPropertyBool("usetetgen16", wxTRANSLATE("Use tetgen 1.6 (otherwise 1.5 is used)"), false);
 
 	}
 	
