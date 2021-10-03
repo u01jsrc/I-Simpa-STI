@@ -430,6 +430,8 @@ add_executable(isimpa
     ${SYSTEM_SCRIPT_FILES}
     ${USER_SCRIPT_FILES})
 
+set_property(TARGET isimpa PROPERTY VS_DPI_AWARE "PerMonitor")
+
 # Creates a folder "executables" and adds target
 # project (isimpa.vcproj) under it
 set_property(TARGET isimpa PROPERTY FOLDER "executables")

@@ -41,6 +41,8 @@ Makefile
 isimpa.mk
 isimpa.project
 build/
+.vs/
+CMakeSettings.json
 make.bat
 files.txt
 *.pot
