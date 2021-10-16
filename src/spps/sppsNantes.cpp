@@ -305,6 +305,9 @@ int MainProcess(int argc, char* argv[])
 	if(seedValue!=0) {
 		SetRandSeed((uint32_t)seedValue);
 	}
+	else {
+		SetRandSeed(static_cast<unsigned int>(std::time(0)));
+	}
 
 	//**************************************************
 	// 3: Chargement du modèle
