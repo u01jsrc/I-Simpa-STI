@@ -42,19 +42,33 @@ int RaySphereIntersection(const vec3& p1, const vec3& p2, const vec3& sc, double
 
 double BRDFs::calculatePhongNormalizationFactor(const vec3& faceNormal, const vec3& specularDirection, const int& n)
 {
-	double S = 0;
 	double d = std::min((float)faceNormal.dot(specularDirection),1.f);
-	double c = sqrt(1 - d*d);
-	double T = ((n % 2)==0) ? M_PIDIV2 : c;
+	double PNF;
+	//double PNF = BRDFs::calculatePNF(d, n);
+	if (n > 1000) [[unlikely]] {
+		PNF = BRDFs::calculatePNF(d, n);
+	}
+	else {
+		int d_idx = std::round(d * 1000);
+		PNF = BRDFs::phongFactorTable[n][d_idx];
+	}
+	return PNF;
+	
+}
+
+double BRDFs::calculatePNF(double d, int n) {
+	double S = 0;
+	double c = sqrt(1 - d * d);
+	double T = ((n % 2) == 0) ? M_PIDIV2 : c;
 	double A = ((n % 2) == 0) ? M_PIDIV2 : M_PI - acos(d);
 	int i = ((n % 2) == 0) ? 0 : 1;
 	while (i <= n - 2) {
 		S = S + T;
-		T = T*c*c*(i + 1) / (i + 2);
+		T = T * c * c * (i + 1.) / (i + 2.);
 		i = i + 2;
 	}
-	return 2. * (T + d*A + d*d*S) / (n + 2.);
-	
+	return 2. * (T + d * A + d * d * S) / (n + 2.);
+
 }
 
 double BRDFs::SolveBRDFReflection(const t_Material_BFreq& material, const vec3& faceNormal, const vec3& targetPoint, const CONF_PARTICULE_AGH &shadowRay, const vec3& incomingDirection, Core_ConfigurationAGH *configurationTool)
@@ -167,6 +181,18 @@ void BRDFs::evaluatePhongAtPoint(int n, float diffusion, double solidAngle, vec3
 		
 	result += diffusion*(1. / M_PI)*solidAngle*cosFace;		//diffuse
 	result += (1. - diffusion) * specEnerg;					//specular
-
-
 }
+
+std::vector<std::vector<double>> BRDFs::calculatePhongFactorTable() {
+	std::vector<std::vector<double>> phongFactorTable(1001, std::vector<double> (1001, 0));
+	int n_idx = 0;
+	for (int n = 0; n <= 1000; n++) {
+		for (int d = 0; d <= 1000; d++) {
+			phongFactorTable[n_idx][d] = BRDFs::calculatePNF(d/1000., n);
+		}
+		n_idx++;
+	}
+	return phongFactorTable;
+}
+
+std::vector<std::vector<double>> BRDFs::phongFactorTable = BRDFs::calculatePhongFactorTable();

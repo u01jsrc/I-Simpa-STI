@@ -4,6 +4,11 @@
 
 class BRDFs
 {
+private:
+	static std::vector<std::vector<double>> phongFactorTable;		//table for storing constant Phong normalization factors
+	static std::vector<std::vector<double>> calculatePhongFactorTable();
+	static double calculatePNF(double d, int n);
+
 public:
 
 	class Initializer
