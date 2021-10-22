@@ -94,7 +94,7 @@ protected:
 private:
 	progressOperation* parent;
 	unsigned int sizeOfEstimation; //Nombre de fils estimé
-	float sizeOf;				   //Nombre de fils détruits
+	double sizeOf;				   //Nombre de fils détruits
 };
 
 
