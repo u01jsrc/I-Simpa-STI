@@ -24,7 +24,7 @@ environment:
 branches:
   # whitelist
   only:
-    - master
+    - Port_STI_calculation
 
 # Operating system (build VM template)
 os: Visual Studio 2019
