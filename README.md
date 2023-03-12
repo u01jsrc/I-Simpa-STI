@@ -1,6 +1,6 @@
 | Travis Linux build status| AppVeyor Windows build status |
 |--------------------------|-------------------------------|
-| | [![Build status](https://ci.appveyor.com/api/projects/status/wwbeuje6ddc1wx01?svg=true)](https://ci.appveyor.com/project/wbinek/i-simpa-d0onn)|
+| | [![Build status](https://ci.appveyor.com/api/projects/status/k6oyrgu6n6b41al9?svg=true)](https://ci.appveyor.com/project/u01jsrc/i-simpa-sti)|
 
 <IMG SRC="https://github.com/Ifsttar/I-Simpa/blob/master/Docs/images/I-Simpa-logo.jpg" WIDTH=400 ALT="I-Simpa logo" TITLE="I-Simpa logo">|
 
